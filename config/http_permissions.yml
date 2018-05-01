@@ -1,0 +1,13 @@
+default:
+  gamer: pass
+  unsigned: redirect_to->login_path
+pages:
+  login:
+    gamer: redirect_to->root_path
+    unsigned: pass
+  signin:
+    gamer: redirect_to->root_path
+    unsigned: pass
+  logout:
+    gamer: pass
+    unsigned: redirect_to->login_path

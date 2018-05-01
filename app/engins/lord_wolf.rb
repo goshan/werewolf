@@ -1,0 +1,2 @@
+class LordWolf < WolfBase
+end

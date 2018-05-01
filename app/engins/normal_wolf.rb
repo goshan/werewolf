@@ -1,0 +1,2 @@
+class NormalWolf < WolfBase
+end

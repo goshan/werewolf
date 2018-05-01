@@ -1,0 +1,161 @@
+= easy_login_session
+
+.container.game-page
+  .logo= image_tag '/img/logo.png'
+  .nav
+    %span#current_user= current_user.name
+    .pull-right
+      = form_tag logout_path, :method => "post" do
+        = submit_tag "退出", :class => "btn btn-link logout"
+
+  .progress
+    .progress-bar.progress-bar-info{:role => "progressbar", :style => "width: 0%;"}
+
+  - if flash.alert
+    .alert.alert-danger= flash.alert
+
+  .area.ope-panel
+    .notice
+      .status{:style => "display: inline-block;"}
+        第
+        %span.status-round
+        天
+        %span.status-turn
+
+      .setting.pull-right
+        = link_to "查看板子", "#", :class => "btn btn-primary btn-xs", 'data-toggle' => "modal", 'data-target' => "#check-setting"
+        .modal.fade{:id => "check-setting", :tabindex => "-1", :role => "dialog", 'aria-labelledby' => "playerOutSelectLabel"}
+          .modal-dialog
+            .modal-content
+              .modal-header
+                %button.close{:type => "button", 'data-dismiss' => "modal", 'aria-label' => "Close"}
+                  %span{'aria-hidden' => "true"} &times;
+                %h4.modal-title 当前板子
+              .modal-body
+                %p= "玩家人数: #{@setting.player_cnt}人"
+                %p= "神民: #{god_setting @setting}"
+                %p= "平民: #{@setting.villager_cnt}人"
+                %p= "狼人: #{wolf_setting @setting}"
+                %p= "胜利条件: #{win_setting @setting}"
+                %p= "狼人必杀角色: #{@setting.must_kill ? role_name(@setting.must_kill.to_sym) : ''}"
+              .modal-footer
+                = link_to "好的", "#", :class => "btn btn-default", 'data-dismiss' => "modal"
+
+    .ope-player
+      = link_to "查看身份", "#", :class => "btn btn-warning", :id => "js-check-role"
+      = link_to "使用技能", "#", :class => "btn btn-warning pull-right", :id => "js-use-skill"
+      .modal.fade{:id => "check-role-dialog"}
+        .modal-dialog
+          .modal-content
+            .modal-header
+              %button.close{:type => "button", 'data-dismiss' => "modal", 'aria-label' => "Close"}
+                %span{'aria-hidden' => "true"} &times;
+              %h4.modal-title
+                游戏身份
+            .modal-body
+              你的身份是
+              %span.role
+              .role-img
+                = image_tag "/card/seer.jpg", :class => 'role-card role-seer hidden'
+                = image_tag "/card/witch.jpg", :class => 'role-card role-witch hidden'
+                = image_tag "/card/hunter.jpg", :class => 'role-card role-hunter hidden'
+                = image_tag "/card/savior.jpg", :class => 'role-card role-savior hidden'
+                = image_tag "/card/idiot.jpg", :class => 'role-card role-idiot hidden'
+                = image_tag "/card/magician.jpg", :class => 'role-card role-magician hidden'
+                = image_tag "/card/augur.jpg", :class => 'role-card role-augur hidden'
+                = image_tag "/card/villager.jpg", :class => 'role-card role-villager hidden'
+                = image_tag "/card/wolf.jpg", :class => 'role-card role-normal_wolf hidden'
+                = image_tag "/card/chief_wolf.jpg", :class => 'role-card role-chief_wolf hidden'
+                = image_tag "/card/lord_wolf.jpg", :class => 'role-card role-lord_wolf hidden'
+                = image_tag "/card/long_wolf.jpg", :class => 'role-card role-long_wolf hidden'
+                = image_tag "/card/ghost_rider.jpg", :class => 'role-card role-ghost_rider hidden'
+            .modal-footer
+              = link_to "好的", "#", :class => "btn btn-default", 'data-dismiss' => "modal"
+
+    .tips
+    .panel-finish= link_to "执行", '#', :class => "btn btn-default hidden"
+
+  .area.player-panel
+    .all_players
+      - (1..@player_height).each do |i|
+        .player
+          = link_to "#{i}号", "#", :class => "btn js-seat", :pos => i
+          %span.name
+        - if i+@player_height <= @setting.player_cnt
+          .player.player-right-side
+            %span.name
+            = link_to "#{i+@player_height}号", "#", :class => "btn js-seat", :pos => i+@player_height
+
+  - if current_user.lord?
+    .area
+      .ope-admin
+        .area
+          = link_to "配置", "#", :class => "btn btn-default", 'data-toggle' => "modal", 'data-target' => "#setting"
+          = link_to "重置", "#", :class => "btn btn-default", :id => "js-reset"
+          .pull-right
+            = link_to "发牌", "#", :class => "btn btn-default", :id => "js-deal"
+            = link_to "夜晚", "#", :class => "btn btn-default", :id => "js-start"
+        .area
+          = link_to "昨夜信息", "#", :class => "btn btn-default", :id => "js-night-info"
+          = link_to "玩家出局", "#", :class => "btn btn-default pull-right", :id => "js-throw"
+        .area
+          = link_to "好人胜利", "#", :class => "btn btn-danger", :id => "js-wolf-lose"
+          = link_to "狼人胜利", "#", :class => "btn btn-danger pull-right", :id => "js-wolf-win"
+        .modal.fade{:id => "setting", :tabindex => "-1", :role => "dialog", 'aria-labelledby' => "settingLabel"}
+          .modal-dialog
+            .modal-content
+              .modal-header
+                %button.close{:type => "button", 'data-dismiss' => "modal", 'aria-label' => "Close"}
+                  %span{'aria-hidden' => "true"} &times;
+                %h4.modal-title 修改设置
+              = form_tag setting_path, :method => "put", :class => "form" do
+                .modal-body
+                  .form-group
+                    = label_tag "神民"
+                    - Setting::GOD_ROLES.each do |r|
+                      .btn-group{'data-toggle' => "buttons"}
+                        %label.btn{:class => "btn-#{role_klass r} #{@setting.has?(r) ? 'active' : ''}"}
+                          = check_box_tag r, 1, @setting.has?(r)
+                          = role_name r
+                  .form-group
+                    = label_tag "女巫解药"
+                    .btn-group{'data-toggle' => "buttons"}
+                      %label.btn.btn-purple{:class => "#{@setting.could_first_night? ? 'active' : ''}"}
+                        = radio_button_tag :witch_self_save, :could_first_night, @setting.could_first_night?
+                        仅第一夜可以自救
+                      %label.btn.btn-purple{:class => "#{@setting.never? ? 'active' : ''}"}
+                        = radio_button_tag :witch_self_save, :never, @setting.never?
+                        不能自救
+                      %label.btn.btn-purple{:class => "#{@setting.always_could? ? 'active' : ''}"}
+                        = radio_button_tag :witch_self_save, :always_could, @setting.always_could?
+                        可以自救
+                  .form-group
+                    = label_tag "平民"
+                    = text_field_tag :villager, @setting.villager_cnt, :class => "form-control", :style => "display: inline-block; width: 100px;"
+                  .form-group
+                    = label_tag "狼人"
+                    - Setting::WOLF_ROLES.each do |r|
+                      .btn-group{'data-toggle' => "buttons"}
+                        %label.btn{:class => "btn-#{role_klass r} #{@setting.has?(r) ? 'active' : ''}"}
+                          = check_box_tag r, 1, @setting.has?(r)
+                          = role_name r
+                    = label_tag "+ 普通狼人"
+                    = text_field_tag :normal_wolf, @setting.normal_wolf_cnt, :class => "form-control", :style => "display: inline-block; width: 100px;"
+                  .form-group
+                    = label_tag "必死角色"
+                    = select_tag :must_kill, options_for_select([['None', :nil]]+Setting::GOD_ROLES.map{|r| [role_name(r), r]}, @setting.must_kill), :class => "form-control"
+                  .form-group
+                    = label_tag "胜利条件"
+                    .btn-group{'data-toggle' => "buttons"}
+                      %label.btn.btn-default{:class => "#{@setting.kill_side? ? 'active' : ''}"}
+                        = radio_button_tag :win_cond, :kill_side, @setting.kill_side?
+                        屠边
+                      %label.btn.btn-default{:class => "#{@setting.kill_all? ? 'active' : ''}"}
+                        = radio_button_tag :win_cond, :kill_all, @setting.kill_all?
+                        屠城
+                      %label.btn.btn-default{:class => "#{@setting.kill_god? ? 'active' : ''}"}
+                        = radio_button_tag :win_cond, :kill_god, @setting.kill_god?
+                        屠神
+                .modal-footer
+                  = submit_tag '修改', :class => "btn btn-default"
+

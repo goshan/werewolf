@@ -1,0 +1,7 @@
+.container.login-page
+  .logo= image_tag '/img/logo.png'
+  = form_tag signin_path, :method => "post" do
+    .form-group{:style => "display: inline-block"}
+      = text_field_tag :name, "", :placeholder => "请输入昵称...", :class => "form-control", :style => "width: 200px;"
+    .form-group{:style => "display: inline-block"}
+      = submit_tag "进入", :class => "btn btn-success"

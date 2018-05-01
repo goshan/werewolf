@@ -1,0 +1,233 @@
+// Place all the styles related to the pages controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+.btn-purple,
+.btn-purple:hover, 
+.btn-purple:focus { 
+	color: #ffffff; 
+	background-color: #805EAD; 
+	border-color: #130269; 
+} 
+
+.btn-purple:active, 
+.btn-purple.active, 
+.open .dropdown-toggle.btn-purple { 
+	color: #ffffff; 
+	background-color: #684D8C; 
+	border-color: #130269; 
+} 
+
+.btn-purple:active, 
+.btn-purple.active, 
+.open .dropdown-toggle.btn-purple { 
+	background-image: none; 
+} 
+
+.btn-purple.disabled, 
+.btn-purple[disabled], 
+fieldset[disabled] .btn-purple, 
+.btn-purple.disabled:hover, 
+.btn-purple[disabled]:hover, 
+fieldset[disabled] .btn-purple:hover, 
+.btn-purple.disabled:focus, 
+.btn-purple[disabled]:focus, 
+fieldset[disabled] .btn-purple:focus, 
+.btn-purple.disabled:active, 
+.btn-purple[disabled]:active, 
+fieldset[disabled] .btn-purple:active, 
+.btn-purple.disabled.active, 
+.btn-purple[disabled].active, 
+fieldset[disabled] .btn-purple.active { 
+	background-color: #805EAD; 
+	border-color: #130269; 
+} 
+
+.btn-purple .badge { 
+	color: #805EAD; 
+	background-color: #ffffff; 
+}
+
+
+.login-page {
+	background: url('/img/game_bg.jpg') center top repeat-y;
+	height: 600px;
+
+	form {
+		text-align: center;
+		margin-top: 200px;
+		opacity: 0.8;
+	}
+}
+
+.game-page {
+	background: url('/img/game_bg.jpg') center top repeat-y;
+}
+
+.area {
+	padding: 10px 10px;
+	border-radius: 15px;
+	margin: 10px 0;
+}
+
+.logo {
+	width: 200px;
+	margin: 0 auto;
+
+	img {
+		width: 200px;
+	}
+}
+
+.nav {
+	position: absolute;
+	top: 25px;
+	width: 93%;
+	line-height: 34px;
+	color: #fff;
+	font-size: 15px;
+	font-weight: bold;
+
+	.logout {
+		color: #ccc;
+	}
+}
+
+.progress {
+	height: 5px;
+}
+
+.ope-panel {
+	background-color: rgb(250, 235, 215);
+	background-color: rgba(250, 235, 215, 0.5);
+}
+
+#check-role-dialog {
+	.role {
+		font-weight: bold;
+		color: #e61713;
+		font-size: 20px;
+
+		a {
+			color: #e61713;
+			&:hover {
+				text-decoration: none;
+			}
+		}
+	}
+	.role-img {
+		text-align: center;
+		margin: 20px;
+
+		img {
+			height: 246px;
+			width: 173px;
+		}
+	}
+}
+
+.player-panel {
+	font-weight: bold;
+	color: #fff;
+}
+
+.notice {
+	height: 50px;
+	padding: 15px;
+
+	.status, .setting {
+		display: inline-block;
+	}
+
+	.status {
+		font-size: 16px;
+	}
+}
+
+.tips {
+	font-size: 18px;
+	font-weight: bold;
+	height: 50px;
+	line-height: 25px;
+	text-align: center;
+	color: #a94442;
+}
+
+.panel-finish {
+	text-align: center;
+	height: 34px;
+}
+
+.rest {
+	text-align: center;
+}
+
+.player {
+	display: inline-block;
+	width: 48%;
+	margin: 10px 0;
+
+	a.btn {
+		width: 60px;
+		color: #fff;
+		background-color: #5bc0de;
+		border: 1px solid #46b8da;
+
+		&[status=dead] {
+			color: #666 !important;
+			background-color: #cdcdcd !important;
+			border: 1px solid #666 !important;
+		}
+
+		&:not([status=dead]) {
+			&.js-disable {
+				color: #666 !important;
+				background-color: transparent !important;
+				border: 1px solid #666 !important;
+			}
+			&.js-selected {
+				color: #000 !important;
+				background-color: #fff !important;
+				border: 1px solid #ccc !important;
+			}
+
+			&.skill-kill {
+				background-color: #d9534f;
+				border: 1px solid #d43f3a;
+			}
+			&.skill-kill_more {
+				background-color: #d9534f;
+				border: 1px solid #d43f3a;
+			}
+			&.skill-poison {
+				background-color: #805EAD;
+				border: 1px solid #684D8C;
+			}
+			&.skill-confirm {
+				background-color: #f0ad4e;
+				border: 1px solid #eea236;
+			}
+			&.skill-guard {
+				background-color: #5cb85c;
+				border: 1px solid #4cae4c;
+			}
+			&.skill-exchange {
+				background-color: #dc78d9;
+				border: 1px solid #ab6caf;
+			}
+			&.skill-lock {
+				background-color: #313ba9;
+				border: 1px solid #202bad;
+			}
+			&.skill-throw {
+				background-color: #337ab7;
+				border: 1px solid #2e6da4;
+			}
+		}
+	}
+
+	&.player-right-side {
+		text-align: right;
+	}
+}
