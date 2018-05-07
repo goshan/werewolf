@@ -93,7 +93,7 @@ Rails.application.configure do
 
   CacheDriver.setup do |config|
     config.store = :redis
-    config.redis_host = "127.0.0.1"
+    config.redis_host = ENV['CACHE_HOST']
     config.redis_port = 6379
     config.redis_namespace = "werewolf"
   end
