@@ -36,7 +36,7 @@ class @Wolf.Audio
         { name: "over_bgm", volume: 0.3 },
         { name: "over_wolf_lose" },
         { name: "over_wolf_win" },
-        { name: "over_voice" }
+        { name: "over_over" }
       ],
 
       path: "/audio/",
@@ -57,20 +57,10 @@ class @Wolf.Audio
     }
 
   play_audio: (type) ->
-    if type == 'wolf_lose'
+    if type == 'wolf_lose' || type == "wolf_win" || type == "over"
       ion.sound.play 'over_bgm'
       setTimeout ->
-        ion.sound.play 'over_wolf_lose'
-      , 1000
-    else if type == 'wolf_win'
-      ion.sound.play 'over_bgm'
-      setTimeout ->
-        ion.sound.play 'over_wolf_win'
-      , 1000
-    else if type == 'over'
-      ion.sound.play 'over_bgm'
-      setTimeout ->
-        ion.sound.play 'over_voice'
+        ion.sound.play "over_#{type}"
       , 1000
     else
       res = type.match /(.+)_(.+)/
