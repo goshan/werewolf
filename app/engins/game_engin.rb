@@ -87,7 +87,6 @@ class GameEngin
     new_history = History.new status.round+1
     new_history.save!
 
-    status.next!
     :success
   end
 
@@ -119,7 +118,6 @@ class GameEngin
 
     player = Player.find_by_user user
     res = player.role.use_skill pos
-    Status.find_by_key.next! if res == :success
 
     res
   end

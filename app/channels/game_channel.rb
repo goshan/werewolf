@@ -1,23 +1,4 @@
 class GameChannel < ApplicationCable::Channel
-  VOICE_LEN = {  # sec
-    :night => 12.5,  # 12.069
-    :augur_start => 8,  # 6.766 + 1
-    :augur_end => 6.5,  # 2.142 + 4
-    :wolf_start => 6,  # 4.650 + 1
-    :wolf_end => 7.5,  # 2.168 + 5
-    :long_wolf_start => 7.5,  # 6.348 + 1
-    :long_wolf_end => 6.5,  # 2.090 + 4
-    :witch_start => 7.5,  # 6.296 + 1
-    :witch_end => 6,  # 1.881 + 4
-    :magician_start => 8.5,  # 7.027 + 1
-    :magician_end => 6.5,  # 2.090 + 4
-    :seer_start => 6,  # 4.833 + 1
-    :seer_end => 6.5,  # 2.221 + 4
-    :savior_start => 6,  # 4.807 + 1
-    :savior_end => 6.5,  # 2.325 + 4
-    :day => 12  # 11.834
-  }
-
   RESPONSE = {
     :failed_not_turn => "当前回合无法操作",
     :failed_seat_not_available => "该位置已被占据",
@@ -99,8 +80,6 @@ class GameChannel < ApplicationCable::Channel
     return if catch_exceptions res
 
     play_voice "night_start"
-    sleep VOICE_LEN[:night]
-    update_status_and_play_voice
   end
 
   def skill_active
@@ -117,10 +96,20 @@ class GameChannel < ApplicationCable::Channel
 
     if res == :success
       play_voice "#{old_status.turn}_end"
-      sleep VOICE_LEN["#{old_status.turn}_end".to_sym]
-      update_status_and_play_voice
     else
       send_to current_user, res
+    end
+  end
+
+  def next_turn
+    Status.find_by_key.next!
+    status = Status.find_by_key
+    play_voice "#{status.turn}_start"
+    update :status
+
+    if @gm.skip_turn?
+      sleep Random.new(Time.now.to_i).rand(12..15)
+      play_voice "#{status.turn}_end"
     end
   end
 
@@ -174,6 +163,10 @@ class GameChannel < ApplicationCable::Channel
   end
 
   private
+
+  # update status or players to one user or alls
+  # data => :status, :players, :status_and_players
+  # user => broadcast to all when user is nil
   def update(data=:status_and_players, user=nil)
     msg = {:action => "update"}
 
@@ -191,27 +184,14 @@ class GameChannel < ApplicationCable::Channel
     end
   end
 
+  # let master user play audio
   def play_voice(type)
     user = Player.find_lord_user
     send_to user, :action => 'play', :audio => type if user
   end
 
-  def update_status_and_play_voice
-    update :status
-
-    status = Status.find_by_key
-    play_voice "#{status.turn}_start"
-
-    if @gm.skip_turn?
-      sleep VOICE_LEN["#{status.turn}_start".to_sym]
-      sleep Random.new(Time.now.to_i).rand(3..6)
-      play_voice "#{status.turn}_end"
-      sleep VOICE_LEN["#{status.turn}_end".to_sym]
-      status.next!
-      update_status_and_play_voice
-    end
-  end
-
+  # send game over audio and update player history with res
+  # res => :wolf_win, :wolf_lose
   def game_over(res)
     if res == :wolf_win
       play_voice "wolf_win"
@@ -233,6 +213,9 @@ class GameChannel < ApplicationCable::Channel
     res
   end
 
+  # send failed message to requesting user if res is starting with :failed_xxx
+  # return: true if res is :failed_xxx
+  #         false if res is not
   def catch_exceptions(res)
     if res.class == Symbol && res.to_s.start_with?('failed') && RESPONSE.keys.include?(res)
       send_to current_user, :action => 'alert', :msg => RESPONSE[res]

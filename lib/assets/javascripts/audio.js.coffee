@@ -50,28 +50,37 @@ class @Wolf.Audio
 
       ended_callback: (obj) ->
         res = obj.name.match /(.+)_end_voice/
-        if res && res[0] == obj.name
+        if obj.name == "night_bgm" || (res && res[0] == obj.name)
           setTimeout ->
-            ion.sound.stop "#{res[1]}_bgm"
+            App.game.do 'next_turn'
+            ion.sound.stop "#{res[1]}_bgm" if res && res[1]
           , 1000
     }
 
   play_audio: (type) ->
     if type == 'wolf_lose' || type == "wolf_win" || type == "over"
-      ion.sound.play 'over_bgm'
-      setTimeout ->
-        ion.sound.play "over_#{type}"
-      , 1000
+      bgm = "over_bgm"
+      voice = "over_#{type}"
     else
       res = type.match /(.+)_(.+)/
       if res && res[0] == type
         if res[2] == "start"
-          ion.sound.play "#{res[1]}_bgm"
-          setTimeout ->
-            ion.sound.play "#{res[0]}_voice"
-          , 1000
+          bgm = "#{res[1]}_bgm"
+          voice = "#{res[0]}_voice"
         else if res[2] == "end"
-          setTimeout ->
-            ion.sound.play "#{res[0]}_voice"
-          , 4000
+          voice = "#{res[0]}_voice"
  
+    if bgm && voice
+      # start audio: new bgm and new voice
+      # voice after bgm: 1s
+      ion.sound.play bgm
+      setTimeout ->
+        ion.sound.play voice
+      , 1000
+    else if voice
+      # end audio: new voice with current bgm
+      # voice delay: 4s
+      setTimeout ->
+        ion.sound.play voice
+      , 4000
+
