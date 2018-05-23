@@ -1,0 +1,2 @@
+module WxesHelper
+end

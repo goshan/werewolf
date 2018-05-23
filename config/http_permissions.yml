@@ -11,7 +11,7 @@ pages:
   logout:
     gamer: pass
     unsigned: redirect_to->login_path
-wxs:
+wxes:
   default:
     gamer: pass
     unsigned: pass

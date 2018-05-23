@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class WxsControllerTest < ActionDispatch::IntegrationTest
+class WxesControllerTest < ActionDispatch::IntegrationTest
   # test "the truth" do
   #   assert true
   # end
