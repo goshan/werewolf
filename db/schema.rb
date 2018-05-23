@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180417094327) do
+ActiveRecord::Schema.define(version: 20180523085934) do
 
   create_table "battle_results", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "user_id",                    null: false
@@ -38,9 +38,12 @@ ActiveRecord::Schema.define(version: 20180417094327) do
     t.string   "name",                             null: false
     t.integer  "role",       limit: 1, default: 0, null: false
     t.string   "alias"
+    t.integer  "login_type", limit: 1, default: 0, null: false
+    t.string   "wx_openid"
     t.datetime "created_at",                       null: false
     t.datetime "updated_at",                       null: false
-    t.index ["name"], name: "index_users_on_name", unique: true, using: :btree
+    t.index ["login_type", "name"], name: "index_users_on_login_type_and_name", unique: true, using: :btree
+    t.index ["login_type", "wx_openid"], name: "index_users_on_login_type_and_wx_openid", unique: true, using: :btree
   end
 
 end

@@ -6,4 +6,9 @@ class User < ApplicationRecord
     :lord => 1
   }
 
+  enum :login_type => {
+    :web => 0,
+    :wx => 1
+  }
+
 end

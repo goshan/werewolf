@@ -19,12 +19,12 @@ class PagesController < ApplicationController
       name = params[:name]
       role = :gamer
     end
-    user = User.find_by_name name
+    user = User.find_by_login_type_and_name :web, name
     if user
       user.role = role
       user.save!
     else
-      user = User.create! :name => name, :role => role
+      user = User.create! :name => name, :role => role, :login_type => :web
     end
     sign_in user
     redirect_to root_path

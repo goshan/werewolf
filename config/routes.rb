@@ -6,4 +6,9 @@ Rails.application.routes.draw do
   post 'signin', :to => "pages#signin", :as => :signin
   post 'logout', :to => "pages#logout", :as => :logout
   put 'setting', :to => "pages#setting", :as => :setting
+
+  resource :wx do
+    get 'login'
+    post 'info'
+  end
 end
