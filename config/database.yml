@@ -8,12 +8,12 @@ default: &default
   adapter: mysql2
   encoding: utf8
   pool: 5
-  username: <%= ENV['DB_USER']%>
-  password: <%= ENV['DB_PASS']%>
-  host: <%= ENV['DB_HOST']%>
 
 development:
   <<: *default
+  username: root
+  password: ''
+  host: localhost
   database: wolf_dev
 
 # Warning: The database defined as "test" will be erased and
@@ -25,4 +25,7 @@ test:
 
 production:
   <<: *default
+  username: <%= ENV['DB_USER']%>
+  password: <%= ENV['DB_PASS']%>
+  host: <%= ENV['DB_HOST']%>
   database: wolf

@@ -1,5 +1,5 @@
 class Player < CacheRecord
-  attr_accessor :pos, :name, :role, :status
+  attr_accessor :pos, :user_id, :role, :status, :name, :image
 
   def initialize(pos, status)
     self.pos = pos
@@ -13,21 +13,32 @@ class Player < CacheRecord
   def to_cache
     {
       :pos => self.pos,
-      :name => self.name,
+      :user_id => self.user_id,
       :role => self.role ? self.role.name : nil,
       :status => self.status
     }
   end
 
   def self.from_cache(obj)
+    user = User.find_by_id obj['user_id']
+
     ins = self.new obj['pos'], obj['status'] ? obj['status'].to_sym : nil
-    ins.name = obj['name']
+    ins.user_id = obj['user_id']
     ins.role = Role.find_by_role obj['role']
+    ins.name = user.name if user
+    ins.image = user.image if user
     ins
   end
 
   def user
-    User.find_by_name self.name
+    User.find_by_id self.user_id
+  end
+
+  def assign!(user)
+    self.user_id = user ? user.id : nil
+    self.name = user ? user.name : nil
+    self.image = user ? user.image : nil
+    self.save!
   end
 
   def die!
@@ -40,7 +51,7 @@ class Player < CacheRecord
   end
 
   def self.find_by_user(user)
-    self.find_all.select{|p| p.name == user.name}.first
+    self.find_all.select{|p| p.user_id == user.id}.first
   end
 
   def self.find_by_role(role)
@@ -73,7 +84,7 @@ class Player < CacheRecord
   def self.to_msg
     players_msg = {}
     self.find_all.each do |player|
-      players_msg[player.pos] = {:name => player.name, :status => player.status}
+      players_msg[player.pos] = {:name => player.name, :status => player.status, :image => player.image}
     end
     players_msg
   end

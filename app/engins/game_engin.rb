@@ -11,16 +11,14 @@ class GameEngin
     return :failed_not_turn unless Status.find_by_key.init?
 
     player = Player.find_by_key pos
-    return :failed_seat_not_available if player.name
+    return :failed_seat_not_available if player.user_id
 
     old_player = Player.find_by_user user
     if old_player
-      old_player.name = nil
-      old_player.save!
+      old_player.assign! nil
     end
 
-    player.name = user.name
-    player.save!
+    player.assign! user
     :success
   end
 

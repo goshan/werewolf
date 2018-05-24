@@ -71,6 +71,8 @@ class PagesController < ApplicationController
     setting.save!
 
     GameEngin.new.reset
+    msg = {:action => "update", :status => Status.to_msg, :players => Player.to_msg}
+    ActionCable.server.broadcast "game", msg
     redirect_to root_path
   end
 end
