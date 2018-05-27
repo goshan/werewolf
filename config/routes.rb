@@ -10,5 +10,8 @@ Rails.application.routes.draw do
   resource :wx do
     get 'login'
     post 'info'
+    get 'rule'
+    get 'setting'
+    get 'update_setting'
   end
 end

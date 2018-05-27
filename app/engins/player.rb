@@ -26,7 +26,7 @@ class Player < CacheRecord
     ins.user_id = obj['user_id']
     ins.role = Role.find_by_role obj['role']
     ins.name = user.name if user
-    ins.image = user.image if user
+    ins.image = user.image_ext if user
     ins
   end
 

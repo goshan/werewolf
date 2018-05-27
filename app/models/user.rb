@@ -11,9 +11,9 @@ class User < ApplicationRecord
     :wx => 1
   }
 
-  DEFAULT_IMAGE = "/img/default_avatar.png"
+  DEFAULT_IMAGE = "default_avatar.png"
 
-  def image
-    @image || DEFAULT_IMAGE
+  def image_ext
+    self.image || DEFAULT_IMAGE
   end
 end
