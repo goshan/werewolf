@@ -1,7 +1,7 @@
 class WxesController < ApplicationController
   include PagesHelper
 
-  protect_from_forgery :except => [:info]
+  protect_from_forgery :except => [:info, :update_setting]
 
   before_action :auth_with_token, :except => [:login]
 
@@ -53,26 +53,11 @@ class WxesController < ApplicationController
   def update_setting
     return render :json => {:msg => "User has no permission"} unless @current_user && @current_user.lord?
 
-    if params[:must_kill] && params[:must_kill] != 'nil' && params[params[:must_kill].to_sym].to_i != 1
+    unless !params[:must_kill] || params[:gods].include?(params[:must_kill])
       return render :json => {:msg => "not selected #{params[:must_kill]}"}
     end
 
-    player_cnt = 0
-    god_roles = []
-    Setting::GOD_ROLES.each do |r|
-      if params[r] == '1'
-        god_roles.push r 
-        player_cnt += 1
-      end
-    end
-    wolf_roles = []
-    Setting::WOLF_ROLES.each do |r|
-      if params[r] == '1'
-        wolf_roles.push r 
-        player_cnt += 1
-      end
-    end
-    player_cnt += params[:villager].to_i + params[:normal_wolf].to_i
+    player_cnt = params[:gods].count + params[:wolves].count + params[:villager].to_i + params[:normal_wolf].to_i
 
     setting = Setting.new({
       :player_cnt => player_cnt,
@@ -81,9 +66,9 @@ class WxesController < ApplicationController
       :witch_self_save => params[:witch_self_save],
       :win_cond => params[:win_cond]
     })
-    setting.set_god_roles_list god_roles
-    setting.set_wolf_roles_list wolf_roles
-    setting.must_kill = params[:must_kill] if params[:must_kill] && params[:must_kill] != 'nil'
+    setting.set_god_roles_list params[:gods]
+    setting.set_wolf_roles_list params[:wolves]
+    setting.must_kill = params[:must_kill] if params[:must_kill]
     setting.save!
 
     GameEngin.new.reset

@@ -12,6 +12,6 @@ Rails.application.routes.draw do
     post 'info'
     get 'rule'
     get 'setting'
-    get 'update_setting'
+    post 'update_setting'
   end
 end
