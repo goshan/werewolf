@@ -1,7 +1,7 @@
 class WxesController < ApplicationController
   include PagesHelper
 
-  protect_from_forgery :except => [:info, :update_setting]
+  protect_from_forgery :except => [:login, :update_setting]
 
   before_action :auth_with_token, :except => [:login]
 
@@ -10,7 +10,11 @@ class WxesController < ApplicationController
     json = JSON.parse Net::HTTP.get(uri)
     if json['openid']
       user = User.find_by_login_type_and_wx_openid :wx, json['openid']
-      user = User.create! :name => json['openid'], :role => :gamer, :login_type => :wx, :wx_openid => json['openid'] unless user
+      if user
+        user.update! :name => params[:name], :image => params[:image]
+      else
+        user = User.create! :name => params[:name], :image => params[:image], :role => :gamer, :login_type => :wx, :wx_openid => json['openid']
+      end
 
       # make token(cookie f)
       timestamp = Time.now.to_i
@@ -20,15 +24,6 @@ class WxesController < ApplicationController
     else
       render :json => json
     end
-  end
-
-  def info
-    msg = "User not found"
-    if @current_user
-      @current_user.update! :name => params[:name], :image => params[:image]
-      msg = "OK"
-    end
-    render :json => {:msg => msg}
   end
 
   def setting

@@ -8,8 +8,7 @@ Rails.application.routes.draw do
   put 'setting', :to => "pages#setting", :as => :setting
 
   resource :wx do
-    get 'login'
-    post 'info'
+    post 'login'
     get 'rule'
     get 'setting'
     post 'update_setting'
