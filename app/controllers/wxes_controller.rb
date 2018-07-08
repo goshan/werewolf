@@ -10,6 +10,7 @@ class WxesController < ApplicationController
     json = JSON.parse Net::HTTP.get(uri)
     if json['openid']
       user = User.find_by_login_type_and_wx_openid :wx, json['openid']
+      params[:name] = params[:name].each_char.select{|c| c.bytes.count < 4}.join
       if user
         user.update! :name => params[:name], :image => params[:image]
       else
