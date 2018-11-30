@@ -1,5 +1,5 @@
 class Setting < ApplicationRecord
-  GOD_ROLES = [:seer, :witch, :hunter, :savior, :idiot, :magician, :augur]
+  GOD_ROLES = [:seer, :witch, :hunter, :savior, :idiot, :magician, :augur, :knight]
   WOLF_ROLES = [:chief_wolf, :lord_wolf, :long_wolf, :ghost_rider]
 
   enum :witch_self_save => {

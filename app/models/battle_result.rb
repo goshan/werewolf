@@ -14,6 +14,7 @@ class BattleResult < ApplicationRecord
     :lord_wolf => 9,
     :long_wolf => 10,
     :ghost_rider => 11,
-    :normal_wolf => 12
+    :normal_wolf => 12,
+    :knight => 13
   }
 end

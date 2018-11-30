@@ -18,6 +18,7 @@ class @Wolf.GameEngin
       idiot: "白痴",
       magician: "魔术师",
       augur: "占卜师",
+      knight: "骑士",
       chief_wolf: "白狼王",
       lord_wolf: "狼王",
       long_wolf: "大灰狼",
