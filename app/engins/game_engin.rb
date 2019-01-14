@@ -48,7 +48,7 @@ class GameEngin
     players = Player.find_all
     (1..1000).each do |i|
       role.shuffle!(:random => Random.new(Time.now.to_i))
-      break if Player.roles_diff_rate(players, role) >= 0.8
+      break if Player.roles_diff_rate(players, role) >= 0.6
     end
 
     # cache
