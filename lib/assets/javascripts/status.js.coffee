@@ -21,4 +21,4 @@ class @Wolf.Status
 
   display: ->
     $('.status-round').text(@round)
-    $('.status-turn').text(@turn_trans[@turn])
+    $('.status-turn').text(Wolf.Trans.Turns[@turn])

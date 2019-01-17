@@ -16,13 +16,13 @@ $(document).on 'turbolinks:load', (e) ->
           console.log "received data:"
           console.log data
           if data.action == 'alert'
-            BootstrapDialog.alert data.msg
+            Wolf.engin.panel.alert data
 
           else if data.action == 'play'
             audio.play_audio data.audio
 
           else if data.action == 'show_role'
-            Wolf.engin.display_role data
+            Wolf.engin.panel.display_role data
 
           else if data.action == 'panel'
             Wolf.engin.panel.show data

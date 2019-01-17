@@ -18,6 +18,7 @@
 //= require ion.sound.min
 //
 //= require audio
+//= require trans
 //= require status
 //= require panel
 //= require player
