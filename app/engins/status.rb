@@ -54,7 +54,7 @@ class Status < CacheRecord
 
     if self.check_role? || self.turn == :day
       self.round += 1
-      self.turn = self.process.first
+      self.turn = self.process.first || :day
     else
       current_turn_index = self.process.index self.turn
       if current_turn_index == self.process.count-1
