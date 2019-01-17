@@ -10,7 +10,7 @@ class @Wolf.Panel
 
     @func = if data.skill == 'throw' then 'throw' else 'skill'
     @select = data.select
-    $('.tips').text(@_insert_params(Wolf.Trans.Panels.panel_tip_trans[data.skill], data))
+    $('.tips').text(@_insert_params(Wolf.Trans.Panel.panel_tip_trans[data.skill], data))
     if typeof(data.only) != 'undefined' && data.only != null
       $('.all_players .player .js-seat').addClass("js-disable")
       for p in data.only
@@ -47,6 +47,11 @@ class @Wolf.Panel
     App.game.do @func, target
     @_reset()
 
+  alert: (data) ->
+    msg = Wolf.Trans.Panel.alert_message_trans[data.msg]
+    msg = data.msg unless msg
+    BootstrapDialog.alert msg
+
   dialog: (data) ->
     # has been showing sth
     return unless @func == 'none'
@@ -54,8 +59,8 @@ class @Wolf.Panel
     buttons = []
     for b in data.buttons
       buttons.push {
-        label: @_insert_params(Wolf.Trans.Panels.dialog_button_trans[b.skill][0], b),
-        cssClass: Wolf.Trans.Panels.dialog_button_trans[b.skill][1],
+        label: @_insert_params(Wolf.Trans.Panel.dialog_button_trans[b.skill][0], b),
+        cssClass: Wolf.Trans.Panel.dialog_button_trans[b.skill][1],
         data: b
         action: (dialog, e) =>
           d = e.data.button.data
@@ -67,7 +72,7 @@ class @Wolf.Panel
       }
     BootstrapDialog.show {
       closable: false,
-      message: @_insert_params(Wolf.Trans.Panels.dialog_message_trans[data.skill], data),
+      message: @_insert_params(Wolf.Trans.Panel.dialog_message_trans[data.skill], data),
       buttons: buttons
     }
 

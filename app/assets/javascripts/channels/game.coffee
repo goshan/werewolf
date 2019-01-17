@@ -16,7 +16,7 @@ $(document).on 'turbolinks:load', (e) ->
           console.log "received data:"
           console.log data
           if data.action == 'alert'
-            BootstrapDialog.alert data.msg
+            Wolf.engin.panel.alert data
 
           else if data.action == 'play'
             audio.play_audio data.audio
