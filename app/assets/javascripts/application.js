@@ -21,6 +21,7 @@
 //= require trans
 //= require status
 //= require panel
+//= require modal
 //= require player
 //= require game_engin
 //

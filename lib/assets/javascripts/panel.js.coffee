@@ -10,7 +10,7 @@ class @Wolf.Panel
 
     @func = if data.skill == 'throw' then 'throw' else 'skill'
     @select = data.select
-    $('.tips').text(@_insert_params(Wolf.Trans.Panel.panel_tip_trans[data.skill], data))
+    $('.tips').text(Wolf.Trans.insert_params(Wolf.Trans.Panel.panel_tip_trans[data.skill], data))
     if typeof(data.only) != 'undefined' && data.only != null
       $('.all_players .player .js-seat').addClass("js-disable")
       for p in data.only
@@ -47,41 +47,6 @@ class @Wolf.Panel
     App.game.do @func, target
     @_reset()
 
-  alert: (data) ->
-    msg = Wolf.Trans.Panel.alert_message_trans[data.msg]
-    msg = data.msg unless msg
-    BootstrapDialog.alert msg
-
-  dialog: (data) ->
-    # has been showing sth
-    return unless @func == 'none'
-
-    buttons = []
-    for b in data.buttons
-      buttons.push {
-        label: @_insert_params(Wolf.Trans.Panel.dialog_button_trans[b.skill][0], b),
-        cssClass: Wolf.Trans.Panel.dialog_button_trans[b.skill][1],
-        data: b
-        action: (dialog, e) =>
-          d = e.data.button.data
-          if d.action == 'skill'
-            App.game.do 'skill', d.value
-          else if d.action == 'panel'
-            @show d
-          dialog.close()
-      }
-    BootstrapDialog.show {
-      closable: false,
-      message: @_insert_params(Wolf.Trans.Panel.dialog_message_trans[data.skill], data),
-      buttons: buttons
-    }
-
-  display_role: (data)->
-    $('#check-role-dialog .role').text(Wolf.Trans.Roles[data.role])
-    $('#check-role-dialog .role-card').addClass('hidden')
-    $("#check-role-dialog .role-#{data.role}").removeClass('hidden')
-    $('#check-role-dialog').modal 'show'
-
   _reset: ->
     @func = 'none'
     @select = null
@@ -90,13 +55,4 @@ class @Wolf.Panel
     $(".all_players .player .js-seat").removeClass (i, cla) ->
       return (cla.match(/(^|\s)skill-\S+/g) || []).join(' ')
     $('.panel-finish a').addClass('hidden')
-
-  _insert_params: (template, params) ->
-    res = template.replace /\{([^\{\}\?:,]+)\}/g, (x, y) ->
-      return if params[y] then params[y] else '??'
-    res = res.replace /\{([^\{\}\?:,]+)\?(([^\{\}\?:,]+:[^\{\}\?:,]+,?)+)\}/g, (x, y, z) ->
-      c_m = z.match /([^\{\}\?:,]+):([^\{\}\?:,]+)/g
-      for r in c_m
-        [k, v] = r.split ':'
-        return v if params[y] == k
 

@@ -16,19 +16,19 @@ $(document).on 'turbolinks:load', (e) ->
           console.log "received data:"
           console.log data
           if data.action == 'alert'
-            Wolf.engin.panel.alert data
+            Wolf.engin.modal.alert data
 
           else if data.action == 'play'
             audio.play_audio data.audio
 
           else if data.action == 'show_role'
-            Wolf.engin.panel.display_role data
+            Wolf.engin.modal.display_role data
 
           else if data.action == 'panel'
             Wolf.engin.panel.show data
 
           else if data.action == 'dialog'
-            Wolf.engin.panel.dialog data
+            Wolf.engin.modal.dialog data
 
           else if data.action == 'update'
             if typeof(data.status) != 'undefined' && data.status != null

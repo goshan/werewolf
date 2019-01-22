@@ -88,3 +88,12 @@
   }
 }
 
+@Wolf.Trans.insert_params = (template, params) ->
+  res = template.replace /\{([^\{\}\?:,]+)\}/g, (x, y) ->
+    return if params[y] then params[y] else '??'
+  res = res.replace /\{([^\{\}\?:,]+)\?(([^\{\}\?:,]+:[^\{\}\?:,]+,?)+)\}/g, (x, y, z) ->
+    c_m = z.match /([^\{\}\?:,]+):([^\{\}\?:,]+)/g
+    for r in c_m
+      [k, v] = r.split ':'
+      return v if params[y] == k
+
