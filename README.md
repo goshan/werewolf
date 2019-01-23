@@ -34,17 +34,11 @@ $ cd {project_dir}
 $ bundle install --path=vendor/bundle
 ```
 
-* Database and cache configure
+- Database
 
-```
-$ echo "export DB_USER='your database user'" >> .env_config
-$ echo "export DB_PASS='your database password'" >> .env_config
-$ echo "export DB_HOST='your database endpoint'" >> .env_config
-$ echo "export CACHE_HOST='your redis endpoint'" >> .env_config
-$ source .env_config
-```
+setup your database config in config/database.yml
 
-**you can also add these variables to sth. like `.bash_profile`**
+default is `mysql -hlocalhost:3306 -uroot` (no pass)
 
 * Database migration
 
