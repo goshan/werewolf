@@ -64,6 +64,9 @@ group :development do
 
   # RailsPanel Chrome extension
   gem 'meta_request'
+
+  # Code style check
+  gem 'rubocop'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
