@@ -14,7 +14,7 @@ class Savior < Role
   end
 
   def prepare_skill
-    {:action => "panel", :skill => "guard", :select => 'single'}
+    { action: 'panel', skill: 'guard', select: 'single' }
   end
 
   def use_skill(pos)

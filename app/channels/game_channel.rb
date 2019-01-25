@@ -1,8 +1,6 @@
 class GameChannel < ApplicationCable::Channel
-
-
   def subscribed
-    logger.info signed_in? ? "Auth with user #{current_user.name}(#{current_user.id})" : "No authed user"
+    logger.info signed_in? ? "Auth with user #{current_user.name}(#{current_user.id})" : 'No authed user'
     will_broadcast_or_send_to current_user
 
     sleep 1
@@ -16,7 +14,7 @@ class GameChannel < ApplicationCable::Channel
   end
 
   def reset
-    return send_to current_user, :action => 'alert', :msg => "不合法操作" unless current_user.lord?
+    return send_to current_user, action: 'alert', msg: '不合法操作' unless current_user.lord?
 
     @gm.reset
     update :status_and_players
@@ -30,29 +28,29 @@ class GameChannel < ApplicationCable::Channel
   end
 
   def deal
-    return send_to current_user, :action => 'alert', :msg => "不合法操作" unless current_user.lord?
+    return send_to current_user, action: 'alert', msg: '不合法操作' unless current_user.lord?
 
     res = @gm.deal
     return if catch_exceptions res
 
     update :status_and_players
-    broadcast :action => "alert", :msg => "已重新发牌，请查看身份"
+    broadcast action: 'alert', msg: '已重新发牌，请查看身份'
   end
 
   def check_role
     res = @gm.check_role current_user
     return if catch_exceptions res
 
-    send_to current_user, :action => 'show_role', :role => res
+    send_to current_user, action: 'show_role', role: res
   end
 
   def start
-    return send_to current_user, :action => 'alert', :msg => "不合法操作" unless current_user.lord?
+    return send_to current_user, action: 'alert', msg: '不合法操作' unless current_user.lord?
 
     res = @gm.start
     return if catch_exceptions res
 
-    play_voice "night_start"
+    play_voice 'night_start'
   end
 
   def skill_active
@@ -87,8 +85,8 @@ class GameChannel < ApplicationCable::Channel
   end
 
   def night_info
-    return send_to current_user, :action => 'alert', :msg => "不合法操作" unless current_user.lord?
-    return send_to current_user, :action => 'alert', :msg => "白天以外无法获取信息" unless Status.find_by_key.turn == :day
+    return send_to current_user, action: 'alert', msg: '不合法操作' unless current_user.lord?
+    return send_to current_user, action: 'alert', msg: '白天以外无法获取信息' unless Status.find_by_key.turn == :day
 
     dead_info = History.find_by_key(Status.find_by_key.round).dead_in_night
     dead_info.each do |d|
@@ -98,18 +96,18 @@ class GameChannel < ApplicationCable::Channel
     update :players
 
     if dead_info.count == 0
-      send_to current_user, :action => 'alert', :msg => "昨夜平安夜"
+      send_to current_user, action: 'alert', msg: '昨夜平安夜'
     elsif dead_info.count == 2
-      send_to current_user, :action => 'alert', :msg => "昨夜双死，死亡不分先后，#{dead_info.first}和#{dead_info.last}号玩家死亡"
+      send_to current_user, action: 'alert', msg: "昨夜双死，死亡不分先后，#{dead_info.first}和#{dead_info.last}号玩家死亡"
     else
-      send_to current_user, :action => 'alert', :msg => "昨夜#{dead_info.join(',')}号玩家死亡"
+      send_to current_user, action: 'alert', msg: "昨夜#{dead_info.join(',')}号玩家死亡"
     end
     res = @gm.check_over
     game_over res
   end
 
   def throw(data)
-    return send_to current_user, :action => 'alert', :msg => "不合法操作" unless current_user.lord?
+    return send_to current_user, action: 'alert', msg: '不合法操作' unless current_user.lord?
 
     res = @gm.throw data['pos']
     return if catch_exceptions res
@@ -124,14 +122,14 @@ class GameChannel < ApplicationCable::Channel
   end
 
   def stop_game(data)
-    return send_to current_user, :action => 'alert', :msg => "不合法操作" unless current_user.lord?
+    return send_to current_user, action: 'alert', msg: '不合法操作' unless current_user.lord?
 
     if data['pos'] == 'wolf'
       return game_over :wolf_win
     elsif data['pos'] == 'villager'
       return game_over :wolf_lose
     else
-      return send_to current_user, :action => 'alert', :msg => "结束游戏失败"
+      return send_to current_user, action: 'alert', msg: '结束游戏失败'
     end
   end
 
@@ -140,15 +138,11 @@ class GameChannel < ApplicationCable::Channel
   # update status or players to one user or alls
   # data => :status, :players, :status_and_players
   # user => broadcast to all when user is nil
-  def update(data=:status_and_players, user=nil)
-    msg = {:action => "update"}
+  def update(data = :status_and_players, user = nil)
+    msg = { action: 'update' }
 
-    if data == :status || data == :status_and_players
-      msg.merge!({:status => Status.to_msg})
-    end
-    if data == :players || data == :status_and_players
-      msg.merge!({:players => Player.to_msg})
-    end
+    msg[:status] = Status.to_msg if %i[status status_and_players].include? data
+    msg[:players] = Player.to_msg if %i[players status_and_players].include? data
 
     if user
       send_to user, msg
@@ -160,29 +154,29 @@ class GameChannel < ApplicationCable::Channel
   # let master user play audio
   def play_voice(type)
     user = Player.find_lord_user
-    send_to user, :action => 'play', :audio => type if user
+    send_to user, action: 'play', audio: type if user
   end
 
   # send game over audio and update player history with res
   # res => :wolf_win, :wolf_lose
   def game_over(res)
     if res == :wolf_win
-      play_voice "wolf_win"
-      broadcast :action => 'alert', :msg => "游戏结束，狼人胜利"
+      play_voice 'wolf_win'
+      broadcast action: 'alert', msg: '游戏结束，狼人胜利'
       Player.find_all.each do |p|
         r = p.role
-        p.user.battle_results.create :role => r.name, :win => (r.side == :wolf)
+        p.user.battle_results.create role: r.name, win: (r.side == :wolf)
       end
     elsif res == :wolf_lose
-      play_voice "wolf_lose"
-      broadcast :action => 'alert', :msg => "游戏结束，好人胜利"
+      play_voice 'wolf_lose'
+      broadcast action: 'alert', msg: '游戏结束，好人胜利'
       Player.find_all.each do |p|
         r = p.role
-        p.user.battle_results.create :role => r.name, :win => (p.role.side == :god || p.role.side == :villager)
+        p.user.battle_results.create role: r.name, win: (p.role.side == :god || p.role.side == :villager)
       end
-    else
-      # not over, continue
     end
+    # else
+    # not over, continue
     res
   end
 
@@ -191,7 +185,7 @@ class GameChannel < ApplicationCable::Channel
   #         false if res is not
   def catch_exceptions(res)
     if res.to_s.start_with?('failed')
-      send_to current_user, :action => 'alert', :msg => res
+      send_to current_user, action: 'alert', msg: res
       return true
     end
     false

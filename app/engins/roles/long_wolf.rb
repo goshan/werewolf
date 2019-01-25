@@ -24,19 +24,18 @@ class LongWolf < WolfBase
 
   def prepare_skill
     status = Status.find_by_key
-    history = History.find_by_key status.round
     buttons = []
-    buttons.push({:action => 'skill', :skill => 'kill_more', :value => 0}) if status.round > 1 && !self.killed
-    buttons.push({:action => 'skill', :skill => 'rest', :value => -1}) unless self.killing
+    buttons.push(action: 'skill', skill: 'kill_more', value: 0) if status.round > 1 && !self.killed
+    buttons.push(action: 'skill', skill: 'rest', value: -1) unless self.killing
 
     {
-      :action => "dialog",
-      :skill => "kill_more",
-      :buttons => buttons
+      action: 'dialog',
+      skill: 'kill_more',
+      buttons: buttons
     }
   end
 
-  # pos: 
+  # pos:
   # nil --> error: 选择落刀则不能空刀
   # -1 --> 不刀
   # 0 --> 落刀
@@ -63,7 +62,7 @@ class LongWolf < WolfBase
 
       self.killing = true
       self.save!
-      return {:action => 'panel', :skill => 'kill_more', :select => 'single', :only => history.augur_lock}
+      return { action: 'panel', skill: 'kill_more', select: 'single', only: history.augur_lock }
     end
 
     player = Player.find_by_key pos

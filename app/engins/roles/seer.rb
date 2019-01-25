@@ -1,5 +1,4 @@
 class Seer < Role
-
   def need_save?
     false
   end
@@ -13,10 +12,10 @@ class Seer < Role
   end
 
   def prepare_skill
-    {:action => "panel", :skill => "confirm", :select => 'single'}
+    { action: 'panel', skill: 'confirm', select: 'single' }
   end
 
-  # pos: 
+  # pos:
   # nil --> 完成验人
   # 1~ --> 验人
   def use_skill(pos)
@@ -36,11 +35,11 @@ class Seer < Role
     player = Player.find_by_key history.magician_exchange(pos.to_i)
 
     {
-      :action => "dialog",
-      :skill => "confirm",
-      :pos => pos,
-      :role => player.role.side == :wolf ? "evil" : "virtuous",
-      :buttons => [{:action => "skill", :skill => "confirm_finish", :pos => nil}]
+      action: 'dialog',
+      skill: 'confirm',
+      pos: pos,
+      role: player.role.side == :wolf ? 'evil' : 'virtuous',
+      buttons: [{ action: 'skill', skill: 'confirm_finish', pos: nil }]
     }
   end
 end

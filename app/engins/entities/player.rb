@@ -7,15 +7,15 @@ class Player < CacheRecord
   end
 
   def self.key_attr
-    "pos"
+    'pos'
   end
 
   def to_cache
     {
-      :pos => self.pos,
-      :user_id => self.user_id,
-      :role => self.role ? self.role.name : nil,
-      :status => self.status
+      pos: self.pos,
+      user_id: self.user_id,
+      role: self.role ? self.role.name : nil,
+      status: self.status
     }
   end
 
@@ -51,15 +51,15 @@ class Player < CacheRecord
   end
 
   def self.find_by_user(user)
-    self.find_all.select{|p| p.user_id == user.id}.first
+    self.find_all.select { |p| p.user_id == user.id }.first
   end
 
   def self.find_by_role(role)
-    self.find_all.select{|p| p.role && p.role.name == role}.first
+    self.find_all.select { |p| p.role && p.role.name == role }.first
   end
 
   def self.find_lord_user
-    p = self.find_all.select{|p| p.user.lord?}.first
+    p = self.find_all.select { |pp| pp.user.lord? }.first
     p ? p.user : nil
   end
 
@@ -71,9 +71,7 @@ class Player < CacheRecord
   end
 
   def self.clear!
-    Player.find_all.each do |p|
-      p.destroy
-    end
+    Player.find_all.each(&:destroy)
   end
 
   def self.reset!
@@ -84,7 +82,7 @@ class Player < CacheRecord
   def self.to_msg
     players_msg = {}
     self.find_all.each do |player|
-      players_msg[player.pos] = {:name => player.name, :status => player.status, :image => player.image}
+      players_msg[player.pos] = { name: player.name, status: player.status, image: player.image }
     end
     players_msg
   end
@@ -97,8 +95,8 @@ class Player < CacheRecord
     sum = 0
     players.each do |p|
       sum += 1
-      diff_cnt += 1 unless p.role && p.role.name == new_role[p.pos-1]
+      diff_cnt += 1 unless p.role && p.role.name == new_role[p.pos - 1]
     end
-    diff_cnt*1.0/sum
+    diff_cnt * 1.0 / sum
   end
 end

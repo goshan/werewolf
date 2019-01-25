@@ -21,19 +21,19 @@ class Witch < Role
   def prepare_skill
     history = History.find_by_key Status.find_by_key.round
     buttons = []
-    buttons.push({:action => 'skill', :skill => 'antidot', :value => 0}) if self.has_antidot
-    buttons.push({:action => 'panel', :skill => 'poison', :select => 'single'}) if self.has_poison
-    buttons.push({:action => 'skill', :skill => 'rest', :value => nil})
+    buttons.push(action: 'skill', skill: 'antidot', value: 0) if self.has_antidot
+    buttons.push(action: 'panel', skill: 'poison', select: 'single') if self.has_poison
+    buttons.push(action: 'skill', skill: 'rest', value: nil)
 
     {
-      :action => "dialog",
-      :skill => self.has_antidot ? ((history.wolf_kill||0)==0 ? "prescribe_none" : "prescribe") : "prescribe_unknow",
-      :killed => self.has_antidot ? history.wolf_kill : nil,
-      :buttons => buttons
+      action: 'dialog',
+      skill: self.has_antidot ? ((history.wolf_kill || 0) == 0 ? 'prescribe_none' : 'prescribe') : 'prescribe_unknow',
+      killed: self.has_antidot ? history.wolf_kill : nil,
+      buttons: buttons
     }
   end
 
-  # pos: 
+  # pos:
   # nil --> 不行动
   # 0 --> 救人
   # 1~ --> 毒人
@@ -63,7 +63,6 @@ class Witch < Role
 
       # update witch limitation
       self.has_antidot = false
-      self.save!
     else
       # check poison limitation
       return :failed_no_poison unless self.has_poison
@@ -74,8 +73,8 @@ class Witch < Role
 
       # update witch limitation
       self.has_poison = false
-      self.save!
     end
+    self.save!
 
     # update history
     history.witch_target = pos.to_i

@@ -1,5 +1,4 @@
 class Idiot < Role
-
   def need_save?
     false
   end

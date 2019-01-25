@@ -18,7 +18,7 @@ class Magician < Role
   end
 
   def prepare_skill
-    {:action => 'panel', :skill => 'exchange', :select => 'multiple'}
+    { action: 'panel', skill: 'exchange', select: 'multiple' }
   end
 
   def use_skill(pos)
@@ -44,6 +44,7 @@ class Magician < Role
     pos.each do |p|
       player = Player.find_by_key p
       return :failed_target_dead unless player.status == :alive
+
       history.magician_target << player.pos
       self.exchanged << player.pos
     end

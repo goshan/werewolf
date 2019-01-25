@@ -1,5 +1,4 @@
 class Knight < Role
-
   def need_save?
     false
   end

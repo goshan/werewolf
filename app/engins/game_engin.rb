@@ -1,5 +1,4 @@
 class GameEngin
-
   def reset
     Status.new.save!
     History.clear!
@@ -14,9 +13,7 @@ class GameEngin
     return :failed_seat_not_available if player.user_id
 
     old_player = Player.find_by_user user
-    if old_player
-      old_player.assign! nil
-    end
+    old_player.assign! nil if old_player
 
     player.assign! user
     :success
@@ -41,19 +38,19 @@ class GameEngin
     Setting::WOLF_ROLES.each do |r|
       role.push r.to_s if setting.has? r
     end
-    (1..setting.villager_cnt).each{|i| role.push 'villager'}
-    (1..setting.normal_wolf_cnt).each{|i| role.push 'normal_wolf'}
+    (1..setting.villager_cnt).each { |_i| role.push 'villager' }
+    (1..setting.normal_wolf_cnt).each { |_i| role.push 'normal_wolf' }
 
     # random deal
     players = Player.find_all
-    (1..1000).each do |i|
+    (1..1000).each do |_i|
       role.shuffle!
       break if Player.roles_diff_rate(players, role) >= 0.8
     end
 
     # cache
     players.each do |p|
-      r = Role.init_by_role role[p.pos-1]
+      r = Role.init_by_role role[p.pos - 1]
       r.save_if_need!
       p.role = r
       p.status = :alive
@@ -65,6 +62,7 @@ class GameEngin
 
   def check_role(user)
     return :failed_not_turn if Status.find_by_key.init?
+
     p = Player.find_by_user user
     return :failed_not_seat unless p
     return :failed_no_role unless p.role
@@ -82,7 +80,7 @@ class GameEngin
     end
 
     # init new round data
-    new_history = History.new status.round+1
+    new_history = History.new status.round + 1
     new_history.save!
 
     :success
@@ -90,10 +88,10 @@ class GameEngin
 
   def skip_turn?
     status = Status.find_by_key
-    return false if [:init, :check_role, :day].include? status.turn
+    return false if %i[init check_role day].include? status.turn
 
     players = Player.find_all
-    p = players.select{|p| p.role.skill_turn == status.turn && p.status == :alive}.first
+    p = players.select { |pp| pp.role.skill_turn == status.turn && pp.status == :alive }.first
     p.nil?
   end
 
@@ -145,28 +143,32 @@ class GameEngin
     setting = Setting.current
 
     # get god, villager, wolf cnt
-    cnt = {:god => 0, :villager => 0, :wolf => 0}
+    cnt = { god: 0, villager: 0, wolf: 0 }
     must_kill_alive = false
     Player.find_all.each do |p|
       next unless p.status == :alive
+
       cnt[p.role.side] += 1
       must_kill_alive = true if p.role.name == setting.must_kill
     end
 
     if setting.kill_side?
       # kill side
-      return :wolf_win if cnt[:god]*cnt[:villager] == 0 && !must_kill_alive
+      return :wolf_win if (cnt[:god] * cnt[:villager]) == 0 && !must_kill_alive
       return :wolf_lose if cnt[:wolf] == 0
+
       return :not_over
     elsif setting.kill_all?
       # kill all
-      return :wolf_win if cnt[:god]+cnt[:villager] == 0
+      return :wolf_win if cnt[:god] + cnt[:villager] == 0
       return :wolf_lose if cnt[:wolf] == 0
+
       return :not_over
     elsif setting.kill_god?
       # kill god
       return :wolf_win if cnt[:god] == 0
       return :wolf_lose if cnt[:wolf] == 0
+
       return :not_over
     end
   end

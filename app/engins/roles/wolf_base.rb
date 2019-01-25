@@ -1,5 +1,4 @@
 class WolfBase < Role
-
   def need_save?
     false
   end
@@ -18,7 +17,7 @@ class WolfBase < Role
 
   def prepare_skill
     history = History.find_by_key Status.find_by_key.round
-    {:action => "panel", :skill => "kill", :select => 'single', :only => history.augur_lock}
+    { action: 'panel', skill: 'kill', select: 'single', only: history.augur_lock }
   end
 
   def use_skill(pos)
@@ -34,7 +33,7 @@ class WolfBase < Role
       player = Player.find_by_key pos
       return :failed_target_dead unless player.status == :alive
 
-      return :failed_cannot_kill_self if ["chief_wolf", "lord_wolf", "ghost_rider"].include? player.role.name
+      return :failed_cannot_kill_self if %w[chief_wolf lord_wolf ghost_rider].include? player.role.name
 
       history.wolf_kill = player.pos
     end
