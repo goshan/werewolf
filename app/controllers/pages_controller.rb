@@ -27,6 +27,7 @@ class PagesController < ApplicationController
       user = User.create! :name => name, :role => role, :login_type => :web
     end
     sign_in user
+    Deal.new(user.id).save!
     redirect_to root_path
   end
 
