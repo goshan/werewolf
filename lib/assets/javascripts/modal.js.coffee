@@ -21,7 +21,7 @@ class @Wolf.Modal
           if d.action == 'skill'
             App.game.do 'skill', d.value
           else if d.action == 'panel'
-            @show d
+            Wolf.engin.panel.show d
           dialog.close()
       }
     BootstrapDialog.show {

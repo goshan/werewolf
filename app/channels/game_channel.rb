@@ -124,9 +124,12 @@ class GameChannel < ApplicationCable::Channel
   def stop_game(data)
     return send_to current_user, action: 'alert', msg: '不合法操作' unless current_user.lord?
 
+    status = Status.find_by_key
     if data['pos'] == 'wolf'
+      status.over! true
       return game_over :wolf_win
     elsif data['pos'] == 'villager'
+      status.over! true
       return game_over :wolf_lose
     else
       return send_to current_user, action: 'alert', msg: '结束游戏失败'
