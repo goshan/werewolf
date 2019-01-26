@@ -8,7 +8,8 @@ class GameChannel < ApplicationCable::Channel
 
     update :status_and_players, current_user
 
-    send_to current_user, action: 'panel', skill: 'vote', select: 'single' if Status.find_by_key.voting
+    player = Player.find_by_user current_user
+    send_to current_user, action: 'panel', skill: 'vote', select: 'single' if Status.find_by_key.voting && player.status == :alive
   end
 
   def unsubscribed

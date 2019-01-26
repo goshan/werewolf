@@ -6,6 +6,7 @@ class GameEngin
     History.clear!
     Role.clear!
     Player.reset!
+    Vote.clear!
 
     @@vote_info = {}
   end
@@ -32,6 +33,7 @@ class GameEngin
     Status.find_by_key.check_role!
     History.clear!
     Role.clear!
+    Vote.clear!
 
     # assign roles
     setting = Setting.current

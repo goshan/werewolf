@@ -34,6 +34,10 @@ class Vote < CacheRecord
     ins
   end
 
+  def self.clear!
+    Vote.find_all.each(&:destroy)
+  end
+
   def to_msg
     votes_by_target = {}
     self.votes_info.each do |key, value|
