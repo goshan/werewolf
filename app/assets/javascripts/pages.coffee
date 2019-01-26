@@ -47,6 +47,13 @@ $(document).on 'turbolinks:load', (e) ->
     else
       BootstrapDialog.alert "只有白天才能查看信息"
 
+  $('#js-start-vote').click (e) ->
+    e.preventDefault()
+    if Wolf.engin.status.turn == 'day'
+      App.game.do 'start_vote'
+    else
+      BootstrapDialog.alert "只有白天才能发起投票"
+
   $('#js-throw').click (e) ->
     e.preventDefault()
     if Wolf.engin.status.turn == 'day'

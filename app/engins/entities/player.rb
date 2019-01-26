@@ -63,6 +63,10 @@ class Player < CacheRecord
     p ? p.user : nil
   end
 
+  def self.find_all_alive
+    self.find_all.select { |p| p.status == :alive }
+  end
+
   def self.init!
     (1..Setting.current.player_cnt).each do |i|
       p = Player.new i, :alive

@@ -1,9 +1,13 @@
 class GameEngin
+  @@vote_info = {}
+
   def reset
     Status.new.save!
     History.clear!
     Role.clear!
     Player.reset!
+
+    @@vote_info = {}
   end
 
   def sit(user, pos)
@@ -57,6 +61,7 @@ class GameEngin
       p.save!
     end
 
+    @@vote_info = {}
     :success
   end
 
@@ -90,8 +95,8 @@ class GameEngin
     status = Status.find_by_key
     return false if %i[init check_role day].include? status.turn
 
-    players = Player.find_all
-    p = players.select { |pp| pp.role.skill_turn == status.turn && pp.status == :alive }.first
+    players = Player.find_all_alive
+    p = players.select { |pp| pp.role.skill_turn == status.turn }.first
     p.nil?
   end
 
@@ -108,14 +113,46 @@ class GameEngin
     p.role.prepare_skill
   end
 
-  def skill(user, pos)
+  def skill(user, target)
     can_use_skill = self.skill_active user
     return can_use_skill if can_use_skill.to_s.start_with?('failed')
 
     player = Player.find_by_user user
-    res = player.role.use_skill pos
+    res = player.role.use_skill target
 
     res
+  end
+
+  def start_vote
+    # vote can only be started in day
+    status = Status.find_by_key
+    return :failed_not_turn unless status.turn == :day
+
+    # set status to vote
+    @@vote_info = {}
+    #vote = Vote.new status.round
+    #vote.save!
+
+    :success
+  end
+
+  def vote(user, target)
+    # only can vote in day
+    status = Status.find_by_key
+    return :failed_not_turn unless status.turn == :day
+
+    player = Player.find_by_user user
+    #return :failed_has_voted if vote_info[player.pos]
+    @@vote_info[player.pos] = target
+
+    # check all alive player finished
+    alive_players_cnt = Player.find_all_alive.count
+    #return :need_next unless @@vote_info.cnt == alive_players_cnt
+
+    #vote = Vote.find_by_key status.round
+    #vote.details = @@vote_info
+    #vote.save!
+    #vote.to_msg
   end
 
   def throw(pos)

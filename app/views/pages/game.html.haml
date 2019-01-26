@@ -98,7 +98,9 @@
             = link_to "夜晚", "#", :class => "btn btn-default", :id => "js-start"
         .area
           = link_to "昨夜信息", "#", :class => "btn btn-default", :id => "js-night-info"
-          = link_to "玩家出局", "#", :class => "btn btn-default pull-right", :id => "js-throw"
+          .pull-right
+            = link_to "投票", "#", :class => "btn btn-default", :id => "js-start-vote"
+            = link_to "放逐", "#", :class => "btn btn-default", :id => "js-throw"
         .area
           = link_to "好人胜利", "#", :class => "btn btn-danger", :id => "js-wolf-lose"
           = link_to "狼人胜利", "#", :class => "btn btn-danger pull-right", :id => "js-wolf-win"
