@@ -1,5 +1,5 @@
 class Status < CacheRecord
-  attr_accessor :round, :turn, :process
+  attr_accessor :round, :turn, :process, :voting, :over
 
   NIGHT_PROCESS = %i[augur wolf witch long_wolf magician seer savior].freeze
 
@@ -7,6 +7,8 @@ class Status < CacheRecord
     self.round = 0
     self.turn = :init
     self.process = []
+    self.voting = false
+    self.over = true
 
     setting = Setting.current
     NIGHT_PROCESS.each do |r|
@@ -22,7 +24,9 @@ class Status < CacheRecord
     {
       round: self.round,
       turn: self.turn,
-      process: self.process
+      process: self.process,
+      voting: self.voting,
+      over: self.over
     }
   end
 
@@ -31,6 +35,8 @@ class Status < CacheRecord
     ins.round = obj['round'].to_i
     ins.turn = obj['turn'].to_sym
     ins.process = obj['process'].map(&:to_sym)
+    ins.voting = obj['voting']
+    ins.over = obj['over']
     ins
   end
 
@@ -45,6 +51,11 @@ class Status < CacheRecord
   def check_role!
     self.round = 0
     self.turn = :check_role
+    self.save!
+  end
+
+  def over!(o)
+    self.over = o
     self.save!
   end
 
