@@ -7,6 +7,8 @@ class GameChannel < ApplicationCable::Channel
     @gm = GameEngin.new
 
     update :status_and_players, current_user
+
+    send_to current_user, action: 'panel', skill: 'vote', select: 'single' if Status.find_by_key.voting
   end
 
   def unsubscribed

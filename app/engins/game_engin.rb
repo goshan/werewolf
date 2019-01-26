@@ -130,8 +130,19 @@ class GameEngin
 
     # set status to vote
     @@vote_info = {}
-    #vote = Vote.new status.round
-    #vote.save!
+
+    round = Vote.current_round
+    vote = Vote.find_by_key round
+
+    if vote
+      return :failed_voted_this_round
+    else
+      vote = Vote.new round
+    end
+    vote.save!
+
+    status.voting = true
+    status.save!
 
     :success
   end
@@ -140,19 +151,24 @@ class GameEngin
     # only can vote in day
     status = Status.find_by_key
     return :failed_not_turn unless status.turn == :day
+    return :failed_vote_not_started unless status.voting
 
     player = Player.find_by_user user
-    #return :failed_has_voted if vote_info[player.pos]
-    @@vote_info[player.pos] = target
+    return :failed_not_alive unless player.status == :alive
+    return :failed_has_voted if @@vote_info[player.pos]
 
+    @@vote_info[player.pos] = target.nil? ? nil : target.to_i
     # check all alive player finished
     alive_players_cnt = Player.find_all_alive.count
-    #return :need_next unless @@vote_info.cnt == alive_players_cnt
+    return :need_next unless @@vote_info.count == alive_players_cnt
 
-    #vote = Vote.find_by_key status.round
-    #vote.details = @@vote_info
-    #vote.save!
-    #vote.to_msg
+    status.voting = false
+    status.save!
+
+    vote = Vote.find_by_key Vote.current_round
+    vote.details = @@vote_info
+    vote.save!
+    vote.to_msg
   end
 
   def throw(pos)
