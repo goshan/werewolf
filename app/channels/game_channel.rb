@@ -133,6 +133,7 @@ class GameChannel < ApplicationCable::Channel
   end
 
   def vote_history
+    send_to current_user, action: 'alert', msg: Vote.get_all_msg
   end
 
   def throw(data)

@@ -24,6 +24,7 @@
 
       .setting.pull-right
         = link_to "查看板子", "#", :class => "btn btn-primary btn-xs", 'data-toggle' => "modal", 'data-target' => "#check-setting"
+        = link_to "投票历史", "#", :class => "btn btn-primary btn-xs", :id => "js-vote-history"
         .modal.fade{:id => "check-setting", :tabindex => "-1", :role => "dialog", 'aria-labelledby' => "playerOutSelectLabel"}
           .modal-dialog
             .modal-content
