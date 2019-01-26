@@ -1,15 +1,15 @@
 class Vote < CacheRecord
   attr_accessor :votes_info, :round
 
-  def details=(votes_info)
-    return if votes_info.nil?
-
-    tmp_info = {}
-    votes_info.each do |key, value|
-      next unless((1..Setting.current.player_cnt) === key && (value.nil? or (1..Setting.current.player_cnt) === value))
-      tmp_info[key] = value
+  def details=(user_votes)
+    self.votes_info = {}
+    if user_votes.nil? || user_votes.empty?
+      return
     end
-    self.votes_info = tmp_info
+
+    user_votes.each do |user_vote|
+      self.votes_info[user_vote.voter_pos] = user_vote.target_pos
+    end
   end
 
   def initialize(round)

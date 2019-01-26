@@ -59,7 +59,10 @@
     failed_is_killing: "已选择追刀，则必须落刀",
     failed_have_killed: "一局游戏只能追刀一次",
     failed_round_1: "第一晚不能追刀",
-    failed_game_not_over: "请先结束游戏"
+    failed_game_not_over: "请先结束游戏",
+    failed_vote_has_started: "已经正在投票中",
+    failed_vote_not_started: "现在不能进行投票"
+
   }
   panel_tip_trans: {
     kill: "请从下方存活玩家中选择一名猎杀，不选择视为空刀",
