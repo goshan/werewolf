@@ -28,6 +28,7 @@ class Deal < CacheRecord
   def self.clear!
     Deal.find_all.each do |deal|
       deal.history = []
+      deal.save!
     end
   end
 
