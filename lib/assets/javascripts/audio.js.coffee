@@ -58,6 +58,7 @@ class @Wolf.Audio
     }
 
   play_audio: (type) ->
+    stop_all = true
     if type == 'wolf_lose' || type == "wolf_win" || type == "over"
       bgm = "over_bgm"
       voice = "over_#{type}"
@@ -68,9 +69,11 @@ class @Wolf.Audio
           bgm = "#{res[1]}_bgm"
           voice = "#{res[0]}_voice"
         else if res[2] == "end"
+          stop_all = false
           voice = "#{res[0]}_voice"
  
-    ion.sound.stop()
+    ion.sound.stop() if stop_all
+
     if bgm && voice
       # start audio: new bgm and new voice
       # voice after bgm: 1s

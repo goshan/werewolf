@@ -1,14 +1,11 @@
 class GameEngin
-  @@vote_info = {}
-
   def reset
     Status.new.save!
     History.clear!
     Role.clear!
     Player.reset!
     Vote.clear!
-
-    @@vote_info = {}
+    UserVote.clear!
   end
 
   def sit(user, pos)
@@ -34,9 +31,12 @@ class GameEngin
     return :failed_game_not_over unless status.over
 
     status.check_role!
+    status.voting = false
+    status.save!
     History.clear!
     Role.clear!
     Vote.clear!
+    UserVote.clear!
 
     # assign roles
     setting = Setting.current
@@ -68,7 +68,6 @@ class GameEngin
       p.save!
     end
 
-    @@vote_info = {}
     :success
   end
 
@@ -136,9 +135,10 @@ class GameEngin
     # vote can only be started in day
     status = Status.find_by_key
     return :failed_not_turn unless status.turn == :day
+    return :failed_vote_has_started if status.voting
 
     # set status to vote
-    @@vote_info = {}
+    UserVote.clear!
 
     round = Vote.current_round
     vote = Vote.find_by_key round
@@ -164,18 +164,22 @@ class GameEngin
 
     player = Player.find_by_user user
     return :failed_not_alive unless player.status == :alive
-    return :failed_has_voted if @@vote_info[player.pos]
+    user_vote = UserVote.find_by_key player.pos
+    return :failed_has_voted if user_vote
 
-    @@vote_info[player.pos] = target.nil? ? nil : target.to_i
+    user_vote = UserVote.new player.pos, target.nil? ? nil : target.to_i
+    user_vote.save!
     # check all alive player finished
     alive_players_cnt = Player.find_all_alive.count
-    return :need_next unless @@vote_info.count == alive_players_cnt
+    all_user_votes = UserVote.find_all
+
+    return :need_next unless all_user_votes.count == alive_players_cnt
 
     status.voting = false
     status.save!
 
     vote = Vote.find_by_key Vote.current_round
-    vote.details = @@vote_info
+    vote.details = all_user_votes
     vote.save!
     vote.to_msg
   end
