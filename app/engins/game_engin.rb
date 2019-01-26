@@ -48,6 +48,7 @@ class GameEngin
     players = Player.find_all
     players.shuffle.each do |p|
       deal = Deal.find_by_key p.user_id
+      deal = Deal.new(p.user_id) unless deal
       weight = get_user_role_weight(deal.history, role)
       role_idx = weighted_random_select(role, weight)
       # deal cache
