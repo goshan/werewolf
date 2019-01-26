@@ -8,7 +8,10 @@ class @Wolf.Panel
     # has been showing sth
     return unless @func == 'none'
 
-    @func = if data.skill == 'throw' then 'throw' else 'skill'
+    if data.skill == 'throw' || data.skill == 'vote'
+      @func = data.skill
+    else
+      @func = 'skill'
     @select = data.select
     $('.tips').text(Wolf.Trans.insert_params(Wolf.Trans.Panel.panel_tip_trans[data.skill], data))
     if typeof(data.only) != 'undefined' && data.only != null
