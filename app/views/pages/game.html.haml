@@ -24,6 +24,7 @@
 
       .setting.pull-right
         = link_to "查看板子", "#", :class => "btn btn-primary btn-xs", 'data-toggle' => "modal", 'data-target' => "#check-setting"
+        = link_to "投票历史", "#", :class => "btn btn-primary btn-xs", :id => "js-vote-history"
         .modal.fade{:id => "check-setting", :tabindex => "-1", :role => "dialog", 'aria-labelledby' => "playerOutSelectLabel"}
           .modal-dialog
             .modal-content
@@ -98,7 +99,9 @@
             = link_to "夜晚", "#", :class => "btn btn-default", :id => "js-start"
         .area
           = link_to "昨夜信息", "#", :class => "btn btn-default", :id => "js-night-info"
-          = link_to "玩家出局", "#", :class => "btn btn-default pull-right", :id => "js-throw"
+          .pull-right
+            = link_to "投票", "#", :class => "btn btn-default", :id => "js-start-vote"
+            = link_to "放逐", "#", :class => "btn btn-default", :id => "js-throw"
         .area
           = link_to "好人胜利", "#", :class => "btn btn-danger", :id => "js-wolf-lose"
           = link_to "狼人胜利", "#", :class => "btn btn-danger pull-right", :id => "js-wolf-win"

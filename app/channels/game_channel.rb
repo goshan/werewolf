@@ -7,6 +7,9 @@ class GameChannel < ApplicationCable::Channel
     @gm = GameEngin.new
 
     update :status_and_players, current_user
+
+    player = Player.find_by_user current_user
+    send_to current_user, action: 'panel', skill: 'vote', select: 'single' if Status.find_by_key.voting && player.status == :alive
   end
 
   def unsubscribed
@@ -104,6 +107,33 @@ class GameChannel < ApplicationCable::Channel
     end
     res = @gm.check_over
     game_over res
+  end
+
+  def start_vote
+    # only lord can start a vote
+    return send_to current_user, action: 'alert', msg: '不合法操作' unless current_user.lord?
+
+    # call engin
+    res = @gm.start_vote
+    return if catch_exceptions res
+
+    # broadcast to all alive players
+    Player.find_all_alive.each do |p|
+      send_to p.user, action: 'panel', skill: 'vote', select: 'single'
+    end
+  end
+
+  def vote(data)
+    res = @gm.vote current_user, data['pos']
+    return if catch_exceptions res
+
+    return if res == :need_next
+
+    broadcast action: 'alert', msg: res
+  end
+
+  def vote_history
+    send_to current_user, action: 'alert', msg: Vote.get_all_msg
   end
 
   def throw(data)
