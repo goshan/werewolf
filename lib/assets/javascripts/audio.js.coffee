@@ -70,6 +70,7 @@ class @Wolf.Audio
         else if res[2] == "end"
           voice = "#{res[0]}_voice"
  
+    ion.sound.stop()
     if bgm && voice
       # start audio: new bgm and new voice
       # voice after bgm: 1s
