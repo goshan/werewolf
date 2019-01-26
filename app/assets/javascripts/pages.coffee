@@ -47,6 +47,13 @@ $(document).on 'turbolinks:load', (e) ->
     else
       BootstrapDialog.alert "只有白天才能查看信息"
 
+  $('#js-start-vote').click (e) ->
+    e.preventDefault()
+    if Wolf.engin.status.turn == 'day'
+      App.game.do 'start_vote'
+    else
+      BootstrapDialog.alert "只有白天才能发起投票"
+
   $('#js-throw').click (e) ->
     e.preventDefault()
     if Wolf.engin.status.turn == 'day'
@@ -61,6 +68,10 @@ $(document).on 'turbolinks:load', (e) ->
       App.game.do 'stop_game', 'wolf'
     else if name == "js-wolf-lose"
       App.game.do 'stop_game', 'villager'
+
+  $('#js-vote-history').click (e) ->
+    e.preventDefault()
+    App.game.do 'vote_history'
 
   $('#js-check-role').click (e) ->
     e.preventDefault()

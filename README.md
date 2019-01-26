@@ -57,3 +57,6 @@ $ bundle exec rails server
 (then access http://localhost:3000 using any browser)
 ```
 
+### Audio
+
+https://ai.baidu.com/tech/speech/tts

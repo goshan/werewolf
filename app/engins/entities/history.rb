@@ -1,20 +1,18 @@
 class History < CacheRecord
   attr_accessor :round, :augur_target, :wolf_kill, :long_wolf_kill, :witch_target, :magician_target, :seer_target, :savior_target, :dead_in_day
 
-  def initialize(round=nil)
+  def initialize(round = nil)
     self.round = round
     self.magician_target = []
     self.dead_in_day = []
   end
 
   def self.key_attr
-    "round"
+    'round'
   end
 
   def self.clear!
-    History.find_all.each do |h|
-      h.destroy
-    end
+    History.find_all.each(&:destroy)
   end
 
   def dead_in_night
@@ -41,10 +39,8 @@ class History < CacheRecord
     end
 
     # long wolf kill
-    dead.push kill_more unless kill_more == -1 || kill_more == 0
-    if guard != 0 && guard == kill_more
-      dead.pop
-    end
+    dead.push kill_more unless [-1, 0].include? kill_more
+    dead.pop if guard != 0 && guard == kill_more
 
     # magician exchange
     dead = dead.map do |d|
@@ -55,10 +51,10 @@ class History < CacheRecord
 
     # witch used poison
     if witch_poison
-      ghost_rider = Player.find_by_role "ghost_rider"
+      ghost_rider = Player.find_by_role 'ghost_rider'
       if ghost_rider && witch_poison == ghost_rider.pos
-        unless ghost_rider.role.anti_killed 
-          w = Player.find_by_role "witch"
+        unless ghost_rider.role.anti_killed
+          w = Player.find_by_role 'witch'
           dead.push w.pos
           ghost_rider.role.anti_killed = true
           ghost_rider.role.save!
@@ -70,9 +66,9 @@ class History < CacheRecord
 
     # seer for ghost_rider
     if seer
-      ghost_rider = Player.find_by_role "ghost_rider"
+      ghost_rider = Player.find_by_role 'ghost_rider'
       if ghost_rider && !ghost_rider.role.anti_killed && seer == ghost_rider.pos
-        s = Player.find_by_role "seer"
+        s = Player.find_by_role 'seer'
         dead.push s.pos
         ghost_rider.role.anti_killed = true
         ghost_rider.role.save!
@@ -110,8 +106,9 @@ class History < CacheRecord
 
   def augur_lock
     return nil unless self.augur_target
-    locked = [self.augur_target-1, self.augur_target, self.augur_target+1]
+
+    locked = [self.augur_target - 1, self.augur_target, self.augur_target + 1]
     player_cnt = Setting.current.player_cnt
-    locked.map{|p| (p-1)%player_cnt+1}  # make start with 0, not 1 before mod
+    locked.map { |p| (p - 1) % player_cnt + 1 } # make start with 0, not 1 before mod
   end
 end

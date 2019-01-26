@@ -1,28 +1,32 @@
 class Status < CacheRecord
-  attr_accessor :round, :turn, :process
+  attr_accessor :round, :turn, :process, :voting, :over
 
-  NIGHT_PROCESS = [:augur, :wolf, :witch, :long_wolf, :magician, :seer, :savior]
+  NIGHT_PROCESS = %i[augur wolf witch long_wolf magician seer savior].freeze
 
   def initialize
     self.round = 0
     self.turn = :init
     self.process = []
+    self.voting = false
+    self.over = true
 
     setting = Setting.current
     NIGHT_PROCESS.each do |r|
-      if r == :wolf
-        self.process.push :wolf if setting.wolf_cnt > 0
-      else
-        self.process.push r if setting.has? r
+      if r == :wolf && setting.wolf_cnt > 0
+        self.process.push :wolf
+      elsif setting.has? r
+        self.process.push r
       end
     end
   end
 
   def to_cache
     {
-      :round => self.round,
-      :turn => self.turn,
-      :process => self.process
+      round: self.round,
+      turn: self.turn,
+      process: self.process,
+      voting: self.voting,
+      over: self.over
     }
   end
 
@@ -31,6 +35,8 @@ class Status < CacheRecord
     ins.round = obj['round'].to_i
     ins.turn = obj['turn'].to_sym
     ins.process = obj['process'].map(&:to_sym)
+    ins.voting = obj['voting']
+    ins.over = obj['over']
     ins
   end
 
@@ -48,6 +54,11 @@ class Status < CacheRecord
     self.save!
   end
 
+  def over!(o)
+    self.over = o
+    self.save!
+  end
+
   def next!
     # do nothing for init turn
     return if self.init?
@@ -57,17 +68,17 @@ class Status < CacheRecord
       self.turn = self.process.first || :day
     else
       current_turn_index = self.process.index self.turn
-      if current_turn_index == self.process.count-1
-        self.turn = :day
-      else
-        self.turn = self.process[current_turn_index+1]
-      end
+      self.turn = if current_turn_index == self.process.count - 1
+                    :day
+                  else
+                    self.process[current_turn_index + 1]
+                  end
     end
     self.save!
   end
 
   def self.to_msg
     status = self.find_by_key
-    {:round => status.round, :turn => status.turn}
+    { round: status.round, turn: status.turn }
   end
 end

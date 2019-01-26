@@ -1,5 +1,4 @@
 class Role < CacheRecord
-
   def need_save?
     false
   end
@@ -32,18 +31,18 @@ class Role < CacheRecord
   end
 
   def self.clear!
-    self.find_all.each do |r|
-      r.destroy
-    end
+    self.find_all.each(&:destroy)
   end
 
   def self.init_by_role(role)
     return nil unless role
+
     role.camelize.constantize.new
   end
 
   def self.find_by_role(role)
     return nil unless role
+
     temp = self.init_by_role role
     temp.need_save? ? temp.class.find_by_key : temp
   end

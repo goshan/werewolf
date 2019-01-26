@@ -19,13 +19,13 @@ class Augur < Role
 
   def prepare_skill
     buttons = []
-    buttons.push({:action => 'panel', :skill => 'lock', :select => 'single'}) unless self.locked
-    buttons.push({:action => 'skill', :skill => 'rest', :value => nil})
+    buttons.push(action: 'panel', skill: 'lock', select: 'single') unless self.locked
+    buttons.push(action: 'skill', skill: 'rest', value: nil)
 
     {
-      :action => "dialog",
-      :skill => "lock",
-      :buttons => buttons
+      action: 'dialog',
+      skill: 'lock',
+      buttons: buttons
     }
   end
 

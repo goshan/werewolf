@@ -23,6 +23,7 @@ class Hunter < Role
     # check skill enabled
     return :failed_finish_shoot if self.dead_round < status.round
     return :failed_cannot_shoot unless history.hunter_skill?
-    {:action => :alert, :msg => "你可以开枪"}
+
+    { action: :alert, msg: '你可以开枪' }
   end
 end

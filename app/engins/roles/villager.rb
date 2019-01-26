@@ -1,5 +1,4 @@
 class Villager < Role
-
   def need_save?
     false
   end
