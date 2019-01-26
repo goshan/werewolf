@@ -34,7 +34,7 @@ class Witch < Role
   end
 
   # pos:
-  # nil --> 不行动
+  # -1 --> 不行动
   # 0 --> 救人
   # 1~ --> 毒人
   def use_skill(pos)
@@ -43,7 +43,11 @@ class Witch < Role
     return :failed_have_acted if history.witch_target
 
     # rest, do nothing
-    return :success if pos.nil?
+    if pos.nil?
+      history.witch_target = -1
+      history.save!
+      return :success 
+    end
 
     if pos == 0
       # check antidot limitation

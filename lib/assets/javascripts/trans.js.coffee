@@ -61,8 +61,8 @@
     failed_round_1: "第一晚不能追刀",
     failed_game_not_over: "请先结束游戏",
     failed_vote_has_started: "已经正在投票中",
-    failed_vote_not_started: "现在不能进行投票"
-
+    failed_vote_not_started: "现在不能进行投票",
+    failed_has_voted: "已经投票"
   }
   panel_tip_trans: {
     kill: "请从下方存活玩家中选择一名猎杀，不选择视为空刀",
