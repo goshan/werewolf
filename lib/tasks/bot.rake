@@ -29,4 +29,20 @@ namespace :bot do
     Deal.clear!
   end
 
+  task :deal_stats => :environment do |task, args|
+    players = Player.find_all
+    players.each do |player|
+      deal = Deal.find_by_key player.user_id
+      p deal.user_id
+      stat=Hash.new
+      deal.history.each do |h|
+        stat[h]=(stat[h] or 0) + 1
+      end
+      stat.keys.sort.each do |k|
+        v = stat[k]*1.0
+        print("#{k}\t#{v}\t#{v/players.length}\n")
+      end
+    end
+  end
+
 end
