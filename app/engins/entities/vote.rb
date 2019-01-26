@@ -58,7 +58,6 @@ class Vote < CacheRecord
       msg += "#{info[:notes_num]}人(#{info[:voters]}) => "
       msg += info[:target_pos].nil? ? "弃权\n" : "#{info[:target_pos]}\n"
     end
-    puts msg
     return msg
   end
 

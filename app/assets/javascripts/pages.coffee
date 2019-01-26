@@ -69,6 +69,10 @@ $(document).on 'turbolinks:load', (e) ->
     else if name == "js-wolf-lose"
       App.game.do 'stop_game', 'villager'
 
+  $('#js-vote-history').click (e) ->
+    e.preventDefault()
+    App.game.do 'vote_history'
+
   $('#js-check-role').click (e) ->
     e.preventDefault()
     App.game.do 'check_role'
