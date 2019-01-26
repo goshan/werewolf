@@ -30,7 +30,10 @@ class GameEngin
       return :failed_empty_seat unless p.user
     end
 
-    Status.find_by_key.check_role!
+    status = Status.find_by_key
+    return :failed_game_not_over unless status.over
+
+    status.check_role!
     History.clear!
     Role.clear!
     Vote.clear!
@@ -85,6 +88,8 @@ class GameEngin
       return :failed_empty_seat unless p.name
       return :failed_no_role unless p.role
     end
+
+    status.over! false
 
     # init new round data
     new_history = History.new status.round + 1
@@ -209,22 +214,37 @@ class GameEngin
 
     if setting.kill_side?
       # kill side
-      return :wolf_win if (cnt[:god] * cnt[:villager]) == 0 && !must_kill_alive
-      return :wolf_lose if cnt[:wolf] == 0
-
-      return :not_over
+      if (cnt[:god] * cnt[:villager]) == 0 && !must_kill_alive
+        Status.find_by_key.over! true
+        return :wolf_win
+      elsif cnt[:wolf] == 0
+        Status.find_by_key.over! true
+        return :wolf_lose 
+      else
+        return :not_over
+      end
     elsif setting.kill_all?
       # kill all
-      return :wolf_win if cnt[:god] + cnt[:villager] == 0
-      return :wolf_lose if cnt[:wolf] == 0
-
-      return :not_over
+      if cnt[:god] + cnt[:villager] == 0
+        Status.find_by_key.over! true
+        return :wolf_win
+      elsif cnt[:wolf] == 0
+        Status.find_by_key.over! true
+        return :wolf_lose 
+      else
+        return :not_over
+      end
     elsif setting.kill_god?
       # kill god
-      return :wolf_win if cnt[:god] == 0
-      return :wolf_lose if cnt[:wolf] == 0
-
-      return :not_over
+      if cnt[:god] == 0
+        Status.find_by_key.over! true
+        return :wolf_win
+      elsif cnt[:wolf] == 0
+        Status.find_by_key.over! true
+        return :wolf_lose
+      else
+        return :not_over
+      end
     end
   end
 end
