@@ -55,7 +55,7 @@ class GameEngin
       deal = Deal.find_by_key p.user_id
       deal = Deal.new(p.user_id) unless deal
       weight = get_user_role_weight(deal.history, role)
-      role_idx = weighted_random_select(role, weight)
+      role_idx = weighted_random_select(weight)
       # deal cache
       deal.history << role[role_idx]
       deal.save!
@@ -274,7 +274,7 @@ class GameEngin
       end
       return weight
   end
-  def weighted_random_select(items, weight)
+  def weighted_random_select(weight)
     # https://en.wikipedia.org/wiki/Fitness_proportionate_selection
     target = rand * weight.inject(:+)
     weight.each_with_index do |w, i|
