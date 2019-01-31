@@ -50,6 +50,7 @@ class Status < CacheRecord
 
   def check_role!
     self.round = 0
+    self.voting = 0
     self.turn = :check_role
     self.save!
   end

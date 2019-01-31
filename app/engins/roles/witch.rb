@@ -34,7 +34,7 @@ class Witch < Role
   end
 
   # pos:
-  # -1 --> 不行动
+  # [nil -> -1] --> 不行动
   # 0 --> 救人
   # 1~ --> 毒人
   def use_skill(pos)

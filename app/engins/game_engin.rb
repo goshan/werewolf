@@ -31,7 +31,6 @@ class GameEngin
     return :failed_game_not_over unless status.over
 
     status.check_role!
-    status.voting = false
     status.save!
     History.clear!
     Role.clear!
