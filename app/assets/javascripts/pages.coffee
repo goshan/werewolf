@@ -50,9 +50,24 @@ $(document).on 'turbolinks:load', (e) ->
   $('#js-start-vote').click (e) ->
     e.preventDefault()
     if Wolf.engin.status.turn == 'day'
-      App.game.do 'start_vote'
+      vote_desc = $('#start-vote-modal #vote_desc').val()
+      target_pos = []
+      for checkbox in $('#start-vote-modal #target_pos .btn.active input[type=checkbox]')
+        target_pos.push $(checkbox).attr('id')
+      voter_pos = []
+      for checkbox in $('#start-vote-modal #voter_pos .btn.active input[type=checkbox]')
+        voter_pos.push $(checkbox).attr('id')
+      App.game.do 'start_vote', {desc: vote_desc, target_pos: target_pos, voter_pos: voter_pos}
+      $('#start-vote-modal .btn-group .btn.active').removeClass('active')
     else
       BootstrapDialog.alert "只有白天才能发起投票"
+
+  $('#js-stop-vote').click (e) ->
+    e.preventDefault()
+    if Wolf.engin.status.turn == 'day'
+      App.game.do 'stop_vote'
+    else
+      BootstrapDialog.alert "只有白天才能终止投票"
 
   $('#js-throw').click (e) ->
     e.preventDefault()

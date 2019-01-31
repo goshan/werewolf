@@ -131,56 +131,55 @@ class GameEngin
     res
   end
 
-  def start_vote
+  def start_vote(desc, target_pos, voter_pos)
     # vote can only be started in day
     status = Status.find_by_key
     return :failed_not_turn unless status.turn == :day
-    return :failed_vote_has_started if status.voting
+    return :failed_vote_has_started unless status.voting == 0
 
     # set status to vote
     UserVote.clear!
 
-    round = Vote.current_round
-    vote = Vote.find_by_key round
-
-    if vote
-      return :failed_voted_this_round
-    else
-      vote = Vote.new round
-    end
+    vote = Vote.new desc
+    players_pos = Player.find_all_alive.map { |p| p.pos }
+    vote.targets = target_pos.nil? || target_pos.empty? ? players_pos : target_pos.map(&:to_i)
+    vote.voters = voter_pos.nil? || voter_pos.empty? ? players_pos : voter_pos.map(&:to_i)
     vote.save!
 
-    status.voting = true
+    status.voting = vote.ts
     status.save!
 
-    :success
+    {target_pos: vote.targets, voter_pos: vote.voters}
   end
 
   def vote(user, target)
     # only can vote in day
     status = Status.find_by_key
     return :failed_not_turn unless status.turn == :day
-    return :failed_vote_not_started unless status.voting
+    return :failed_vote_not_started if status.voting == 0
 
+    vote = Vote.find_by_key status.voting
     player = Player.find_by_user user
-    return :failed_not_alive unless player.status == :alive
+    return :failed_not_voter unless player.status == :alive && vote.voters.include?(player.pos)
     user_vote = UserVote.find_by_key player.pos
     return :failed_has_voted if user_vote
 
     user_vote = UserVote.new player.pos, target.nil? ? nil : target.to_i
     user_vote.save!
-    # check all alive player finished
-    alive_players_cnt = Player.find_all_alive.count
-    all_user_votes = UserVote.find_all
+  end
 
-    return :need_next unless all_user_votes.count == alive_players_cnt
+  def stop_vote
+    status = Status.find_by_key
+    return :failed_not_turn unless status.turn == :day
+    return :failed_vote_not_started if status.voting == 0
 
-    status.voting = false
+    vote = Vote.find_by_key status.voting
+    vote.votes_info = UserVote.find_all
+    vote.save!
+
+    status.voting = 0
     status.save!
 
-    vote = Vote.find_by_key Vote.current_round
-    vote.details = all_user_votes
-    vote.save!
     vote.to_msg
   end
 

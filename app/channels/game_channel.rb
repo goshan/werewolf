@@ -8,8 +8,14 @@ class GameChannel < ApplicationCable::Channel
 
     update :status_and_players, current_user
 
+    # show vote panel
     player = Player.find_by_user current_user
-    send_to current_user, action: 'panel', skill: 'vote', select: 'single' if Status.find_by_key.voting && player.status == :alive
+    voting = Status.find_by_key.voting
+    if voting != 0  && player.status == :alive
+      vote = Vote.find_by_key voting
+      user_vote = UserVote.find_by_key player.pos
+      send_to current_user, action: 'panel', skill: 'vote', select: 'single', only: vote.targets if vote.voters.include?(player.pos) && !user_vote
+    end
   end
 
   def unsubscribed
@@ -109,31 +115,38 @@ class GameChannel < ApplicationCable::Channel
     game_over res
   end
 
-  def start_vote
+  def start_vote(data)
     # only lord can start a vote
     return send_to current_user, action: 'alert', msg: '不合法操作' unless current_user.lord?
 
     # call engin
-    res = @gm.start_vote
+    res = @gm.start_vote data['pos']['desc'], data['pos']['target_pos'], data['pos']['voter_pos']
     return if catch_exceptions res
 
     # broadcast to all alive players
     Player.find_all_alive.each do |p|
-      send_to p.user, action: 'panel', skill: 'vote', select: 'single'
+      send_to p.user, action: 'panel', skill: 'vote', select: 'single', only: res[:target_pos] if res[:voter_pos].include?(p.pos)
     end
   end
 
   def vote(data)
     res = @gm.vote current_user, data['pos']
-    return if catch_exceptions res
+    catch_exceptions res
+  end
 
-    return if res == :need_next
+  def stop_vote
+    # only lord can start a vote
+    return send_to current_user, action: 'alert', msg: '不合法操作' unless current_user.lord?
+
+    # call engin
+    res = @gm.stop_vote
+    return if catch_exceptions res
 
     broadcast action: 'alert', msg: res
   end
 
   def vote_history
-    send_to current_user, action: 'alert', msg: Vote.get_all_msg
+    send_to current_user, action: 'alert', msg: Vote.history_msg
   end
 
   def throw(data)

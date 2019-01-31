@@ -1,36 +1,34 @@
 class Vote < CacheRecord
-  attr_accessor :votes_info, :round
+  attr_accessor :ts, :desc, :targets, :voters, :user_votes
 
-  def details=(user_votes)
-    self.votes_info = {}
-    if user_votes.nil? || user_votes.empty?
-      return
-    end
-
-    user_votes.each do |user_vote|
-      self.votes_info[user_vote.voter_pos] = user_vote.target_pos
-    end
-  end
-
-  def initialize(round)
-    self.votes_info = {}
-    self.round = round
+  def initialize(desc)
+    self.ts = Time.now.to_i
+    self.desc = desc.gsub '{round}', Status.find_by_key.round.to_s
+    self.targets = []
+    self.voters = []
+    self.user_votes = {}
   end
 
   def self.key_attr
-    'round'
+    'ts'
   end
 
   def to_cache
     {
-      :votes_info => self.votes_info,
-      :round      => self.round,
+      ts: self.ts,
+      desc: self.desc,
+      targets: self.targets,
+      voters: self.voters,
+      user_votes: self.user_votes
     }
   end
 
   def self.from_cache(obj)
-    ins = self.new obj['round']
-    ins.votes_info = obj['votes_info']
+    ins = self.new obj['desc']
+    ins.ts = obj['ts']
+    ins.targets = obj['targets']
+    ins.voters = obj['voters']
+    ins.user_votes = obj['user_votes']
     ins
   end
 
@@ -38,50 +36,43 @@ class Vote < CacheRecord
     Vote.find_all.each(&:destroy)
   end
 
+  def votes_info=(user_votes)
+    # default every one skill vote
+    self.user_votes = Hash[self.voters.map{ |p| [p, 0] }]
+    return if user_votes.nil? || user_votes.empty?
+
+    user_votes.each do |user_vote|
+      voter_pos = self.voters.include?(user_vote.voter_pos) ? user_vote.voter_pos : nil
+      target_pos = self.targets.include?(user_vote.target_pos) ? user_vote.target_pos : 0
+
+      self.user_votes[voter_pos] = target_pos if voter_pos
+    end
+  end
+
   def to_msg
     votes_by_target = {}
-    self.votes_info.each do |key, value|
-      if votes_by_target[value].present?
-        votes_by_target[value] << key
-      else
-        votes_by_target[value] = [key]
-      end
+    self.user_votes.each do |voter, target|
+      votes_by_target[target] = [] unless votes_by_target[target]
+      votes_by_target[target] << voter
     end
-    
-    arranged_vote_info = []
-    votes_by_target.each do |key, value|
-      arranged_vote_info << { :target_pos => key, :notes_num => value.length, :voters => value.sort_by { |a| a.to_i }.join(sep=",") }
+    res = votes_by_target.to_a
+
+    res.map! do |item|
+      [item.first, item.last.sort]
     end
 
-    msg = ""
-    arranged_vote_info.sort_by { |a| -1 * a[:notes_num] }.each do |info|
-      msg += "#{info[:notes_num]}人(#{info[:voters]}) => "
-      msg += info[:target_pos].nil? ? "弃权\n" : "#{info[:target_pos]}\n"
+    msg = "※ #{self.desc} ※\n"
+    res.sort { |a, b| b.last.count <=> a.last.count }.each do |item|
+      msg += "#{item.first == 0 ? '弃权' : "#{item.first}号"} (#{item.last.count}票) <= #{item.last.join(',')}\n"
     end
-    return msg
+    msg
   end
 
-  def self.get_all_msg
-    msg = ""
-    self.find_all.sort { |a, b| a.round <=> b.round }.each do |vote|
-      round_str = "◯ 第" + "#{vote.round}" + "天投票结果:◯\n"
-      msg += round_str
-      msg += vote.to_msg
+  def self.history_msg
+    msg = ''
+    self.find_all.sort_by(&:ts).each do |vote|
+      msg += "#{vote.to_msg}\n"
     end
-    puts msg
-    return msg
-  end
-
-  def self.current_round
-    round = Status.find_by_key.round
-    sheriff_vote = self.find_by_key 0
-    if round == 1 && (sheriff_vote.nil? || sheriff_vote.votes_info.empty?)
-      0
-    else
-      round
-    end
+    msg
   end
 end
-  
-
-

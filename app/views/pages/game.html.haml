@@ -100,11 +100,41 @@
         .area
           = link_to "昨夜信息", "#", :class => "btn btn-default", :id => "js-night-info"
           .pull-right
-            = link_to "投票", "#", :class => "btn btn-default", :id => "js-start-vote"
-            = link_to "放逐", "#", :class => "btn btn-default", :id => "js-throw"
+            = link_to "放逐玩家", "#", :class => "btn btn-default", :id => "js-throw"
+        .area
+          = link_to "发起投票", "#", :class => "btn btn-primary", :id => "start-vote-btn", 'data-toggle' => "modal", 'data-target' => "#start-vote-modal"
+          .pull-right
+            = link_to "终止投票", "#", :class => "btn btn-primary", :id => "js-stop-vote"
         .area
           = link_to "好人胜利", "#", :class => "btn btn-danger", :id => "js-wolf-lose"
           = link_to "狼人胜利", "#", :class => "btn btn-danger pull-right", :id => "js-wolf-win"
+        .modal.fade{:id => "start-vote-modal", :tabindex => "-1", :role => "dialog", 'aria-labelledby' => "playerOutSelectLabel"}
+          .modal-dialog
+            .modal-content
+              .modal-header
+                %button.close{:type => "button", 'data-dismiss' => "modal", 'aria-label' => "Close"}
+                  %span{'aria-hidden' => "true"} &times;
+                %h4.modal-title 发起投票
+              .modal-body
+                .form-group
+                  = label_tag "投票内容"
+                  = select_tag :vote_desc, options_for_select(["警长竞选", "平票PK", "第{round}天放逐投票"], "放逐投票"), :class => "form-control"
+                .form-group#target_pos
+                  = label_tag "投票对象"
+                  - (1..Setting.current.player_cnt).each do |i|
+                    .btn-group{'data-toggle' => "buttons"}
+                      %label.btn{:class => "btn-primary", :id => "target-#{i}"}
+                        = check_box_tag i, 1, false
+                        = "#{i}号"
+                .form-group#voter_pos
+                  = label_tag "可投票玩家"
+                  - (1..Setting.current.player_cnt).each do |i|
+                    .btn-group{'data-toggle' => "buttons"}
+                      %label.btn{:class => "btn-primary", :id => "target-#{i}"}
+                        = check_box_tag i, 1
+                        = "#{i}号"
+              .modal-footer
+                = link_to "好的", "#", :class => "btn btn-default", 'data-dismiss' => "modal", :id => "js-start-vote"
         .modal.fade{:id => "setting", :tabindex => "-1", :role => "dialog", 'aria-labelledby' => "settingLabel"}
           .modal-dialog
             .modal-content

@@ -7,7 +7,7 @@ class Status < CacheRecord
     self.round = 0
     self.turn = :init
     self.process = []
-    self.voting = false
+    self.voting = 0
     self.over = true
 
     setting = Setting.current
@@ -35,7 +35,7 @@ class Status < CacheRecord
     ins.round = obj['round'].to_i
     ins.turn = obj['turn'].to_sym
     ins.process = obj['process'].map(&:to_sym)
-    ins.voting = obj['voting']
+    ins.voting = obj['voting'].to_i
     ins.over = obj['over']
     ins
   end
@@ -54,8 +54,8 @@ class Status < CacheRecord
     self.save!
   end
 
-  def over!(o)
-    self.over = o
+  def over!(over)
+    self.over = over
     self.save!
   end
 

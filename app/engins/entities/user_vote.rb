@@ -2,14 +2,9 @@ class UserVote < CacheRecord
   attr_accessor :voter_pos, :target_pos
 
   def initialize(voter_pos, target_pos)
+    raise "voter_pos can not be nil or 0" if voter_pos.nil? || voter_pos.zero?
     self.voter_pos = voter_pos
-    self.target_pos = target_pos
-  end
-
-  def self.init!(voter_pos, target_pos)
-    ins = self.new(voter_pos, target_pos)
-    ins.save!
-    ins
+    self.target_pos = target_pos.nil? ? 0 : target_pos
   end
 
   def self.key_attr
@@ -18,8 +13,8 @@ class UserVote < CacheRecord
 
   def to_cache
     {
-      :voter_pos => self.voter_pos,
-      :target_pos => self.target_pos,
+      voter_pos: self.voter_pos,
+      target_pos: self.target_pos
     }
   end
 
@@ -32,6 +27,3 @@ class UserVote < CacheRecord
     UserVote.find_all.each(&:destroy)
   end
 end
-  
-
-
