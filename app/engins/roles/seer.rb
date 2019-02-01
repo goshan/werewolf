@@ -21,7 +21,7 @@ class Seer < Role
   def use_skill(pos)
     return :success if pos.nil?
 
-    status = Status.find_by_key
+    status = Status.find_current
     history = History.find_by_key status.round
     return :failed_have_acted if history.seer_target
 
@@ -29,7 +29,7 @@ class Seer < Role
     return :failed_target_dead unless player.status == :alive
 
     history.seer_target = player.pos
-    history.save!
+    history.save
 
     # exchange role if magician exchanged
     player = Player.find_by_key history.magician_exchange(pos.to_i)

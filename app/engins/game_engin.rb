@@ -1,23 +1,27 @@
 class GameEngin
   def reset
-    Status.new.save!
-    History.clear!
-    Role.clear!
-    Player.reset!
-    Vote.clear!
-    UserVote.clear!
+    Status.new.save
+    History.clear
+    Role.clear
+    Player.reset
+    Vote.clear
+    UserVote.clear
   end
 
   def sit(user, pos)
-    return :failed_not_turn unless Status.find_by_key.init?
+    return :failed_not_turn unless Status.find_current.init?
 
     player = Player.find_by_key pos
     return :failed_seat_not_available if player.user_id
 
     old_player = Player.find_by_user user
-    old_player.assign! nil if old_player
+    if old_player
+      old_player.assign! nil
+      old_player.save
+    end
 
     player.assign! user
+    player.save
     :success
   end
 
@@ -27,15 +31,15 @@ class GameEngin
       return :failed_empty_seat unless p.user
     end
 
-    status = Status.find_by_key
+    status = Status.find_current
     return :failed_game_not_over unless status.over
 
     status.check_role!
-    status.save!
-    History.clear!
-    Role.clear!
-    Vote.clear!
-    UserVote.clear!
+    status.save
+    History.clear
+    Role.clear
+    Vote.clear
+    UserVote.clear
 
     # assign roles
     setting = Setting.current
@@ -57,21 +61,21 @@ class GameEngin
       role_idx = weighted_random_select(role, weight)
       # deal cache
       deal.history << role[role_idx]
-      deal.save!
+      deal.save
       # role cache
       r = Role.init_by_role role[role_idx]
       role.delete_at(role_idx)
-      r.save_if_need!
+      r.save_if_need
       p.role = r
       p.status = :alive
-      p.save!
+      p.save
     end
 
     :success
   end
 
   def check_role(user)
-    return :failed_not_turn if Status.find_by_key.init?
+    return :failed_not_turn if Status.find_current.init?
 
     p = Player.find_by_user user
     return :failed_not_seat unless p
@@ -81,7 +85,7 @@ class GameEngin
   end
 
   def start
-    status = Status.find_by_key
+    status = Status.find_current
     return :failed_not_turn unless status.check_role? || status.turn == :day
 
     Player.find_all.each do |p|
@@ -89,17 +93,18 @@ class GameEngin
       return :failed_no_role unless p.role
     end
 
-    status.over! false
+    status.over = false
+    status.save
 
     # init new round data
     new_history = History.new status.round + 1
-    new_history.save!
+    new_history.save
 
     :success
   end
 
   def skip_turn?
-    status = Status.find_by_key
+    status = Status.find_current
     return false if %i[init check_role day].include? status.turn
 
     players = Player.find_all_alive
@@ -108,7 +113,7 @@ class GameEngin
   end
 
   def skill_active(user)
-    status = Status.find_by_key
+    status = Status.find_current
     return :failed_not_turn if status.init? || status.check_role?
 
     p = Player.find_by_user user
@@ -132,28 +137,28 @@ class GameEngin
 
   def start_vote(desc, target_pos, voter_pos)
     # vote can only be started in day
-    status = Status.find_by_key
+    status = Status.find_current
     return :failed_not_turn unless status.turn == :day
     return :failed_vote_has_started unless status.voting == 0
 
     # set status to vote
-    UserVote.clear!
+    UserVote.clear
 
     vote = Vote.new desc
     players_pos = Player.find_all_alive.map { |p| p.pos }
     vote.targets = target_pos.nil? || target_pos.empty? ? players_pos : target_pos.map(&:to_i)
     vote.voters = voter_pos.nil? || voter_pos.empty? ? players_pos : voter_pos.map(&:to_i)
-    vote.save!
+    vote.save
 
     status.voting = vote.ts
-    status.save!
+    status.save
 
     {target_pos: vote.targets, voter_pos: vote.voters}
   end
 
   def vote(user, target)
     # only can vote in day
-    status = Status.find_by_key
+    status = Status.find_current
     return :failed_not_turn unless status.turn == :day
     return :failed_vote_not_started if status.voting == 0
 
@@ -163,28 +168,28 @@ class GameEngin
     user_vote = UserVote.find_by_key player.pos
     return :failed_has_voted if user_vote
 
-    user_vote = UserVote.new player.pos, target.nil? ? nil : target.to_i
-    user_vote.save!
+    user_vote = UserVote.new player.pos, (target || 0).to_i
+    user_vote.save
   end
 
   def stop_vote
-    status = Status.find_by_key
+    status = Status.find_current
     return :failed_not_turn unless status.turn == :day
     return :failed_vote_not_started if status.voting == 0
 
     vote = Vote.find_by_key status.voting
     vote.votes_info = UserVote.find_all
-    vote.save!
+    vote.save
 
     status.voting = 0
-    status.save!
+    status.save
 
     vote.to_msg
   end
 
   def throw(pos)
     # check current turn is day
-    status = Status.find_by_key
+    status = Status.find_current
     return :failed_not_turn unless status.turn == :day
 
     history = History.find_by_key status.round
@@ -195,11 +200,12 @@ class GameEngin
 
       # throw out
       player.die!
+      player.save
 
       # update history
       history.dead_in_day.push player.pos
     end
-    history.save!
+    history.save
     :success
   end
 
@@ -216,13 +222,16 @@ class GameEngin
       must_kill_alive = true if p.role.name == setting.must_kill
     end
 
+    status = Status.find_current
     if setting.kill_side?
       # kill side
       if (cnt[:god] * cnt[:villager]) == 0 && !must_kill_alive
-        Status.find_by_key.over! true
+        status.over = true
+        status.save
         return :wolf_win
       elsif cnt[:wolf] == 0
-        Status.find_by_key.over! true
+        status.over = true
+        status.save
         return :wolf_lose 
       else
         return :not_over
@@ -230,10 +239,12 @@ class GameEngin
     elsif setting.kill_all?
       # kill all
       if cnt[:god] + cnt[:villager] == 0
-        Status.find_by_key.over! true
+        status.over = true
+        status.save
         return :wolf_win
       elsif cnt[:wolf] == 0
-        Status.find_by_key.over! true
+        status.over = true
+        status.save
         return :wolf_lose 
       else
         return :not_over
@@ -241,10 +252,12 @@ class GameEngin
     elsif setting.kill_god?
       # kill god
       if cnt[:god] == 0
-        Status.find_by_key.over! true
+        status.over = true
+        status.save
         return :wolf_win
       elsif cnt[:wolf] == 0
-        Status.find_by_key.over! true
+        status.over = true
+        status.save
         return :wolf_lose
       else
         return :not_over

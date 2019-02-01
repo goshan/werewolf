@@ -16,12 +16,12 @@ class WolfBase < Role
   end
 
   def prepare_skill
-    history = History.find_by_key Status.find_by_key.round
+    history = History.find_by_key Status.find_current.round
     { action: 'panel', skill: 'kill', select: 'single', only: history.augur_lock }
   end
 
   def use_skill(pos)
-    status = Status.find_by_key
+    status = Status.find_current
     history = History.find_by_key status.round
     return :failed_have_acted if history.wolf_kill
 
@@ -38,7 +38,7 @@ class WolfBase < Role
       history.wolf_kill = player.pos
     end
 
-    history.save!
+    history.save
     :success
   end
 end

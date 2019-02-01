@@ -21,7 +21,7 @@ namespace :bot do
 
     Player.find_all.each do |player|
       next if Deal.find_by_key player.user_id
-      Deal.new(player.user_id).save!
+      Deal.new(player.user_id).save
     end
   end
 

@@ -22,7 +22,7 @@ class Magician < Role
   end
 
   def use_skill(pos)
-    status = Status.find_by_key
+    status = Status.find_current
     history = History.find_by_key status.round
     return :failed_have_acted if history.magician_target && !history.magician_target.empty?
 
@@ -49,8 +49,8 @@ class Magician < Role
       self.exchanged << player.pos
     end
 
-    history.save!
-    self.save!
+    history.save
+    self.save
 
     :success
   end

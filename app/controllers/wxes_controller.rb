@@ -65,7 +65,7 @@ class WxesController < ApplicationController
     setting.god_roles_list = params[:gods]
     setting.wolf_roles_list = params[:wolves]
     setting.must_kill = params[:must_kill] if params[:must_kill]
-    setting.save!
+    setting.save
 
     GameEngin.new.reset
     msg = { action: 'update', status: Status.to_msg, players: Player.to_msg }

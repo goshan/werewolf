@@ -1,39 +1,16 @@
 class Vote < CacheRecord
   attr_accessor :ts, :desc, :targets, :voters, :user_votes
 
-  def initialize(desc)
-    self.ts = Time.now.to_i
-    self.desc = desc.gsub '{round}', Status.find_by_key.round.to_s
-    self.targets = []
-    self.voters = []
-    self.user_votes = {}
-  end
-
   def self.key_attr
     'ts'
   end
 
-  def to_cache
-    {
-      ts: self.ts,
-      desc: self.desc,
-      targets: self.targets,
-      voters: self.voters,
-      user_votes: self.user_votes
-    }
-  end
-
-  def self.from_cache(obj)
-    ins = self.new obj['desc']
-    ins.ts = obj['ts']
-    ins.targets = obj['targets']
-    ins.voters = obj['voters']
-    ins.user_votes = obj['user_votes']
-    ins
-  end
-
-  def self.clear!
-    Vote.find_all.each(&:destroy)
+  def initialize(desc)
+    self.ts = Time.now.to_i
+    self.desc = desc.gsub '{round}', Status.find_current.round.to_s
+    self.targets = []
+    self.voters = []
+    self.user_votes = {}
   end
 
   def votes_info=(user_votes)

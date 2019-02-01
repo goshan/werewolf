@@ -18,7 +18,7 @@ class Savior < Role
   end
 
   def use_skill(pos)
-    status = Status.find_by_key
+    status = Status.find_current
     history = History.find_by_key status.round
     return :failed_have_acted if history.savior_target
 
@@ -35,11 +35,11 @@ class Savior < Role
 
     # defend
     history.savior_target = pos.to_i
-    history.save!
+    history.save
 
     # update savior limitation
     self.last_guard = pos.to_i
-    self.save!
+    self.save
 
     :success
   end

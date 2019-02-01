@@ -1,18 +1,14 @@
 class History < CacheRecord
   attr_accessor :round, :augur_target, :wolf_kill, :long_wolf_kill, :witch_target, :magician_target, :seer_target, :savior_target, :dead_in_day
 
-  def initialize(round = nil)
-    self.round = round
-    self.magician_target = []
-    self.dead_in_day = []
-  end
-
   def self.key_attr
     'round'
   end
 
-  def self.clear!
-    History.find_all.each(&:destroy)
+  def initialize(round = nil)
+    self.round = round
+    self.magician_target = []
+    self.dead_in_day = []
   end
 
   def dead_in_night
@@ -57,7 +53,7 @@ class History < CacheRecord
           w = Player.find_by_role 'witch'
           dead.push w.pos
           ghost_rider.role.anti_killed = true
-          ghost_rider.role.save!
+          ghost_rider.role.save
         end
       else
         dead.push witch_poison
@@ -71,7 +67,7 @@ class History < CacheRecord
         s = Player.find_by_role 'seer'
         dead.push s.pos
         ghost_rider.role.anti_killed = true
-        ghost_rider.role.save!
+        ghost_rider.role.save
       end
     end
 
@@ -105,7 +101,7 @@ class History < CacheRecord
   end
 
   def augur_lock
-    return nil unless self.augur_target
+    return nil if self.augur_target.nil? || self.augur_target == 0
 
     locked = [self.augur_target - 1, self.augur_target, self.augur_target + 1]
     player_cnt = Setting.current.player_cnt

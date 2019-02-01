@@ -20,23 +20,10 @@ class Status < CacheRecord
     end
   end
 
-  def to_cache
-    {
-      round: self.round,
-      turn: self.turn,
-      process: self.process,
-      voting: self.voting,
-      over: self.over
-    }
-  end
-
   def self.from_cache(obj)
-    ins = self.new
-    ins.round = obj['round'].to_i
-    ins.turn = obj['turn'].to_sym
-    ins.process = obj['process'].map(&:to_sym)
-    ins.voting = obj['voting'].to_i
-    ins.over = obj['over']
+    ins = super obj
+    ins.turn = obj['turn'].to_sym if obj['turn']
+    ins.process = obj['process'].map(&:to_sym) if obj['process']
     ins
   end
 
@@ -52,12 +39,6 @@ class Status < CacheRecord
     self.round = 0
     self.voting = 0
     self.turn = :check_role
-    self.save!
-  end
-
-  def over!(over)
-    self.over = over
-    self.save!
   end
 
   def next!
@@ -75,11 +56,11 @@ class Status < CacheRecord
                     self.process[current_turn_index + 1]
                   end
     end
-    self.save!
+    self.save
   end
 
   def self.to_msg
-    status = self.find_by_key
+    status = self.find_current
     { round: status.round, turn: status.turn }
   end
 end

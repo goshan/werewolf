@@ -19,7 +19,7 @@ class Witch < Role
   end
 
   def prepare_skill
-    history = History.find_by_key Status.find_by_key.round
+    history = History.find_by_key Status.find_current.round
     buttons = []
     buttons.push(action: 'skill', skill: 'antidot', value: 0) if self.has_antidot
     buttons.push(action: 'panel', skill: 'poison', select: 'single') if self.has_poison
@@ -38,14 +38,14 @@ class Witch < Role
   # 0 --> 救人
   # 1~ --> 毒人
   def use_skill(pos)
-    status = Status.find_by_key
+    status = Status.find_current
     history = History.find_by_key status.round
     return :failed_have_acted if history.witch_target
 
     # rest, do nothing
     if pos.nil?
       history.witch_target = -1
-      history.save!
+      history.save
       return :success 
     end
 
@@ -78,11 +78,11 @@ class Witch < Role
       # update witch limitation
       self.has_poison = false
     end
-    self.save!
+    self.save
 
     # update history
     history.witch_target = pos.to_i
-    history.save!
+    history.save
     :success
   end
 end

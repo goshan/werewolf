@@ -22,12 +22,12 @@ class PagesController < ApplicationController
     user = User.find_by_login_type_and_name :web, name
     if user
       user.role = role
-      user.save!
+      user.save
     else
       user = User.create! name: name, role: role, login_type: :web
     end
     sign_in user
-    Deal.new(user.id).save! unless Deal.find_by_key user.id
+    Deal.new(user.id).save unless Deal.find_by_key user.id
     redirect_to root_path
   end
 
@@ -69,7 +69,7 @@ class PagesController < ApplicationController
     setting.god_roles_list = god_roles
     setting.wolf_roles_list = wolf_roles
     setting.must_kill = params[:must_kill] if params[:must_kill] && params[:must_kill] != 'nil'
-    setting.save!
+    setting.save
 
     GameEngin.new.reset
     msg = { action: 'update', status: Status.to_msg, players: Player.to_msg }

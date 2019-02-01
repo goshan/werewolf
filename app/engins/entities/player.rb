@@ -1,53 +1,8 @@
 class Player < CacheRecord
   attr_accessor :pos, :user_id, :role, :status, :name, :image
 
-  def initialize(pos, status)
-    self.pos = pos
-    self.status = status
-  end
-
   def self.key_attr
     'pos'
-  end
-
-  def to_cache
-    {
-      pos: self.pos,
-      user_id: self.user_id,
-      role: self.role ? self.role.name : nil,
-      status: self.status
-    }
-  end
-
-  def self.from_cache(obj)
-    user = User.find_by_id obj['user_id']
-
-    ins = self.new obj['pos'], obj['status'] ? obj['status'].to_sym : nil
-    ins.user_id = obj['user_id']
-    ins.role = Role.find_by_role obj['role']
-    ins.name = user.name if user
-    ins.image = user.image_ext if user
-    ins
-  end
-
-  def user
-    User.find_by_id self.user_id
-  end
-
-  def assign!(user)
-    self.user_id = user ? user.id : nil
-    self.name = user ? user.name : nil
-    self.image = user ? user.image : nil
-    self.save!
-  end
-
-  def die!
-    if self.role.name == 'hunter'
-      self.role.dead_round = Status.find_by_key.round
-      self.role.save!
-    end
-    self.status = :dead
-    self.save!
   end
 
   def self.find_by_user(user)
@@ -67,20 +22,59 @@ class Player < CacheRecord
     self.find_all.select { |p| p.status == :alive }
   end
 
-  def self.init!
+  def self.init
     (1..Setting.current.player_cnt).each do |i|
       p = Player.new i, :alive
-      p.save!
+      p.save
     end
   end
 
-  def self.clear!
-    Player.find_all.each(&:destroy)
+  def self.reset
+    self.clear
+    self.init
   end
 
-  def self.reset!
-    self.clear!
-    self.init!
+  def initialize(pos, status)
+    self.pos = pos
+    self.status = status
+  end
+
+  def to_cache
+    hash = super
+    hash[:role] = self.role.name if self.role
+    hash
+  end
+
+  def self.from_cache(obj)
+    ins = super obj
+    ins.status = obj['status'].to_sym if obj['status']
+    ins.role = Role.find_by_role obj['role'] if obj['role']
+
+    user = User.find_by_id obj['user_id']
+    if user
+      ins.name = user.name
+      ins.image = user.image_ext
+    end
+
+    ins
+  end
+
+  def user
+    User.find_by_id self.user_id
+  end
+
+  def assign!(user)
+    self.user_id = user ? user.id : nil
+    self.name = user ? user.name : nil
+    self.image = user ? user.image : nil
+  end
+
+  def die!
+    if self.role.name == 'hunter'
+      self.role.dead_round = Status.find_current.round
+      self.role.save
+    end
+    self.status = :dead
   end
 
   def self.to_msg

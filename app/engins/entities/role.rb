@@ -1,4 +1,17 @@
 class Role < CacheRecord
+  def self.init_by_role(role)
+    return nil unless role
+
+    role.camelize.constantize.new
+  end
+
+  def self.find_by_role(role)
+    return nil unless role
+
+    temp = self.init_by_role role
+    temp.need_save? ? temp.class.find_current : temp
+  end
+
   def need_save?
     false
   end
@@ -26,24 +39,7 @@ class Role < CacheRecord
   def use_skill(pos)
   end
 
-  def save_if_need!
-    self.save! if self.need_save?
-  end
-
-  def self.clear!
-    self.find_all.each(&:destroy)
-  end
-
-  def self.init_by_role(role)
-    return nil unless role
-
-    role.camelize.constantize.new
-  end
-
-  def self.find_by_role(role)
-    return nil unless role
-
-    temp = self.init_by_role role
-    temp.need_save? ? temp.class.find_by_key : temp
+  def save_if_need
+    self.save if self.need_save?
   end
 end

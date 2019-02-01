@@ -23,7 +23,7 @@ class LongWolf < WolfBase
   end
 
   def prepare_skill
-    status = Status.find_by_key
+    status = Status.find_current
     buttons = []
     buttons.push(action: 'skill', skill: 'kill_more', value: 0) if status.round > 1 && !self.killed
     buttons.push(action: 'skill', skill: 'rest', value: -1) unless self.killing
@@ -41,7 +41,7 @@ class LongWolf < WolfBase
   # 0 --> 落刀
   # 1~ --> 刀人
   def use_skill(pos)
-    status = Status.find_by_key
+    status = Status.find_current
     history = History.find_by_key status.round
     return :failed_have_acted if history.long_wolf_kill
 
@@ -52,7 +52,7 @@ class LongWolf < WolfBase
       return :failed_is_killing if self.killing
 
       history.long_wolf_kill = pos
-      history.save!
+      history.save
       return :success
     end
 
@@ -61,7 +61,7 @@ class LongWolf < WolfBase
       return :failed_round_1 if status.round <= 1
 
       self.killing = true
-      self.save!
+      self.save
       return { action: 'panel', skill: 'kill_more', select: 'single', only: history.augur_lock }
     end
 
@@ -70,10 +70,10 @@ class LongWolf < WolfBase
     return :failed_target_dead unless player.status == :alive
 
     history.long_wolf_kill = player.pos
-    history.save!
+    history.save
 
     self.killed = true
-    self.save!
+    self.save
 
     :success
   end

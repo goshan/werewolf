@@ -17,26 +17,11 @@ class Deal < CacheRecord
     'user_id'
   end
 
-  def self.to_cache
-    {
-      :user_id => self.user_id,
-      :history => self.history,
-    }
-  end
-
-  def self.from_cache(obj)
-    ins = self.new(obj['user_id'])
-    obj.each do |key, value|
-      ins.send "#{key}=", value
-    end
-    return ins
-  end
-
-  def self.clear!
+  def self.clear
     Deal.find_all.each do |deal|
       deal.history = []
       deal.create_at = Time.now.to_i
-      deal.save!
+      deal.save
     end
   end
 end

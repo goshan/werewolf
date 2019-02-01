@@ -18,7 +18,7 @@ class Hunter < Role
   end
 
   def prepare_skill
-    status = Status.find_by_key
+    status = Status.find_current
     history = History.find_by_key status.round
     # check skill enabled
     return :failed_finish_shoot if self.dead_round < status.round
