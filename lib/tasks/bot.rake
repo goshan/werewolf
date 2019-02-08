@@ -19,7 +19,12 @@ namespace :bot do
     end
   end
 
-  task analyse_deal: :environment do |_task, _args|
+  task :analyse_deal, ['round', 'pos', 'target'] => :environment do |_task, args|
+    round = (args[:round] || 10).to_i
+    pos = (args[:pos] || 3).to_i
+    target = args[:target] || 'normal_wolf'
+    puts "simulate with #{round} rounds, check player##{pos}, with target role #{target}"
+
     # truncate tables
     puts "truncate data..."
     User.connection.execute "TRUNCATE TABLE users"
@@ -28,9 +33,8 @@ namespace :bot do
 
     # config setting
     puts "init..."
-    setting = Setting.new player_cnt: 12, villager_cnt: 4, normal_wolf_cnt: 3
+    setting = Setting.new player_cnt: 12, villager_cnt: 4, normal_wolf_cnt: 4
     setting.god_roles_list = ['seer', 'witch', 'hunter', 'savior']
-    setting.wolf_roles_list = ['lord_wolf']
     setting.save
 
     # init players cache
@@ -43,46 +47,46 @@ namespace :bot do
     end
 
     puts "deal..."
-    pos3_history = []
+    history = []
     gm = GameEngin.new
-    (1..10).each do |j|
-      sleep rand(10)
+    (1..round).each do |j|
+      start = Time.now.to_f
       gm.deal
-      players = Player.find_all
-      puts "##{j}: #{players.map{ |p| p.role.name }.join ','}"
+      duration = Time.now.to_f - start
+      players = Player.find_all.sort_by(&:pos)
+      puts "##{j}(#{(duration * 1000).to_i}ms): #{players.map{ |p| p.role.name }.join ','}"
       players.each do |player|
         Result.create user_id: player.user_id, role: player.role.name
-        pos3_history << player.role.name if player.pos == 3
+        history << player.role.name if player.pos == pos
       end
     end
 
-    puts "player 3 results:"
-    count = 0
-    hist = {}
+    puts "history of player##{pos}: #{history.inspect}"
+    max = Array.new round, 0
+    con = false
     start = 0
-    current_role = pos3_history.first
-    max = 0
-    max_role = current_role
-    pos3_history.each_with_index do |h, i|
-      hist[h] ||= 0
-      hist[h] += 1
-      count += 1
-
-      unless current_role == h
-        cnt = i - start
-        if cnt > max
-          max = cnt
-          max_role = current_role
-
-          start = i
-          current_role = h
+    history.each_with_index do |h, i|
+      cnt = 0
+      if h == target
+        if i == history.count - 1
+          cnt = i - start + 1
         end
+        start = i unless con
+        con = true
+      else
+        cnt = i - start
+        start = i + 1
+        con = false
+      end
+
+      unless cnt == 0
+        max[cnt - 1] += 1
       end
     end
-    puts "roles hist: "
-    hist.each do |role, cnt|
-      puts "#{role}: #{cnt * 1.0 / count}"
+
+    puts "#{target} rate:"
+    max.each_with_index do |m, i|
+      puts "#{i+1}: #{m}"
     end
-    puts "continous role: #{max_role}, count: #{max}"
   end
 end

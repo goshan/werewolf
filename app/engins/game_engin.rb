@@ -41,36 +41,9 @@ class GameEngin
     Vote.clear
     UserVote.clear
 
-    # assign roles
-    setting = Setting.current
-    roles = []
-    Setting::GOD_ROLES.each do |r|
-      roles.push r.to_s if setting.has? r
-    end
-    Setting::WOLF_ROLES.each do |r|
-      roles.push r.to_s if setting.has? r
-    end
-    (1..setting.villager_cnt).each { |_i| roles.push 'villager' }
-    (1..setting.normal_wolf_cnt).each { |_i| roles.push 'normal_wolf' }
-
     # random deal
-    players = Player.find_all
-    (1..1000).each do |i|
-      seed = Time.now.to_i * i
-      roles = shuffle_roles roles, seed
-      score = eval_roles(players, roles)
-      Rails.logger.debug "[DEAL ANALYSE] try ##{i}, seed: #{seed}, score: #{score}"
-      break if score >= 0.8
-    end
-
-    Rails.logger.debug "[DEAL ANALYSE] roles: #{roles.join ','}"
-    players.each do |p|
-      r = Role.init_by_role roles[p.pos - 1]
-      r.save_if_need
-      p.role = r
-      p.status = :alive
-      p.save
-    end
+    roles = Role.deal_roles players
+    Player.set_roles roles
 
     :success
   end
@@ -254,34 +227,5 @@ class GameEngin
     status = Status.find_current
     status.over = true
     status.save
-  end
-
-  private
-
-  def shuffle_roles(roles, rand_seed)
-    rand = Random.new rand_seed
-    roles.each_with_index do |_r, i|
-      o = rand.rand i + 1
-      roles[o], roles[i] = roles[i], roles[o]
-    end
-    roles
-  end
-
-  def eval_roles(players, roles)
-    return 1.0 if !players || players.empty?
-    return 1.0 if !roles || roles.empty?
-
-    scores = players.map do |player|
-      # fetch count from history
-      results = Result.in_today.of_user player.user_id
-      total_cnt = results.count
-      role_cnt = results.by_role(roles[player.pos - 1]).count
-
-      # cal score
-      total_cnt == 0 ? 1.0 : 1 - (role_cnt * 1.0 / total_cnt)
-    end
-
-    # cal average score
-    scores.reduce(:+) / scores.count
   end
 end

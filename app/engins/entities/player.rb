@@ -34,6 +34,16 @@ class Player < CacheRecord
     self.init
   end
 
+  def self.set_roles(roles)
+    self.find_all.each do |p|
+      r = Role.init_by_role roles[p.pos - 1]
+      r.save_if_need
+      p.role = r
+      p.status = :alive
+      p.save
+    end
+  end
+
   def initialize(pos, status)
     self.pos = pos
     self.status = status
