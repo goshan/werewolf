@@ -54,17 +54,14 @@ class GameEngin
     (1..setting.normal_wolf_cnt).each { |_i| role.push 'normal_wolf' }
 
     # random deal
-    Player.find_all.shuffle.each do |p|
-      deal = Deal.find_by_key p.user_id
-      deal = Deal.new(p.user_id) unless deal
-      weight = get_user_role_weight(deal.history, role)
-      role_idx = weighted_random_select(role, weight)
-      # deal cache
-      deal.history << role[role_idx]
-      deal.save
-      # role cache
-      r = Role.init_by_role role[role_idx]
-      role.delete_at(role_idx)
+    players = Player.find_all
+    (1..1000).each do |_i|
+      role.shuffle!
+      break if roles_diff_rate(players, role) >= 0.8
+    end
+
+    players.each do |p|
+      r = Role.init_by_role role[p.pos -1]
       r.save_if_need
       p.role = r
       p.status = :alive
@@ -266,32 +263,16 @@ class GameEngin
   end
 
   private
-  def get_user_role_weight(deal_history, role)
-      weight = [2] * role.length
-      role_count = {}
-      role.each do |r|
-        role_count[r] = 0
-      end
-      deal_history.each do |d|
-        next unless role_count.key?(d)
-        role_count[d] += 1
-      end
-      weight.each_with_index do |w, idx|
-        next if w == 1
-        new_w = w - role_count[role[idx]]
-        new_w = 1 if new_w < 1
-        weight[idx] = new_w
-        role_count[role[idx]] -= w - new_w
-      end
-      return weight
-  end
-  def weighted_random_select(items, weight)
-    # https://en.wikipedia.org/wiki/Fitness_proportionate_selection
-    target = rand * weight.inject(:+)
-    weight.each_with_index do |w, i|
-      target -= w
-      return i if target < 0
+  def roles_diff_rate(players, new_role)
+    return 1.0 if !players || players.empty?
+    return 1.0 if !new_role || new_role.empty?
+
+    diff_cnt = 0
+    sum = 0
+    players.each do |p|
+      sum += 1
+      diff_cnt += 1 unless p.role && p.role.name == new_role[p.pos - 1]
     end
-    return -1
+    diff_cnt * 1.0 / sum
   end
 end

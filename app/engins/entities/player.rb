@@ -84,17 +84,4 @@ class Player < CacheRecord
     end
     players_msg
   end
-
-  def self.roles_diff_rate(players, new_role)
-    return 1.0 if !players || players.empty?
-    return 1.0 if !new_role || new_role.empty?
-
-    diff_cnt = 0
-    sum = 0
-    players.each do |p|
-      sum += 1
-      diff_cnt += 1 unless p.role && p.role.name == new_role[p.pos - 1]
-    end
-    diff_cnt * 1.0 / sum
-  end
 end
