@@ -50,7 +50,7 @@ GEM
       debug_inspector (>= 0.0.1)
     builder (3.2.3)
     byebug (10.0.2)
-    cache_driver (0.3.9)
+    cache_driver (0.3.12)
       colorize (~> 0.8)
       redis (~> 3.3)
       tty-prompt (~> 0.18)

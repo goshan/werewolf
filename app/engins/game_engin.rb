@@ -43,25 +43,29 @@ class GameEngin
 
     # assign roles
     setting = Setting.current
-    role = []
+    roles = []
     Setting::GOD_ROLES.each do |r|
-      role.push r.to_s if setting.has? r
+      roles.push r.to_s if setting.has? r
     end
     Setting::WOLF_ROLES.each do |r|
-      role.push r.to_s if setting.has? r
+      roles.push r.to_s if setting.has? r
     end
-    (1..setting.villager_cnt).each { |_i| role.push 'villager' }
-    (1..setting.normal_wolf_cnt).each { |_i| role.push 'normal_wolf' }
+    (1..setting.villager_cnt).each { |_i| roles.push 'villager' }
+    (1..setting.normal_wolf_cnt).each { |_i| roles.push 'normal_wolf' }
 
     # random deal
     players = Player.find_all
-    (1..1000).each do |_i|
-      role.shuffle!
-      break if roles_diff_rate(players, role) >= 0.8
+    (1..1000).each do |i|
+      seed = Time.now.to_i * i
+      roles = shuffle_roles roles, seed
+      score = eval_roles(players, roles)
+      Rails.logger.debug "[DEAL ANALYSE] try ##{i}, seed: #{seed}, score: #{score}"
+      break if score >= 0.8
     end
 
+    Rails.logger.debug "[DEAL ANALYSE] roles: #{roles.join ','}"
     players.each do |p|
-      r = Role.init_by_role role[p.pos - 1]
+      r = Role.init_by_role roles[p.pos - 1]
       r.save_if_need
       p.role = r
       p.status = :alive
@@ -254,16 +258,30 @@ class GameEngin
 
   private
 
-  def roles_diff_rate(players, new_role)
-    return 1.0 if !players || players.empty?
-    return 1.0 if !new_role || new_role.empty?
-
-    diff_cnt = 0
-    sum = 0
-    players.each do |p|
-      sum += 1
-      diff_cnt += 1 unless p.role && p.role.name == new_role[p.pos - 1]
+  def shuffle_roles(roles, rand_seed)
+    rand = Random.new rand_seed
+    roles.each_with_index do |_r, i|
+      o = rand.rand i + 1
+      roles[o], roles[i] = roles[i], roles[o]
     end
-    diff_cnt * 1.0 / sum
+    roles
+  end
+
+  def eval_roles(players, roles)
+    return 1.0 if !players || players.empty?
+    return 1.0 if !roles || roles.empty?
+
+    scores = players.map do |player|
+      # fetch count from history
+      results = Result.in_today.of_user player.user_id
+      total_cnt = results.count
+      role_cnt = results.by_role(roles[player.pos - 1]).count
+
+      # cal score
+      total_cnt == 0 ? 1.0 : 1 - (role_cnt * 1.0 / total_cnt)
+    end
+
+    # cal average score
+    scores.reduce(:+) / scores.count
   end
 end
