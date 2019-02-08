@@ -61,7 +61,7 @@ class GameEngin
     end
 
     players.each do |p|
-      r = Role.init_by_role role[p.pos -1]
+      r = Role.init_by_role role[p.pos - 1]
       r.save_if_need
       p.role = r
       p.status = :alive
@@ -142,7 +142,7 @@ class GameEngin
     UserVote.clear
 
     vote = Vote.new desc
-    players_pos = Player.find_all_alive.map { |p| p.pos }
+    players_pos = Player.find_all_alive.map(&:pos)
     vote.targets = target_pos.nil? || target_pos.empty? ? players_pos : target_pos.map(&:to_i)
     vote.voters = voter_pos.nil? || voter_pos.empty? ? players_pos : voter_pos.map(&:to_i)
     vote.save
@@ -150,7 +150,7 @@ class GameEngin
     status.voting = vote.ts
     status.save
 
-    {target_pos: vote.targets, voter_pos: vote.voters}
+    { target_pos: vote.targets, voter_pos: vote.voters }
   end
 
   def vote(user, target)
@@ -162,6 +162,7 @@ class GameEngin
     vote = Vote.find_by_key status.voting
     player = Player.find_by_user user
     return :failed_not_voter unless player.status == :alive && vote.voters.include?(player.pos)
+
     user_vote = UserVote.find_by_key player.pos
     return :failed_has_voted if user_vote
 
@@ -220,49 +221,39 @@ class GameEngin
     end
 
     status = Status.find_current
-    if setting.kill_side?
-      # kill side
-      if (cnt[:god] * cnt[:villager]) == 0 && !must_kill_alive
-        status.over = true
-        status.save
-        return :wolf_win
-      elsif cnt[:wolf] == 0
-        status.over = true
-        status.save
-        return :wolf_lose 
-      else
-        return :not_over
+    res = if cnt[:wolf] == 0
+            :wolf_win
+          elsif (setting.kill_side? && (cnt[:god] * cnt[:villager]) == 0 && !must_kill_alive) ||
+                (setting.kill_all? && cnt[:god] + cnt[:villager] == 0) ||
+                (setting.kill_god? && cnt[:god] == 0)
+            :wolf_win
+          else
+            :not_over
+          end
+
+    game_over res unless res == :not_over
+    res
+  end
+
+  def game_over(res)
+    Player.find_all.each do |p|
+      win = false
+      if res == :wolf_win
+        win = p.role.side == :wolf
+      elsif res == :wolf_lose
+        win = (p.role.side == :god) || (p.role.side == :villager)
       end
-    elsif setting.kill_all?
-      # kill all
-      if cnt[:god] + cnt[:villager] == 0
-        status.over = true
-        status.save
-        return :wolf_win
-      elsif cnt[:wolf] == 0
-        status.over = true
-        status.save
-        return :wolf_lose 
-      else
-        return :not_over
-      end
-    elsif setting.kill_god?
-      # kill god
-      if cnt[:god] == 0
-        status.over = true
-        status.save
-        return :wolf_win
-      elsif cnt[:wolf] == 0
-        status.over = true
-        status.save
-        return :wolf_lose
-      else
-        return :not_over
-      end
+
+      p.user.results.create role: p.role.name, win: win
     end
+
+    status = Status.find_current
+    status.over = true
+    status.save
   end
 
   private
+
   def roles_diff_rate(players, new_role)
     return 1.0 if !players || players.empty?
     return 1.0 if !new_role || new_role.empty?

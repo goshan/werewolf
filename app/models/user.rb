@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  has_many :battle_results
+  has_many :results
 
   enum role: {
     gamer: 0,

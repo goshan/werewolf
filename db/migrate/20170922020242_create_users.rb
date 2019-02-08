@@ -4,7 +4,6 @@ class CreateUsers < ActiveRecord::Migration[5.0]
       t.string :name, :null => false
       t.integer :role, :limit => 1, :null => false, :default => 0
       t.string :alias
-      t.string :history, :null => false, :default => "{}"
 
       t.timestamps
     end

@@ -169,19 +169,15 @@ class GameChannel < ApplicationCable::Channel
 
   def stop_game(data)
     return send_to current_user, action: 'alert', msg: '不合法操作' unless current_user.lord?
+    return send_to current_user, action: 'alert', msg: '结束游戏失败' unless data['pos'] == 'wolf' || data['pos'] = 'villager'
 
-    status = Status.find_current
-    if data['pos'] == 'wolf'
-      status.over = true
-      status.save
-      return game_over :wolf_win
-    elsif data['pos'] == 'villager'
-      status.over = true
-      status.save
-      return game_over :wolf_lose
-    else
-      return send_to current_user, action: 'alert', msg: '结束游戏失败'
-    end
+    res = if data['pos'] == 'wolf'
+            :wolf_win
+          elsif data['pos'] == 'villager'
+            :wolf_lose
+          end
+    @gm.game_over res
+    game_over res
   end
 
   private
@@ -214,21 +210,10 @@ class GameChannel < ApplicationCable::Channel
     if res == :wolf_win
       play_voice 'wolf_win'
       broadcast action: 'alert', msg: '游戏结束，狼人胜利'
-      Player.find_all.each do |p|
-        r = p.role
-        p.user.battle_results.create role: r.name, win: (r.side == :wolf)
-      end
     elsif res == :wolf_lose
       play_voice 'wolf_lose'
       broadcast action: 'alert', msg: '游戏结束，好人胜利'
-      Player.find_all.each do |p|
-        r = p.role
-        p.user.battle_results.create role: r.name, win: (p.role.side == :god || p.role.side == :villager)
-      end
     end
-    # else
-    # not over, continue
-    res
   end
 
   # send failed message to requesting user if res is starting with :failed_xxx

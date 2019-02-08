@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class BattleResultTest < ActiveSupport::TestCase
+class ResultTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end
