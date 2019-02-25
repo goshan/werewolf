@@ -25,20 +25,18 @@ $(document).on 'turbolinks:load', (e) ->
             Wolf.engin.modal.display_role data
 
           else if data.action == 'panel'
-            Wolf.engin.panel.show data
+            Wolf.panel.updateWithData data
 
           else if data.action == 'dialog'
             Wolf.engin.modal.dialog data
 
           else if data.action == 'update'
-            if typeof(data.status) != 'undefined' && data.status != null
-              Wolf.engin.status.update data.status.round, data.status.turn
-              Wolf.engin.status.display()
-              Wolf.engin.panel.func = if data.status.turn == 'init' then 'sit' else 'none'
-            if typeof(data.players) != 'undefined' && data.players != null
-              for pos, p of data.players
-                Wolf.engin.players[pos].update p.name, p.status
-                Wolf.engin.players[pos].display()
+            if !Wolf.Utils.varIsNull(data.status)
+              Wolf.status.round = data.status.round
+              Wolf.status.turn = data.status.turn
+              Wolf.panel.updateWithTurn data.status.turn
+            if !Wolf.Utils.varIsNull(data.players)
+              Wolf.panel.players = data.players
 
       do: (action, pos=null)->
         if pos != null

@@ -94,6 +94,8 @@
 }
 
 @Wolf.Trans.insert_params = (template, params) ->
+  return "" if Wolf.Utils.varIsNull(template)
+
   res = template.replace /\{([^\{\}\?:,]+)\}/g, (x, y) ->
     return if params[y] then params[y] else '??'
   res = res.replace /\{([^\{\}\?:,]+)\?(([^\{\}\?:,]+:[^\{\}\?:,]+,?)+)\}/g, (x, y, z) ->

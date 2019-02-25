@@ -67,7 +67,6 @@ fieldset[disabled] .btn-purple.active {
 
 .area {
 	padding: 10px 10px;
-	border-radius: 15px;
 	margin: 10px 0;
 }
 
@@ -98,7 +97,8 @@ fieldset[disabled] .btn-purple.active {
 	height: 5px;
 }
 
-.ope-panel {
+.info-panel {
+	border-radius: 15px 15px 0 0;
 	background-color: rgb(250, 235, 215);
 	background-color: rgba(250, 235, 215, 0.5);
 }
@@ -127,36 +127,44 @@ fieldset[disabled] .btn-purple.active {
 	}
 }
 
-.player-panel {
-	font-weight: bold;
-	color: #fff;
+#ope-panel {
+  font-weight: bold;
+  margin-top: -10px;
+
+  .tip-panel {
+    border-radius: 0 0 15px 15px;
+    background-color: rgb(250, 235, 215);
+    background-color: rgba(250, 235, 215, 0.5);
+    text-align: center;
+
+    .tips {
+      font-size: 18px;
+      height: 50px;
+      line-height: 25px;
+      color: #a94442;
+    }
+
+    .panel-finish {
+      height: 34px;
+    }
+  }
+
+  .player-panel {
+    color: #fff;
+  }
 }
 
 .notice {
 	height: 50px;
 	padding: 15px;
 
-	.status, .setting {
+	#status, .setting {
 		display: inline-block;
 	}
 
-	.status {
+	#status {
 		font-size: 16px;
 	}
-}
-
-.tips {
-	font-size: 18px;
-	font-weight: bold;
-	height: 50px;
-	line-height: 25px;
-	text-align: center;
-	color: #a94442;
-}
-
-.panel-finish {
-	text-align: center;
-	height: 34px;
 }
 
 .rest {
@@ -179,56 +187,52 @@ fieldset[disabled] .btn-purple.active {
 			background-color: #cdcdcd !important;
 			border: 1px solid #666 !important;
 		}
-
-		&:not([status=dead]) {
-			&.js-disable {
-				color: #666 !important;
-				background-color: transparent !important;
-				border: 1px solid #666 !important;
-			}
-			&.js-selected {
-				color: #000 !important;
-				background-color: #fff !important;
-				border: 1px solid #ccc !important;
-			}
-
-			&.skill-kill {
-				background-color: #d9534f;
-				border: 1px solid #d43f3a;
-			}
-			&.skill-kill_more {
-				background-color: #d9534f;
-				border: 1px solid #d43f3a;
-			}
-			&.skill-poison {
-				background-color: #805EAD;
-				border: 1px solid #684D8C;
-			}
-			&.skill-confirm {
-				background-color: #f0ad4e;
-				border: 1px solid #eea236;
-			}
-			&.skill-guard {
-				background-color: #5cb85c;
-				border: 1px solid #4cae4c;
-			}
-			&.skill-exchange {
-				background-color: #dc78d9;
-				border: 1px solid #ab6caf;
-			}
-			&.skill-lock {
-				background-color: #313ba9;
-				border: 1px solid #202bad;
-			}
-			&.skill-vote {
-				background-color: #f0ad4e;
-				border: 1px solid #eea236;
-			}
-			&.skill-throw {
-				background-color: #337ab7;
-				border: 1px solid #2e6da4;
-			}
-		}
+    &[status=disable] {
+      color: #666 !important;
+      background-color: transparent !important;
+      border: 1px solid #666 !important;
+    }
+    &[status=selected] {
+      color: #000 !important;
+      background-color: #fff !important;
+      border: 1px solid #ccc !important;
+    }
+    &[status=kill] {
+      background-color: #d9534f;
+      border: 1px solid #d43f3a;
+    }
+    &[status=kill_more] {
+      background-color: #d9534f;
+      border: 1px solid #d43f3a;
+    }
+    &[status=poison] {
+      background-color: #805EAD;
+      border: 1px solid #684D8C;
+    }
+    &[status=confirm] {
+      background-color: #f0ad4e;
+      border: 1px solid #eea236;
+    }
+    &[status=guard] {
+      background-color: #5cb85c;
+      border: 1px solid #4cae4c;
+    }
+    &[status=exchange] {
+      background-color: #dc78d9;
+      border: 1px solid #ab6caf;
+    }
+    &[status=lock] {
+      background-color: #313ba9;
+      border: 1px solid #202bad;
+    }
+    &[status=vote] {
+      background-color: #f0ad4e;
+      border: 1px solid #eea236;
+    }
+    &[status=throw] {
+      background-color: #337ab7;
+      border: 1px solid #2e6da4;
+    }
 	}
 
 	&.player-right-side {

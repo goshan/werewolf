@@ -18,7 +18,7 @@ $(document).on 'turbolinks:load', (e) ->
 
   $('#js-start').click (e) ->
     e.preventDefault()
-    if Wolf.engin.status.turn == 'check_role' || Wolf.engin.status.turn == 'day'
+    if Wolf.status.turn == 'check_role' || Wolf.status.turn == 'day'
       BootstrapDialog.show {
         title: '直接进入黑夜',
         message: '不放逐玩家而直接进入黑夜，可以吗？',
@@ -94,13 +94,10 @@ $(document).on 'turbolinks:load', (e) ->
 
   $('#js-use-skill').click (e) ->
     e.preventDefault()
-    if Wolf.engin.panel.func == 'none'
+    if Wolf.panel.skillParams.action == 'none'
       App.game.do 'skill_active'
 
   $('.js-seat').click (e) ->
     e.preventDefault()
     Wolf.engin.panel.click e.currentTarget
 
-  $('.panel-finish a').click (e) ->
-    e.preventDefault()
-    Wolf.engin.panel.finish()

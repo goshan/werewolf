@@ -1,84 +1,111 @@
-= easy_login_session
+<%= easy_login_session %>
 
-.container.game-page
-  .logo= image_tag '/img/logo.png'
-  .nav
-    %span#current_user= current_user.name
-    .pull-right
-      = form_tag logout_path, :method => "post" do
-        = submit_tag "退出", :class => "btn btn-link logout"
+<div class="container game-page">
+  <div class="logo"><%= image_tag "/img/logo.png" %></div>
+  <div class="nav">
+    <span id="current_user"><%= current_user.name %></span>
+    <div class="pull-right">
+      <%= form_tag logout_path, :method => "post" do %>
+        <% = submit_tag "退出", :class => "btn btn-link logout" %>
+      <% end %>
+    </div>
+  </div>
 
-  .progress
-    .progress-bar.progress-bar-info{:role => "progressbar", :style => "width: 0%;"}
+  <div class="progress">
+    <div class="progress-bar progress-bar-info" role="progressbar" style="width: 0%"></div>
+  </div>
 
-  - if flash.alert
-    .alert.alert-danger= flash.alert
+  <div class="area ope-panel">
+    <div class="notice">
+      <div id="status" class="status" style="display: inline-block">
+        第{{statusRound}}天 {{statusTurn}}
+      </div>
 
-  .area.info-panel
-    .notice
-      #status{:style => "display: inline-block;"}
-        第{{round}}天 {{turnTrans}}
+      <div class="setting pull-right">
+        <%= link_to "投票历史", "#", :class => "btn btn-primary btn-xs", :id => "js-vote-history" %>
+        <%= link_to "查看板子", "#", :class => "btn btn-primary btn-xs", 'data-toggle' => "modal", 'data-target' => "#check-setting" %>
+        <div class="model fade" id="check-setting" tabindex="-1" role="dialog" aria-labelledby="playerOutSelectLabel">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">当前板子</h4>
+              </div>
+              <div class="modal-body">
+                <p>玩家人数: <%= @setting.player_cnt %>人</p>
+                <p>神民: <%=god_setting @setting %></p>
+                <p>平民: <%= @setting.villager_cnt %>人</p>
+                <p>狼人: <%= wolf_setting @setting %>人</p>
+                <p>胜利条件: <%= win_setting @setting %>人</p>
+                <p>狼人必杀角色: <%= @setting.must_kill ? role_name(@setting.must_kill.to_sym) : '' %></p>
+              </div>
+              <div class="modal-footer">
+                <% = link_to "好的", "#", :class => "btn btn-default", 'data-dismiss' => "modal" %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-      .setting.pull-right
-        = link_to "投票历史", "#", :class => "btn btn-primary btn-xs", :id => "js-vote-history"
-        = link_to "查看板子", "#", :class => "btn btn-primary btn-xs", 'data-toggle' => "modal", 'data-target' => "#check-setting"
-        .modal.fade{:id => "check-setting", :tabindex => "-1", :role => "dialog", 'aria-labelledby' => "playerOutSelectLabel"}
-          .modal-dialog
-            .modal-content
-              .modal-header
-                %button.close{:type => "button", 'data-dismiss' => "modal", 'aria-label' => "Close"}
-                  %span{'aria-hidden' => "true"} &times;
-                %h4.modal-title 当前板子
-              .modal-body
-                %p= "玩家人数: #{@setting.player_cnt}人"
-                %p= "神民: #{god_setting @setting}"
-                %p= "平民: #{@setting.villager_cnt}人"
-                %p= "狼人: #{wolf_setting @setting}"
-                %p= "胜利条件: #{win_setting @setting}"
-                %p= "狼人必杀角色: #{@setting.must_kill ? role_name(@setting.must_kill.to_sym) : ''}"
-              .modal-footer
-                = link_to "好的", "#", :class => "btn btn-default", 'data-dismiss' => "modal"
-
-    .ope-player
-      = link_to "查看身份", "#", :class => "btn btn-warning", :id => "js-check-role"
-      = link_to "使用技能", "#", :class => "btn btn-warning pull-right", :id => "js-use-skill"
-      .modal.fade{:id => "check-role-dialog"}
-        .modal-dialog
-          .modal-content
-            .modal-header
-              %button.close{:type => "button", 'data-dismiss' => "modal", 'aria-label' => "Close"}
-                %span{'aria-hidden' => "true"} &times;
-              %h4.modal-title
-                游戏身份
-            .modal-body
+    <div class="ope-player">
+      <%= link_to "查看身份", "#", :class => "btn btn-warning", :id => "js-check-role" %>
+      <%= link_to "使用技能", "#", :class => "btn btn-warning pull-right", :id => "js-use-skill" %>
+      <div class="modal fade" id="check-role-dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h4 class="modal-title">游戏身份</h4>
+            </div>
+            <div class="modal-body">
               你的身份是
-              %span.role
-              .role-img
-                = image_tag "/card/seer.jpg", :class => 'role-card role-seer hidden'
-                = image_tag "/card/witch.jpg", :class => 'role-card role-witch hidden'
-                = image_tag "/card/hunter.jpg", :class => 'role-card role-hunter hidden'
-                = image_tag "/card/savior.jpg", :class => 'role-card role-savior hidden'
-                = image_tag "/card/idiot.jpg", :class => 'role-card role-idiot hidden'
-                = image_tag "/card/magician.jpg", :class => 'role-card role-magician hidden'
-                = image_tag "/card/augur.jpg", :class => 'role-card role-augur hidden'
-                = image_tag "/card/knight.jpg", :class => 'role-card role-knight hidden'
-                = image_tag "/card/villager.jpg", :class => 'role-card role-villager hidden'
-                = image_tag "/card/wolf.jpg", :class => 'role-card role-normal_wolf hidden'
-                = image_tag "/card/chief_wolf.jpg", :class => 'role-card role-chief_wolf hidden'
-                = image_tag "/card/lord_wolf.jpg", :class => 'role-card role-lord_wolf hidden'
-                = image_tag "/card/long_wolf.jpg", :class => 'role-card role-long_wolf hidden'
-                = image_tag "/card/ghost_rider.jpg", :class => 'role-card role-ghost_rider hidden'
-            .modal-footer
-              = link_to "好的", "#", :class => "btn btn-default", 'data-dismiss' => "modal"
+              <span class="role"></span>
+              <div="role-img">
+                <% = image_tag "/card/seer.jpg", :class => 'role-card role-seer hidden' %>
+                <% = image_tag "/card/witch.jpg", :class => 'role-card role-witch hidden' %>
+                <% = image_tag "/card/hunter.jpg", :class => 'role-card role-hunter hidden' %>
+                <% = image_tag "/card/savior.jpg", :class => 'role-card role-savior hidden' %>
+                <% = image_tag "/card/idiot.jpg", :class => 'role-card role-idiot hidden' %>
+                <% = image_tag "/card/magician.jpg", :class => 'role-card role-magician hidden' %>
+                <% = image_tag "/card/augur.jpg", :class => 'role-card role-augur hidden' %>
+                <% = image_tag "/card/knight.jpg", :class => 'role-card role-knight hidden' %>
+                <% = image_tag "/card/villager.jpg", :class => 'role-card role-villager hidden' %>
+                <% = image_tag "/card/wolf.jpg", :class => 'role-card role-normal_wolf hidden' %>
+                <% = image_tag "/card/chief_wolf.jpg", :class => 'role-card role-chief_wolf hidden' %>
+                <% = image_tag "/card/lord_wolf.jpg", :class => 'role-card role-lord_wolf hidden' %>
+                <% = image_tag "/card/long_wolf.jpg", :class => 'role-card role-long_wolf hidden' %>
+                <% = image_tag "/card/ghost_rider.jpg", :class => 'role-card role-ghost_rider hidden' %>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <%= link_to "好的", "#", :class => "btn btn-default", 'data-dismiss' => "modal" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  #ope-panel
-    .area.tip-panel
-      .tips {{tip}}
-      .panel-finish= link_to "执行", '#', :class => "btn btn-default", 'v-show' => "showFinishButton", '@click' => "onFinish"
+    <div class="tips"></div>
+    <div class="panel-finish"><%= link_to "执行", '#', :class => "btn btn-default hidden" %></div>
+  </div>
 
-    .area.player-panel
-      #all_players{:player_cnt => @setting.player_cnt}
-        %player{'v-for' => "(player, ind) in playersShow", ':key' => "ind", ':player' => "player"}
+  <div class="area player-panel">
+    <div class="all_players">
+      <div class="player" v-for="player in players">
+        <%= link_to "{{#{player.pos}}}号", "#", :class => "btn js-seat", ::pos => player.pos %>
+      - (1..@player_height).each do |i|
+        .player
+          = link_to "#{i}号", "#", :class => "btn js-seat", :pos => i
+          %span.name
+        - if i+@player_height <= @setting.player_cnt
+          .player.player-right-side
+            %span.name
+            = link_to "#{i+@player_height}号", "#", :class => "btn js-seat", :pos => i+@player_height
 
   - if current_user.lord?
     .area
