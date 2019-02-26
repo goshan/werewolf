@@ -1,6 +1,6 @@
 @Wolf = @Wolf ? {}
 
-class @Wolf.Modal
+@Wolf.modal = {
   alert: (data) ->
     msg = Wolf.Trans.Panel.alert_message_trans[data.msg]
     msg = data.msg unless msg
@@ -8,7 +8,7 @@ class @Wolf.Modal
 
   dialog: (data) ->
     # has been showing sth
-    return unless Wolf.engin.panel.func == 'none'
+    return unless Wolf.panel.skillParams.action == 'none'
 
     buttons = []
     for b in data.buttons
@@ -21,7 +21,7 @@ class @Wolf.Modal
           if d.action == 'skill'
             App.game.do 'skill', d.value
           else if d.action == 'panel'
-            Wolf.engin.panel.show d
+            Wolf.panel.updateWithData d
           dialog.close()
       }
     BootstrapDialog.show {
@@ -35,4 +35,4 @@ class @Wolf.Modal
     $('#check-role-dialog .role-card').addClass('hidden')
     $("#check-role-dialog .role-#{data.role}").removeClass('hidden')
     $('#check-role-dialog').modal 'show'
-
+}

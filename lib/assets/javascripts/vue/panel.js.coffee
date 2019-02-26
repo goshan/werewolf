@@ -32,7 +32,7 @@ Vue.component 'player', {
         @$parent.selected = [@player.pos]
       else if @$parent.skillParams.select == "multiple"
         if @player.pos in @$parent.selected
-          @$parent.selected = @$parent.selected.filter (p) p == @player.pos
+          @$parent.selected = @$parent.selected.filter (p) => p != @player.pos
         else
           @$parent.selected.push @player.pos
   }
@@ -51,15 +51,17 @@ Vue.component 'player', {
   computed: {
     tip: ->
       Wolf.Trans.insert_params Wolf.Trans.Panel.panel_tip_trans[@skillName], @skillParams
+
     showFinishButton: ->
-      @skillParams.action != "none"
+      @skillParams.action not in ["none", "sit"]
+
     playersShow: ->
       players = []
       keys = Object.keys(@players)
       sep = Math.ceil(keys.length/2)
       for pos in keys
-        index = parseInt(pos, 10)
-        index = if index <= sep then index*2-1 else (index-sep)*2
+        pos = parseInt(pos, 10)
+        index = if pos <= sep then pos*2-1 else (pos-sep)*2
         val = @players[pos]
         status = val.status
         if val.status == "alive"
@@ -81,18 +83,28 @@ Vue.component 'player', {
       players
   }
   methods: {
-    updateWithTurn: (turn = "finished") ->
+    updateWithTurn: (turn = null) ->
       @skillName = null
       @skillParams = {
         action: if turn == "init" then "sit" else "none"
       }
+
     updateWithData: (data) ->
       @skillName = data.skill
+      if data.skill in ["vote", "throw"]
+        action = data.skill
+      else
+        action = "skill"
       @skillParams = {
-        action: if data.action == "panel" then "skill" else data.action,
+        action: action,
         select: data.select,
         only: data.only
       }
+
+    _reset: () ->
+      @updateWithTurn()
+      @selected = []
+
     onFinish: (e) ->
       e.preventDefault()
 
@@ -102,8 +114,7 @@ Vue.component 'player', {
         App.game.do @skillParams.action, @selected[0]
       else if @skillParams.select == "multiple"
         App.game.do @skillParams.action, @selected
-      @updateWithTurn()
-      @selected = []
+      @_reset()
   }
 }
 

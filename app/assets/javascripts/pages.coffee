@@ -6,7 +6,6 @@
 
 $(document).on 'turbolinks:load', (e) ->
   current_user = $('#current_user').text()
-  Wolf.engin = new Wolf.GameEngin current_user
 
   $('#js-reset').click (e) ->
     e.preventDefault()
@@ -42,14 +41,14 @@ $(document).on 'turbolinks:load', (e) ->
 
   $('#js-night-info').click (e) ->
     e.preventDefault()
-    if Wolf.engin.status.turn == 'day'
+    if Wolf.status.turn == 'day'
       App.game.do 'night_info'
     else
       BootstrapDialog.alert "只有白天才能查看信息"
 
   $('#js-start-vote').click (e) ->
     e.preventDefault()
-    if Wolf.engin.status.turn == 'day'
+    if Wolf.status.turn == 'day'
       vote_desc = $('#start-vote-modal #vote_desc').val()
       target_pos = []
       for checkbox in $('#start-vote-modal #target_pos .btn.active input[type=checkbox]')
@@ -64,15 +63,15 @@ $(document).on 'turbolinks:load', (e) ->
 
   $('#js-stop-vote').click (e) ->
     e.preventDefault()
-    if Wolf.engin.status.turn == 'day'
+    if Wolf.status.turn == 'day'
       App.game.do 'stop_vote'
     else
       BootstrapDialog.alert "只有白天才能终止投票"
 
   $('#js-throw').click (e) ->
     e.preventDefault()
-    if Wolf.engin.status.turn == 'day'
-      Wolf.engin.panel.show {skill: 'throw', select: 'multiple'}
+    if Wolf.status.turn == 'day'
+      Wolf.panel.updateWithData {skill: 'throw', select: 'multiple'}
     else
       BootstrapDialog.alert "只有白天才能放逐玩家"
 
@@ -96,8 +95,4 @@ $(document).on 'turbolinks:load', (e) ->
     e.preventDefault()
     if Wolf.panel.skillParams.action == 'none'
       App.game.do 'skill_active'
-
-  $('.js-seat').click (e) ->
-    e.preventDefault()
-    Wolf.engin.panel.click e.currentTarget
 
