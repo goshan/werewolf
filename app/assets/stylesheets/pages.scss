@@ -2,6 +2,9 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+[v-loack] {
+  display: none !important;
+}
 
 .btn-purple,
 .btn-purple:hover, 
@@ -97,7 +100,7 @@ fieldset[disabled] .btn-purple.active {
 	height: 5px;
 }
 
-.info-panel {
+#info {
 	border-radius: 15px 15px 0 0;
 	background-color: rgb(250, 235, 215);
 	background-color: rgba(250, 235, 215, 0.5);
@@ -158,11 +161,11 @@ fieldset[disabled] .btn-purple.active {
 	height: 50px;
 	padding: 15px;
 
-	#status, .setting {
+	.status, .setting {
 		display: inline-block;
 	}
 
-	#status {
+	.status {
 		font-size: 16px;
 	}
 }

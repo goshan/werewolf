@@ -5,8 +5,6 @@
 
 
 $(document).on 'turbolinks:load', (e) ->
-  current_user = $('#current_user').text()
-
   $('#js-reset').click (e) ->
     e.preventDefault()
     App.game.do 'reset'
@@ -82,17 +80,4 @@ $(document).on 'turbolinks:load', (e) ->
       App.game.do 'stop_game', 'wolf'
     else if name == "js-wolf-lose"
       App.game.do 'stop_game', 'villager'
-
-  $('#js-vote-history').click (e) ->
-    e.preventDefault()
-    App.game.do 'vote_history'
-
-  $('#js-check-role').click (e) ->
-    e.preventDefault()
-    App.game.do 'check_role'
-
-  $('#js-use-skill').click (e) ->
-    e.preventDefault()
-    if Wolf.panel.skillParams.action == 'none'
-      App.game.do 'skill_active'
 

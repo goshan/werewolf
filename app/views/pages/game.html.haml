@@ -14,13 +14,13 @@
   - if flash.alert
     .alert.alert-danger= flash.alert
 
-  .area.info-panel
+  .area#info{'v-loack' => true}
     .notice
-      #status{:style => "display: inline-block;"}
+      .status{:style => "display: inline-block;"}
         第{{round}}天 {{turnTrans}}
 
       .setting.pull-right
-        = link_to "投票历史", "#", :class => "btn btn-primary btn-xs", :id => "js-vote-history"
+        = link_to "投票历史", "#", :class => "btn btn-primary btn-xs", '@click' => "onClickVoteHistory"
         = link_to "查看板子", "#", :class => "btn btn-primary btn-xs", 'data-toggle' => "modal", 'data-target' => "#check-setting"
         .modal.fade{:id => "check-setting", :tabindex => "-1", :role => "dialog", 'aria-labelledby' => "playerOutSelectLabel"}
           .modal-dialog
@@ -40,8 +40,8 @@
                 = link_to "好的", "#", :class => "btn btn-default", 'data-dismiss' => "modal"
 
     .ope-player
-      = link_to "查看身份", "#", :class => "btn btn-warning", :id => "js-check-role"
-      = link_to "使用技能", "#", :class => "btn btn-warning pull-right", :id => "js-use-skill"
+      = link_to "查看身份", "#", :class => "btn btn-warning", '@click' => "onClickCheckRole"
+      = link_to "使用技能", "#", :class => "btn btn-warning pull-right", '@click' => "onClickSkill"
       .modal.fade{:id => "check-role-dialog"}
         .modal-dialog
           .modal-content
@@ -71,7 +71,7 @@
             .modal-footer
               = link_to "好的", "#", :class => "btn btn-default", 'data-dismiss' => "modal"
 
-  #ope-panel
+  #ope-panel{'v-loack' => true}
     .area.tip-panel
       .tips {{tip}}
       .panel-finish= link_to "执行", '#', :class => "btn btn-default", 'v-show' => "showFinishButton", '@click' => "onFinish"
