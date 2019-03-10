@@ -38,6 +38,10 @@ class Status < CacheRecord
     self.round == 0 && self.turn == :check_role
   end
 
+  def check_turn?
+    self.round <= 1 || self.turn != :mixed
+  end
+
   def check_role!
     self.round = 0
     self.voting = 0
@@ -52,17 +56,14 @@ class Status < CacheRecord
       self.round += 1
       self.turn = self.process.first || :day
     else
-      current_turn_index = 1 + self.process.index(self.turn)
-      self.turn = :day
-      while current_turn_index < self.process.count
-        turn = self.process[current_turn_index]
-        role = Role.find_by_role turn
-        if role.act_turn?
-          self.turn = turn
-          break
-        end
-        current_turn_index += 1
+      next_turn_index = 1 + self.process.index(self.turn)
+      while next_turn_index < self.process.count
+        self.turn = self.process[next_turn_index]
+        break if self.check_turn?
+
+        next_turn_index += 1
       end
+      self.turn = :day if next_turn_index == self.process.count
     end
     self.save
   end

@@ -62,10 +62,6 @@ class Role < CacheRecord
     self.save if self.need_save?
   end
 
-  def act_turn?
-    true
-  end
-
   def win?(res)
     win = false
     if res == :wolf_win

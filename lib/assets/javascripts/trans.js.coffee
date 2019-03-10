@@ -36,6 +36,7 @@
 @Wolf.Trans.Panel = @Wolf.Trans.Panel ? {
   alert_message_trans: {
     failed_not_select: "请选择对象",
+    failed_mix_self: "不能混血自己",
     failed_not_turn: "当前回合无法操作",
     failed_seat_not_available: "该位置已被占据",
     failed_empty_seat: "人数不足",

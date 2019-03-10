@@ -9,11 +9,6 @@ class Mixed < Role
     :villager
   end
 
-  def act_turn?
-    status = Status.find_current
-    status.round <= 1
-  end
-
   def win?(res)
     player = Player.find_by_key self.mixed_with
     player.role.win?(res)
@@ -32,6 +27,9 @@ class Mixed < Role
     return :failed_not_select if pos.nil? || pos.to_i == 0
     return :failed_have_acted if !self.mixed_with.nil? && self.mixed_with != 0
 
+    mixed = Player.find_by_role self.name
+    return :failed_mix_self if pos.to_i == mixed.pos.to_i
+
     self.mixed_with = pos.to_i
     self.save
 
@@ -39,7 +37,7 @@ class Mixed < Role
       action: 'dialog',
       skill: 'mixed',
       pos: pos,
-      buttons: [{ action: 'skill', skill: 'mixed_finish', pos: -1 }]
+      buttons: [{ action: 'skill', skill: 'mixed_finish', value: -1 }]
     }
   end
 end
