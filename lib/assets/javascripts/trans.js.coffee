@@ -2,6 +2,7 @@
 @Wolf.Trans = @Wolf.Trans ? {}
 
 @Wolf.Trans.Roles = @Wolf.Trans.Roles ? {
+  mixed: "混血儿",
   seer: "预言家",
   witch: "女巫",
   hunter: "猎人",
@@ -29,10 +30,12 @@
   savior: "夜晚 守卫行动",
   magician: "夜晚 魔术师行动"
   augur: "夜晚 占卜师行动"
+  mixed: "夜晚 混血儿行动"
 }
 
 @Wolf.Trans.Panel = @Wolf.Trans.Panel ? {
   alert_message_trans: {
+    failed_not_select: "请选择对象",
     failed_not_turn: "当前回合无法操作",
     failed_seat_not_available: "该位置已被占据",
     failed_empty_seat: "人数不足",
