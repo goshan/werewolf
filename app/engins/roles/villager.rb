@@ -7,10 +7,7 @@ class Villager < Role
     :villager
   end
 
-  def skill_name
-    nil
-  end
-
-  def skill
+  def role_checked_by_seer
+    :virtuous
   end
 end

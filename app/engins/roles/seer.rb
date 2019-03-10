@@ -7,6 +7,10 @@ class Seer < Role
     :god
   end
 
+  def role_checked_by_seer
+    :virtuous
+  end
+
   def skill_timing
     :alive
   end
@@ -38,7 +42,7 @@ class Seer < Role
       action: 'dialog',
       skill: 'confirm',
       pos: pos,
-      role: player.role.side == :wolf ? 'evil' : 'virtuous',
+      role: player.role.role_checked_by_seer,
       buttons: [{ action: 'skill', skill: 'confirm_finish', pos: nil }]
     }
   end

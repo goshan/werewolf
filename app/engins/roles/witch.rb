@@ -18,6 +18,10 @@ class Witch < Role
     :alive
   end
 
+  def role_checked_by_seer
+    :virtuous
+  end
+
   def prepare_skill
     history = History.find_by_key Status.find_current.round
     buttons = []

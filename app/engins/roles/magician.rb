@@ -17,6 +17,10 @@ class Magician < Role
     :alive
   end
 
+  def role_checked_by_seer
+    :virtuous
+  end
+
   def prepare_skill
     { action: 'panel', skill: 'exchange', select: 'multiple' }
   end

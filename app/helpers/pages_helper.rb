@@ -11,7 +11,8 @@ module PagesHelper
     :chief_wolf => "白狼王",
     :lord_wolf => "狼王",
     :long_wolf => "大灰狼",
-    :ghost_rider => "恶灵骑士"
+    :ghost_rider => "恶灵骑士",
+    :hidden_wolf => "隐狼"
   }
   ROLE_KLASS = {
     :seer => "primary",
@@ -25,7 +26,8 @@ module PagesHelper
     :chief_wolf => "danger",
     :lord_wolf => "danger",
     :long_wolf => "danger",
-    :ghost_rider => "danger"
+    :ghost_rider => "danger",
+    :hidden_wolf => "danger"
   }
 
   def role_klass(role)

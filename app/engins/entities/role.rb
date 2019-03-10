@@ -51,6 +51,10 @@ class Role < CacheRecord
     nil
   end
 
+  def role_checked_by_seer
+    nil
+  end
+
   def prepare_skill
     nil
   end

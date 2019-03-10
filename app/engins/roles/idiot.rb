@@ -7,10 +7,7 @@ class Idiot < Role
     :god
   end
 
-  def skill_name
-    nil
-  end
-
-  def skill
+  def role_checked_by_seer
+    :virtuous
   end
 end
