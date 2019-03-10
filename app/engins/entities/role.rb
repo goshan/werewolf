@@ -62,13 +62,27 @@ class Role < CacheRecord
     self.save if self.need_save?
   end
 
+  def act_turn?
+    true
+  end
+
+  def win?(res)
+    win = false
+    if res == :wolf_win
+      win = self.side == :wolf
+    elsif res == :wolf_lose
+      win = (self.side == :god) || (self.side == :villager)
+    end
+    win
+  end
+
   private
 
   def self.init_roles_with_setting
     setting = Setting.current
     roles = []
 
-    Setting::GOD_ROLES.each do |r|
+    Setting::SPECIAL_ROLES.each do |r|
       roles.push r.to_s if setting.has? r
     end
     Setting::WOLF_ROLES.each do |r|

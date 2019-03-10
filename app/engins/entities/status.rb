@@ -1,7 +1,7 @@
 class Status < CacheRecord
   attr_accessor :round, :turn, :process, :voting, :over
 
-  NIGHT_PROCESS = %i[augur wolf witch long_wolf magician seer savior].freeze
+  NIGHT_PROCESS = %i[mixed augur wolf witch long_wolf magician seer savior].freeze
 
   def initialize
     self.round = 0
@@ -9,7 +9,10 @@ class Status < CacheRecord
     self.process = []
     self.voting = 0
     self.over = true
+    self.generate_next_round_turns!
+  end
 
+  def generate_next_round_turns!
     setting = Setting.current
     NIGHT_PROCESS.each do |r|
       if r == :wolf && setting.wolf_cnt > 0
@@ -49,12 +52,17 @@ class Status < CacheRecord
       self.round += 1
       self.turn = self.process.first || :day
     else
-      current_turn_index = self.process.index self.turn
-      self.turn = if current_turn_index == self.process.count - 1
-                    :day
-                  else
-                    self.process[current_turn_index + 1]
-                  end
+      current_turn_index = 1 + self.process.index(self.turn)
+      self.turn = :day
+      while current_turn_index < self.process.count
+        turn = self.process[current_turn_index]
+        role = Role.find_by_role turn
+        if role.act_turn?
+          self.turn = turn
+          break
+        end
+        current_turn_index += 1
+      end
     end
     self.save
   end
