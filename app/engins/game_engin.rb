@@ -199,7 +199,7 @@ class GameEngin
 
     status = Status.find_current
     res = if cnt[:wolf] == 0
-            :wolf_win
+            :wolf_lose
           elsif (setting.kill_side? && (cnt[:god] * cnt[:villager]) == 0 && !must_kill_alive) ||
                 (setting.kill_all? && cnt[:god] + cnt[:villager] == 0) ||
                 (setting.kill_god? && cnt[:god] == 0)
