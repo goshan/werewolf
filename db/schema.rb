@@ -23,7 +23,7 @@ ActiveRecord::Schema.define(version: 20180523085934) do
 
   create_table "settings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "player_cnt",                default: 0
-    t.string   "god_roles"
+    t.string   "special_roles"
     t.string   "wolf_roles"
     t.integer  "villager_cnt",              default: 0
     t.integer  "normal_wolf_cnt",           default: 0

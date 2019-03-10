@@ -1,5 +1,5 @@
 class Setting < ApplicationRecord
-  GOD_ROLES = %i[seer witch hunter savior idiot magician augur knight].freeze
+  SPECIAL_ROLES = %i[seer witch hunter savior idiot magician augur knight mixed].freeze
   WOLF_ROLES = %i[chief_wolf lord_wolf long_wolf ghost_rider].freeze
 
   enum witch_self_save: {
@@ -18,16 +18,16 @@ class Setting < ApplicationRecord
     self.order(updated_at: :desc).first
   end
 
-  def god_roles_list
-    self.god_roles ? self.god_roles.split(',').map(&:to_sym) : []
+  def special_roles_list
+    self.special_roles ? self.special_roles.split(',').map(&:to_sym) : []
   end
 
   def wolf_roles_list
     self.wolf_roles ? self.wolf_roles.split(',').map(&:to_sym) : []
   end
 
-  def god_roles_list=(list)
-    self.god_roles = list.join ','
+  def special_roles_list=(list)
+    self.special_roles = list.join ','
   end
 
   def wolf_roles_list=(list)
@@ -35,7 +35,7 @@ class Setting < ApplicationRecord
   end
 
   def has?(role)
-    return true if self.god_roles_list.include? role
+    return true if self.special_roles_list.include? role
     return true if self.wolf_roles_list.include? role
 
     false
