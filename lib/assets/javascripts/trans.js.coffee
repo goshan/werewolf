@@ -71,6 +71,7 @@
     kill: "请从下方存活玩家中选择一名猎杀，不选择视为空刀",
     poison: "请从下方存活玩家中选择一名毒杀，不选择视为不采取行动",
     confirm: "请从下方存活玩家中选择一名查验",
+    mixed: "请从下方玩家中选择一名混血",
     guard: "请从下方存活玩家中选择一名守护，不选择视为空守",
     exchange: "请从下方存活玩家中选择两名交换，不选择视为不交换",
     lock: "请从下方存活玩家中选择一名锁定，不选择视为不锁定",
@@ -83,6 +84,7 @@
     prescribe_unknow: "无法获知今晚被猎杀玩家信息，请操作",
     prescribe_none: "今晚没有玩家被猎杀，请操作",
     confirm: "{pos}号玩家的身份是<span style='font-size: 21px; font-weight: bold; color: {role?evil:red,virtuous:green};'>{role?evil:狼人,virtuous:好人}</span>",
+    mixed: "你混了{pos}号玩家的血。你与其同胜负。",
     lock: "今晚是否锁定玩家"
     kill_more: "今晚是否追刀"
   }
@@ -90,6 +92,7 @@
     antidot: ["救人", 'btn-success'],
     poison: ["毒人", 'btn-purple'],
     rest: ["不行动", 'btn-default'],
+    mixed_finish: ["好滴", 'btn-default'],
     confirm_finish: ["明白", 'btn-default'],
     lock: ["锁定", 'btn-warning']
     kill_more: ["追刀", 'btn-danger']
