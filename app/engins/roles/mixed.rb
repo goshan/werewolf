@@ -24,8 +24,8 @@ class Mixed < Role
 
   def use_skill(pos)
     return :success if pos.to_i == -1
-    return :failed_not_select if pos.nil? || pos.to_i == 0
-    return :failed_have_acted if !self.mixed_with.nil? && self.mixed_with != 0
+    return :failed_not_select if pos.to_i == 0
+    return :failed_have_acted if self.mixed_with.to_i != 0
 
     mixed = Player.find_by_role self.name
     return :failed_mix_self if pos.to_i == mixed.pos.to_i
