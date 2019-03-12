@@ -1,4 +1,4 @@
-class Witch < Role
+class Witch < God
   attr_accessor :has_antidot, :has_poison
 
   def initialize
@@ -12,10 +12,6 @@ class Witch < Role
 
   def side
     :god
-  end
-
-  def skill_timing
-    :alive
   end
 
   def prepare_skill

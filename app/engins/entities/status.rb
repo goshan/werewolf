@@ -1,7 +1,7 @@
 class Status < CacheRecord
   attr_accessor :round, :turn, :process, :voting, :over
 
-  NIGHT_PROCESS = %i[mixed augur wolf witch long_wolf magician seer savior].freeze
+  NIGHT_PROCESS = %i[mixed augur wolf hidden_wolf witch long_wolf magician seer savior].freeze
 
   def initialize
     self.round = 0

@@ -1,2 +1,2 @@
-class LordWolf < WolfBase
+class LordWolf < Wolf
 end

@@ -60,3 +60,5 @@ $ bundle exec rails server
 ### Audio
 
 https://ai.baidu.com/tech/speech/tts
+
+普通女生，语速4，语调4

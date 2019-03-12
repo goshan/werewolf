@@ -3,6 +3,42 @@ class Role < CacheRecord
   LAST_ROLES_SCORE_COEF = [0.8, 0.9].freeze
   DEAL_SCORE_THRESHOLD = 0.7
 
+  def name
+    self.class.to_s.underscore
+  end
+
+  def side
+    nil
+  end
+
+  def side_for_seer
+    return nil if self.side.nil?
+    self.side == :wolf ? :evil : :virtuous
+  end
+
+  def skill_turn
+    nil
+  end
+
+  def skill_timing
+    :alive
+  end
+
+  def need_save?
+    false
+  end
+
+  def save_if_need
+    self.save if self.need_save?
+  end
+
+  def prepare_skill
+    nil
+  end
+
+  def use_skill(pos)
+  end
+
   def self.init_by_role(role)
     return nil unless role
 
@@ -33,29 +69,6 @@ class Role < CacheRecord
 
   def need_save?
     false
-  end
-
-  def side
-    nil
-  end
-
-  def name
-    self.class.to_s.underscore
-  end
-
-  def skill_turn
-    self.name.to_sym
-  end
-
-  def skill_timing
-    nil
-  end
-
-  def prepare_skill
-    nil
-  end
-
-  def use_skill(pos)
   end
 
   def save_if_need

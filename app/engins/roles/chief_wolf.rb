@@ -1,2 +1,2 @@
-class ChiefWolf < WolfBase
+class ChiefWolf < Wolf
 end
