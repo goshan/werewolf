@@ -52,8 +52,8 @@ module PagesHelper
     end
   end
 
-  def special_roles_setting(setting)
-    setting.special_roles_list.map do |r|
+  def god_setting(setting)
+    setting.god_roles_list.map do |r|
       w = ROLE_NAME[r]
       w += "(#{witch_save_setting setting})" if r == :witch
       w

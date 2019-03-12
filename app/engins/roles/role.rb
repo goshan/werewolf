@@ -91,7 +91,7 @@ class Role < CacheRecord
     setting = Setting.current
     roles = []
 
-    Setting::SPECIAL_ROLES.each do |r|
+    Setting::GOD_ROLES.each do |r|
       roles.push r.to_s if setting.has? r
     end
     Setting::WOLF_ROLES.each do |r|

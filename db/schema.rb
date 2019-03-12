@@ -12,15 +12,6 @@
 
 ActiveRecord::Schema.define(version: 20190310071442) do
 
-  create_table "battle_results", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.integer  "user_id",                    null: false
-    t.integer  "role",                       null: false
-    t.boolean  "win",        default: false, null: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-    t.index ["user_id"], name: "index_battle_results_on_user_id", using: :btree
-  end
-
   create_table "results", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "user_id",                    null: false
     t.string   "role",                       null: false
@@ -31,16 +22,17 @@ ActiveRecord::Schema.define(version: 20190310071442) do
   end
 
   create_table "settings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.integer  "player_cnt",                default: 0
-    t.string   "special_roles"
+    t.integer  "player_cnt",                       default: 0
+    t.string   "god_roles"
+    t.string   "special_villager_roles"
     t.string   "wolf_roles"
-    t.integer  "villager_cnt",              default: 0
-    t.integer  "normal_wolf_cnt",           default: 0
-    t.integer  "witch_self_save", limit: 1, default: 0, null: false
-    t.integer  "win_cond",        limit: 1, default: 0, null: false
+    t.integer  "villager_cnt",                     default: 0
+    t.integer  "normal_wolf_cnt",                  default: 0
+    t.integer  "witch_self_save",        limit: 1, default: 0, null: false
+    t.integer  "win_cond",               limit: 1, default: 0, null: false
     t.string   "must_kill"
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
   end
 
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
