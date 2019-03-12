@@ -1,4 +1,4 @@
-class Witch < Role
+class Witch < God
   attr_accessor :has_antidot, :has_poison
 
   def initialize

@@ -1,12 +1,8 @@
-class Hunter < Role
+class Hunter < God
   attr_accessor :shoot_done, :dead_round
 
   def need_save?
     true
-  end
-
-  def side
-    :god
   end
 
   def skill_turn

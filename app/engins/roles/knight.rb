@@ -1,5 +1,2 @@
-class Knight < Role
-  def side
-    :god
-  end
+class Knight < God
 end

@@ -1,4 +1,4 @@
-class HiddenWolf < WolfBase
+class HiddenWolf < Wolf
   def skill_turn
     :hidden_wolf
   end

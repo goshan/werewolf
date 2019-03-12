@@ -1,4 +1,4 @@
-class WolfBase < Role
+class Wolf < Role
   def side
     :wolf
   end

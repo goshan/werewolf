@@ -1,5 +1,2 @@
-class Idiot < Role
-  def side
-    :god
-  end
+class Idiot < God
 end

@@ -1,4 +1,4 @@
-class Augur < Role
+class Augur < God
   attr_accessor :locked
 
   def initialize
@@ -7,10 +7,6 @@ class Augur < Role
 
   def need_save?
     true
-  end
-
-  def side
-    :god
   end
 
   def prepare_skill

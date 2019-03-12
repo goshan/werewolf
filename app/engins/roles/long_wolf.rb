@@ -1,4 +1,4 @@
-class LongWolf < WolfBase
+class LongWolf < Wolf
   attr_accessor :killing, :killed
 
   def initialize

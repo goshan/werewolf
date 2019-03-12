@@ -1,8 +1,4 @@
-class Seer < Role
-  def side
-    :god
-  end
-
+class Seer < God
   def prepare_skill
     { action: 'panel', skill: 'confirm', select: 'single' }
   end
