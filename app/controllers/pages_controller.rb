@@ -42,10 +42,17 @@ class PagesController < ApplicationController
     end
 
     player_cnt = 0
-    special_roles = []
-    Setting::SPECIAL_ROLES.each do |r|
+    god_roles = []
+    Setting::GOD_ROLES.each do |r|
       if params[r] == '1'
-        special_roles.push r
+        god_roles.push r
+        player_cnt += 1
+      end
+    end
+    special_villager_roles = []
+    Setting::SPECIAL_VILLAGER_ROLES.each do |r|
+      if params[r] == '1'
+        special_villager_roles.push r
         player_cnt += 1
       end
     end
@@ -60,12 +67,13 @@ class PagesController < ApplicationController
 
     setting = Setting.new(
       player_cnt: player_cnt,
-      villager_cnt: params[:villager],
+      normal_villager_cnt: params[:villager],
       normal_wolf_cnt: params[:normal_wolf],
       witch_self_save: params[:witch_self_save],
       win_cond: params[:win_cond]
     )
-    setting.special_roles_list = special_roles
+    setting.god_roles_list = god_roles
+    setting.special_villager_roles_list = special_villager_roles
     setting.wolf_roles_list = wolf_roles
     setting.must_kill = params[:must_kill] if params[:must_kill] && params[:must_kill] != 'nil'
     setting.save

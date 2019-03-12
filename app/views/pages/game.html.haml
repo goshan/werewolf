@@ -31,8 +31,8 @@
                 %h4.modal-title 当前板子
               .modal-body
                 %p= "玩家人数: #{@setting.player_cnt}人"
-                %p= "特殊角色: #{special_roles_setting @setting}"
-                %p= "平民: #{@setting.villager_cnt}人"
+                %p= "神民: #{god_setting @setting}"
+                %p= "平民: #{villager_setting @setting}"
                 %p= "狼人: #{wolf_setting @setting}"
                 %p= "胜利条件: #{win_setting @setting}"
                 %p= "狼人必杀角色: #{@setting.must_kill ? role_name(@setting.must_kill.to_sym) : ''}"
@@ -140,7 +140,7 @@
                 .modal-body
                   .form-group
                     = label_tag "神民"
-                    - Setting::SPECIAL_ROLES.each do |r|
+                    - Setting::GOD_ROLES.each do |r|
                       .btn-group{'data-toggle' => "buttons"}
                         %label.btn{:class => "btn-#{role_klass r} #{@setting.has?(r) ? 'active' : ''}"}
                           = check_box_tag r, 1, @setting.has?(r)
@@ -159,7 +159,13 @@
                         可以自救
                   .form-group
                     = label_tag "平民"
-                    = text_field_tag :villager, @setting.villager_cnt, :class => "form-control", :style => "display: inline-block; width: 100px;"
+                    - Setting::SPECIAL_VILLAGER_ROLES.each do |r|
+                      .btn-group{'data-toggle' => "buttons"}
+                        %label.btn{:class => "btn-#{role_klass r} #{@setting.has?(r) ? 'active' : ''}"}
+                          = check_box_tag r, 1, @setting.has?(r)
+                          = role_name r
+                    = label_tag "+ 普通村民"
+                    = text_field_tag :villager, @setting.normal_villager_cnt, :class => "form-control", :style => "display: inline-block; width: 100px;"
                   .form-group
                     = label_tag "狼人"
                     - Setting::WOLF_ROLES.each do |r|
@@ -171,7 +177,7 @@
                     = text_field_tag :normal_wolf, @setting.normal_wolf_cnt, :class => "form-control", :style => "display: inline-block; width: 100px;"
                   .form-group
                     = label_tag "必死角色"
-                    = select_tag :must_kill, options_for_select([['None', :nil]]+Setting::SPECIAL_ROLES.map{|r| [role_name(r), r]}, @setting.must_kill), :class => "form-control"
+                    = select_tag :must_kill, options_for_select([['None', :nil]]+Setting::GOD_ROLES.map{|r| [role_name(r), r]}, @setting.must_kill), :class => "form-control"
                   .form-group
                     = label_tag "胜利条件"
                     .btn-group{'data-toggle' => "buttons"}

@@ -1,21 +1,22 @@
-class Mixed < Role
+class Mixed < Villager
   attr_accessor :mixed_with
 
   def need_save?
     true
   end
 
-  def side
-    :villager
+  def side_to_check_win
+    mixed_target = Player.find_by_key self.mixed_with
+    mixed_target.role.side == :wolf ? nil : :villager
+  end
+
+  def skill_turn
+    :mixed
   end
 
   def win?(res)
     player = Player.find_by_key self.mixed_with
     player.role.win?(res)
-  end
-
-  def skill_timing
-    :alive
   end
 
   def prepare_skill

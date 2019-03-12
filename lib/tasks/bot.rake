@@ -36,8 +36,8 @@ namespace :bot do
 
       # config setting
       puts "init..."
-      setting = Setting.new player_cnt: 12, villager_cnt: 4, normal_wolf_cnt: 4
-      setting.special_roles_list = ['seer', 'witch', 'hunter', 'savior']
+      setting = Setting.new player_cnt: 12, normal_villager_cnt: 4, normal_wolf_cnt: 4
+      setting.god_roles_list = ['seer', 'witch', 'hunter', 'savior']
       setting.save
 
       # init players cache
@@ -106,8 +106,8 @@ namespace :bot do
       Setting.connection.execute "TRUNCATE TABLE settings"
 
       # config setting
-      setting = Setting.new player_cnt: 12, villager_cnt: 4, normal_wolf_cnt: 4
-      setting.special_roles_list = ['seer', 'witch', 'hunter', 'savior']
+      setting = Setting.new player_cnt: 12, normal_villager_cnt: 4, normal_wolf_cnt: 4
+      setting.god_roles_list = ['seer', 'witch', 'hunter', 'savior']
       setting.save
 
       # init players cache
