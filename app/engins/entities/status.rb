@@ -9,10 +9,7 @@ class Status < CacheRecord
     self.process = []
     self.voting = 0
     self.over = true
-    self.generate_next_round_turns!
-  end
 
-  def generate_next_round_turns!
     setting = Setting.current
     NIGHT_PROCESS.each do |r|
       if r == :wolf && setting.wolf_cnt > 0
