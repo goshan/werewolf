@@ -224,6 +224,10 @@ fieldset[disabled] .btn-purple.active {
       background-color: #dc78d9;
       border: 1px solid #ab6caf;
     }
+    &[status=mixed] {
+      background-color: #805EAD;
+      border: 1px solid #684D8C;
+    }
     &[status=lock] {
       background-color: #313ba9;
       border: 1px solid #202bad;

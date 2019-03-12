@@ -1,5 +1,6 @@
 class Setting < ApplicationRecord
-  GOD_ROLES = %i[seer witch hunter savior idiot magician augur knight mixed].freeze
+  GOD_ROLES = %i[seer witch hunter savior idiot magician augur knight].freeze
+  SPECIAL_VILLAGER_ROLES = %i[mixed].freeze
   WOLF_ROLES = %i[chief_wolf lord_wolf long_wolf ghost_rider hidden_wolf].freeze
 
   enum witch_self_save: {
@@ -22,6 +23,10 @@ class Setting < ApplicationRecord
     self.god_roles ? self.god_roles.split(',').map(&:to_sym) : []
   end
 
+  def special_villager_roles_list
+    self.special_villager_roles ? self.special_villager_roles.split(',').map(&:to_sym) : []
+  end
+
   def wolf_roles_list
     self.wolf_roles ? self.wolf_roles.split(',').map(&:to_sym) : []
   end
@@ -30,15 +35,27 @@ class Setting < ApplicationRecord
     self.god_roles = list.join ','
   end
 
+  def special_villager_roles_list=(list)
+    self.special_villager_roles = list.join ','
+  end
+
   def wolf_roles_list=(list)
     self.wolf_roles = list.join ','
   end
 
   def has?(role)
     return true if self.god_roles_list.include? role
+    return true if self.special_villager_roles_list.include? role
     return true if self.wolf_roles_list.include? role
 
     false
+  end
+
+  def villager_cnt
+    cnt = self.normal_villager_cnt
+    SPECIAL_VILLAGER_ROLES.each do |r|
+      cnt += 1 if self.has? r
+    end
   end
 
   def wolf_cnt

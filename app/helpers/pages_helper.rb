@@ -16,7 +16,7 @@ module PagesHelper
     :hidden_wolf => "隐狼"
   }
   ROLE_KLASS = {
-    :mixed => "info",
+    :mixed => "danger",
     :seer => "primary",
     :witch => "purple",
     :hunter => "warning",
@@ -58,6 +58,13 @@ module PagesHelper
       w += "(#{witch_save_setting setting})" if r == :witch
       w
     end.join('，')
+  end
+
+  def villager_setting(setting)
+    w = setting.special_villager_roles_list.map do |r|
+      "#{ROLE_NAME[r]}+"
+    end.join('')
+    w += "普通村民#{setting.normal_villager_cnt}人"
   end
 
   def wolf_setting(setting)

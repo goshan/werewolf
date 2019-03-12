@@ -33,8 +33,9 @@ class WxesController < ApplicationController
       res = {
         player_cnt: setting.player_cnt,
         god_roles: setting.god_roles_list,
+        special_villager_roles: setting.special_villager_roles_list,
         wolf_roles: setting.wolf_roles_list,
-        villager_cnt: setting.villager_cnt,
+        normal_villager_cnt: setting.normal_villager_cnt,
         normal_wolf_cnt: setting.normal_wolf_cnt,
         witch_self_save: setting.witch_self_save,
         win_cond: setting.win_cond,
@@ -53,16 +54,17 @@ class WxesController < ApplicationController
       return render json: { msg: "not selected #{params[:must_kill]}" }
     end
 
-    player_cnt = params[:gods].count + params[:wolves].count + params[:villager].to_i + params[:normal_wolf].to_i
+    player_cnt = params[:gods].count + params[:special_villager].count + params[:wolves].count + params[:normal_villager].to_i + params[:normal_wolf].to_i
 
     setting = Setting.new(
       player_cnt: player_cnt,
-      villager_cnt: params[:villager],
+      normal_villager_cnt: params[:villager],
       normal_wolf_cnt: params[:normal_wolf],
       witch_self_save: params[:witch_self_save],
       win_cond: params[:win_cond]
     )
     setting.god_roles_list = params[:gods]
+    setting.special_villager_roles_list = params[:special_villager]
     setting.wolf_roles_list = params[:wolves]
     setting.must_kill = params[:must_kill] if params[:must_kill]
     setting.save
@@ -79,7 +81,7 @@ class WxesController < ApplicationController
       setting = Setting.current
       msg = ["玩家人数: #{setting.player_cnt}人",
              "神民: #{god_setting setting}",
-             "平民: #{setting.villager_cnt}人",
+             "平民: #{villager_setting setting}人",
              "狼人: #{wolf_setting setting}",
              "胜利条件: #{win_setting setting}",
              "狼人必杀角色: #{setting.must_kill ? role_name(@setting.must_kill.to_sym) : ''}"].join("\r\n")

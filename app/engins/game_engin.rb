@@ -192,8 +192,9 @@ class GameEngin
     must_kill_alive = false
     Player.find_all.each do |p|
       next unless p.status == :alive
+      next if p.role.side_to_check_win.nil?
 
-      cnt[p.role.side] += 1
+      cnt[p.role.side_to_check_win] += 1
       must_kill_alive = true if p.role.name == setting.must_kill
     end
 

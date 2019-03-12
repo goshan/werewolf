@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 20190310071442) do
     t.string   "god_roles"
     t.string   "special_villager_roles"
     t.string   "wolf_roles"
-    t.integer  "villager_cnt",                     default: 0
+    t.integer  "normal_villager_cnt",              default: 0
     t.integer  "normal_wolf_cnt",                  default: 0
     t.integer  "witch_self_save",        limit: 1, default: 0, null: false
     t.integer  "win_cond",               limit: 1, default: 0, null: false

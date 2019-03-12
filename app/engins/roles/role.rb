@@ -16,6 +16,10 @@ class Role < CacheRecord
     self.side == :wolf ? :evil : :virtuous
   end
 
+  def side_to_check_win
+    self.side
+  end
+
   def skill_turn
     nil
   end
@@ -94,10 +98,13 @@ class Role < CacheRecord
     Setting::GOD_ROLES.each do |r|
       roles.push r.to_s if setting.has? r
     end
+    Setting::SPECIAL_VILLAGER_ROLES.each do |r|
+      roles.push r.to_s if setting.has? r
+    end
     Setting::WOLF_ROLES.each do |r|
       roles.push r.to_s if setting.has? r
     end
-    (1..setting.villager_cnt).each { |_i| roles.push 'villager' }
+    (1..setting.normal_villager_cnt).each { |_i| roles.push 'villager' }
     (1..setting.normal_wolf_cnt).each { |_i| roles.push 'normal_wolf' }
 
     roles
