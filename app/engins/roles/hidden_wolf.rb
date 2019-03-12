@@ -4,33 +4,37 @@ class HiddenWolf < WolfBase
   end
 
   def role_checked_by_seer
-    wolf_cnt = Player.find_all.map{|p| p.status == :alive && p.role.side == :wolf ? 1 : 0}.sum
-    wolf_cnt == 1 ? :evil : :virtuous
+    :virtuous
   end
 
   def prepare_skill
-    wolf_cnt = Player.find_all.map{|p| p.status == :alive && p.role.side == :wolf ? 1 : 0}.sum
-    if wolf_cnt == 1
+    oth_wolves = HiddenWolf.find_other_alive_wolves
+    if oth_wolves.count == 0
       super
     else
       {
         action: 'dialog',
-        skill: "cannot_kill",
-        buttons: [{action: 'skill', skill: 'rest', value: nil}]
+        skill: "normal_wolf_still_alive",
+        pos: oth_wolves.map(&:pos).join(","),
+        buttons: [{action: 'skill', skill: 'rest', value: -1}]
       }
     end
   end
 
   # pos:
-  # nil --> error: 选择落刀则不能空刀
-  # -1 --> 不刀
-  # 0 --> 落刀
+  # -1 --> 不能刀
+  # nil, 0 --> 空刀
   # 1~ --> 刀人
   def use_skill(pos)
-    return :success if pos.nil?
-    wolf_cnt = Player.find_all.map{|p| p.status == :alive && p.role.side == :wolf ? 1 : 0}.sum
-    return :failed_cannot_kill unless wolf_cnt == 1
+    return :success if pos.to_i == -1
+    oth_wolf_cnt = HiddenWolf.find_other_alive_wolves.count
+    return :failed_cannot_kill unless oth_wolf_cnt == 0
 
     super pos
+  end
+
+  private
+  def self.find_other_alive_wolves
+    Player.find_all.select{|p| p.role.side == :wolf && p.status == :alive && p.role.name != "hidden_wolf"}
   end
 end

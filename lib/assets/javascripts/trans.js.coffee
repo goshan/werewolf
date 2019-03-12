@@ -65,7 +65,7 @@
     failed_vote_has_started: "已经正在投票中",
     failed_vote_not_started: "现在不能进行投票",
     failed_has_voted: "已经投票",
-    failed_cannot_kill: "当前情况下无法行动"
+    failed_cannot_kill: "目前还不能刀人"
   }
   panel_tip_trans: {
     kill: "请从下方存活玩家中选择一名猎杀，不选择视为空刀",
@@ -85,7 +85,7 @@
     confirm: "{pos}号玩家的身份是<span style='font-size: 21px; font-weight: bold; color: {role?evil:red,virtuous:green};'>{role?evil:狼人,virtuous:好人}</span>",
     lock: "今晚是否锁定玩家",
     kill_more: "今晚是否追刀",
-    cannot_kill: "当前情况下无法行动"
+    normal_wolf_still_alive: "你的狼同伴 {pos} 尚未全部死亡，不能刀人"
   }
   dialog_button_trans: {
     antidot: ["救人", 'btn-success'],
