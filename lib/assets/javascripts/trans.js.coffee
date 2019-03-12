@@ -15,7 +15,8 @@
   long_wolf: "大灰狼",
   ghost_rider: "恶灵骑士",
   villager: "村民",
-  normal_wolf: "狼人"
+  normal_wolf: "狼人",
+  hidden_wolf: "隐狼"
 }
 
 @Wolf.Trans.Turns = @Wolf.Trans.Turns ? {
@@ -23,11 +24,12 @@
   check_role: "查看身份",
   day: "白天",
   wolf: "夜晚 狼人行动",
+  hidden_wolf: "夜晚 隐狼行动",
   long_wolf: "夜晚 大灰狼行动",
   witch: "夜晚 女巫行动",
   seer: "夜晚 预言家行动",
   savior: "夜晚 守卫行动",
-  magician: "夜晚 魔术师行动"
+  magician: "夜晚 魔术师行动",
   augur: "夜晚 占卜师行动"
 }
 
@@ -62,7 +64,8 @@
     failed_game_not_over: "请先结束游戏",
     failed_vote_has_started: "已经正在投票中",
     failed_vote_not_started: "现在不能进行投票",
-    failed_has_voted: "已经投票"
+    failed_has_voted: "已经投票",
+    failed_cannot_kill: "目前还不能刀人"
   }
   panel_tip_trans: {
     kill: "请从下方存活玩家中选择一名猎杀，不选择视为空刀",
@@ -80,8 +83,9 @@
     prescribe_unknow: "无法获知今晚被猎杀玩家信息，请操作",
     prescribe_none: "今晚没有玩家被猎杀，请操作",
     confirm: "{pos}号玩家的身份是<span style='font-size: 21px; font-weight: bold; color: {role?evil:red,virtuous:green};'>{role?evil:狼人,virtuous:好人}</span>",
-    lock: "今晚是否锁定玩家"
-    kill_more: "今晚是否追刀"
+    lock: "今晚是否锁定玩家",
+    kill_more: "今晚是否追刀",
+    normal_wolf_still_alive: "你的狼同伴 {pos} 尚未全部死亡，不能刀人"
   }
   dialog_button_trans: {
     antidot: ["救人", 'btn-success'],

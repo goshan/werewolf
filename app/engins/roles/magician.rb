@@ -1,4 +1,4 @@
-class Magician < Role
+class Magician < God
   attr_accessor :exchanged
 
   def initialize
@@ -7,14 +7,6 @@ class Magician < Role
 
   def need_save?
     true
-  end
-
-  def side
-    :god
-  end
-
-  def skill_timing
-    :alive
   end
 
   def prepare_skill

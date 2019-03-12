@@ -1,16 +1,4 @@
-class Seer < Role
-  def need_save?
-    false
-  end
-
-  def side
-    :god
-  end
-
-  def skill_timing
-    :alive
-  end
-
+class Seer < God
   def prepare_skill
     { action: 'panel', skill: 'confirm', select: 'single' }
   end
@@ -38,7 +26,7 @@ class Seer < Role
       action: 'dialog',
       skill: 'confirm',
       pos: pos,
-      role: player.role.side == :wolf ? 'evil' : 'virtuous',
+      role: player.role.side_for_seer,
       buttons: [{ action: 'skill', skill: 'confirm_finish', pos: nil }]
     }
   end
