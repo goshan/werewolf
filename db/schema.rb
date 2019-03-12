@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180523085934) do
+ActiveRecord::Schema.define(version: 20190310071442) do
+
+  create_table "battle_results", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "user_id",                    null: false
+    t.integer  "role",                       null: false
+    t.boolean  "win",        default: false, null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.index ["user_id"], name: "index_battle_results_on_user_id", using: :btree
+  end
 
   create_table "results", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "user_id",                    null: false
@@ -23,7 +32,7 @@ ActiveRecord::Schema.define(version: 20180523085934) do
 
   create_table "settings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "player_cnt",                default: 0
-    t.string   "god_roles"
+    t.string   "special_roles"
     t.string   "wolf_roles"
     t.integer  "villager_cnt",              default: 0
     t.integer  "normal_wolf_cnt",           default: 0

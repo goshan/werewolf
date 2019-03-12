@@ -1,7 +1,7 @@
 class Status < CacheRecord
   attr_accessor :round, :turn, :process, :voting, :over
 
-  NIGHT_PROCESS = %i[augur wolf hidden_wolf witch long_wolf magician seer savior].freeze
+  NIGHT_PROCESS = %i[mixed augur wolf hidden_wolf witch long_wolf magician seer savior].freeze
 
   def initialize
     self.round = 0
@@ -56,6 +56,10 @@ class Status < CacheRecord
                     self.process[current_turn_index + 1]
                   end
     end
+
+    # skip mixed if round > 1
+    self.next! if self.round > 1 && self.turn == :mixed
+
     self.save
   end
 

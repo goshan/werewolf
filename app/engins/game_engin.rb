@@ -199,7 +199,7 @@ class GameEngin
 
     status = Status.find_current
     res = if cnt[:wolf] == 0
-            :wolf_win
+            :wolf_lose
           elsif (setting.kill_side? && (cnt[:god] * cnt[:villager]) == 0 && !must_kill_alive) ||
                 (setting.kill_all? && cnt[:god] + cnt[:villager] == 0) ||
                 (setting.kill_god? && cnt[:god] == 0)
@@ -214,14 +214,7 @@ class GameEngin
 
   def game_over(res)
     Player.find_all.each do |p|
-      win = false
-      if res == :wolf_win
-        win = p.role.side == :wolf
-      elsif res == :wolf_lose
-        win = (p.role.side == :god) || (p.role.side == :villager)
-      end
-
-      p.user.results.create role: p.role.name, win: win
+      p.user.results.create role: p.role.name, win: p.role.win?(res)
     end
 
     status = Status.find_current
