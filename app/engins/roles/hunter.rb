@@ -17,10 +17,6 @@ class Hunter < Role
     :dead
   end
 
-  def role_checked_by_seer
-    :virtuous
-  end
-
   def prepare_skill
     status = Status.find_current
     history = History.find_by_key status.round

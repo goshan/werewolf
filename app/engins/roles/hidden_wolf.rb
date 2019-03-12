@@ -3,7 +3,7 @@ class HiddenWolf < WolfBase
     :hidden_wolf
   end
 
-  def role_checked_by_seer
+  def side_for_seer
     :virtuous
   end
 

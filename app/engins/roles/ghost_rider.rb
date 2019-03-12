@@ -8,16 +8,4 @@ class GhostRider < WolfBase
   def need_save?
     true
   end
-
-  def side
-    :wolf
-  end
-
-  def skill_turn
-    :wolf
-  end
-
-  def skill_timing
-    :alive
-  end
 end

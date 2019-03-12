@@ -1,13 +1,5 @@
 class Villager < Role
-  def need_save?
-    false
-  end
-
   def side
     :villager
-  end
-
-  def role_checked_by_seer
-    :virtuous
   end
 end

@@ -10,16 +10,8 @@ class LongWolf < WolfBase
     true
   end
 
-  def side
-    :wolf
-  end
-
   def skill_turn
     :long_wolf
-  end
-
-  def skill_timing
-    :alive
   end
 
   def prepare_skill

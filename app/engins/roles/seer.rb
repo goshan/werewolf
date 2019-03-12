@@ -1,18 +1,6 @@
 class Seer < Role
-  def need_save?
-    false
-  end
-
   def side
     :god
-  end
-
-  def role_checked_by_seer
-    :virtuous
-  end
-
-  def skill_timing
-    :alive
   end
 
   def prepare_skill
@@ -42,7 +30,7 @@ class Seer < Role
       action: 'dialog',
       skill: 'confirm',
       pos: pos,
-      role: player.role.role_checked_by_seer,
+      role: player.role.side_for_seer,
       buttons: [{ action: 'skill', skill: 'confirm_finish', pos: nil }]
     }
   end

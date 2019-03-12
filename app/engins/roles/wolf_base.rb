@@ -1,22 +1,10 @@
 class WolfBase < Role
-  def need_save?
-    false
-  end
-
   def side
     :wolf
   end
 
   def skill_turn
     :wolf
-  end
-
-  def skill_timing
-    :alive
-  end
-
-  def role_checked_by_seer
-    :evil
   end
 
   def prepare_skill

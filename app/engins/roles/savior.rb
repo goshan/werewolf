@@ -9,14 +9,6 @@ class Savior < Role
     :god
   end
 
-  def skill_timing
-    :alive
-  end
-
-  def role_checked_by_seer
-    :virtuous
-  end
-
   def prepare_skill
     { action: 'panel', skill: 'guard', select: 'single' }
   end

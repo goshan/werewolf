@@ -39,6 +39,10 @@ class Role < CacheRecord
     nil
   end
 
+  def side_for_seer
+    self.side == :wolf ? :evil : :virtuous
+  end
+
   def name
     self.class.to_s.underscore
   end
@@ -48,11 +52,7 @@ class Role < CacheRecord
   end
 
   def skill_timing
-    nil
-  end
-
-  def role_checked_by_seer
-    nil
+    :alive
   end
 
   def prepare_skill
