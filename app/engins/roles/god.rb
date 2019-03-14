@@ -1,4 +1,6 @@
 class God < Role
+  need_override :prepare_skill, :use_skill
+
   def side
     :god
   end
