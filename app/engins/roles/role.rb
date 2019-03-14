@@ -1,14 +1,14 @@
 class Role < CacheRecord
+  include Abstract
+
+  need_override :side, :skill_turn, :prepare_skill, :use_skill
+
   DEAL_RETRY_TIMES_MAX = 250
   LAST_ROLES_SCORE_COEF = [0.8, 0.9].freeze
   DEAL_SCORE_THRESHOLD = 0.7
 
   def name
     self.class.to_s.underscore
-  end
-
-  def side
-    nil
   end
 
   def side_for_seer
@@ -18,10 +18,6 @@ class Role < CacheRecord
 
   def side_to_check_win
     self.side
-  end
-
-  def skill_turn
-    nil
   end
 
   def skill_timing
@@ -34,13 +30,6 @@ class Role < CacheRecord
 
   def save_if_need
     self.save if self.need_save?
-  end
-
-  def prepare_skill
-    nil
-  end
-
-  def use_skill(pos)
   end
 
   def self.init_by_role(role)
@@ -69,14 +58,6 @@ class Role < CacheRecord
 
     Rails.logger.debug "[DEAL ANALYSE] roles: #{roles.join ','}"
     roles
-  end
-
-  def need_save?
-    false
-  end
-
-  def save_if_need
-    self.save if self.need_save?
   end
 
   def win?(res)
