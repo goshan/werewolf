@@ -1,5 +1,5 @@
 class Role < CacheRecord
-  include Abstract
+  extend Abstract
 
   need_override :side, :skill_turn, :prepare_skill, :use_skill
 
