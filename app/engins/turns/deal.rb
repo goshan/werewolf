@@ -1,0 +1,2 @@
+class Deal < Init
+end

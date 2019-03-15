@@ -15,7 +15,7 @@ $(document).on 'turbolinks:load', (e) ->
 
   $('#js-start').click (e) ->
     e.preventDefault()
-    if Wolf.status.turn == 'check_role' || Wolf.status.turn == 'day'
+    if Wolf.status.turn == 'deal' || Wolf.status.turn == 'discuss'
       BootstrapDialog.show {
         title: '直接进入黑夜',
         message: '不放逐玩家而直接进入黑夜，可以吗？',
@@ -39,14 +39,14 @@ $(document).on 'turbolinks:load', (e) ->
 
   $('#js-night-info').click (e) ->
     e.preventDefault()
-    if Wolf.status.turn == 'day'
+    if Wolf.status.turn == 'discuss'
       App.game.do 'night_info'
     else
       BootstrapDialog.alert "只有白天才能查看信息"
 
   $('#js-start-vote').click (e) ->
     e.preventDefault()
-    if Wolf.status.turn == 'day'
+    if Wolf.status.turn == 'discuss'
       vote_desc = $('#start-vote-modal #vote_desc').val()
       target_pos = []
       for checkbox in $('#start-vote-modal #target_pos .btn.active input[type=checkbox]')
@@ -61,14 +61,14 @@ $(document).on 'turbolinks:load', (e) ->
 
   $('#js-stop-vote').click (e) ->
     e.preventDefault()
-    if Wolf.status.turn == 'day'
+    if Wolf.status.turn == 'discuss'
       App.game.do 'stop_vote'
     else
       BootstrapDialog.alert "只有白天才能终止投票"
 
   $('#js-throw').click (e) ->
     e.preventDefault()
-    if Wolf.status.turn == 'day'
+    if Wolf.status.turn == 'discuss'
       Wolf.panel.updateWithData {skill: 'throw', select: 'multiple'}
     else
       BootstrapDialog.alert "只有白天才能放逐玩家"

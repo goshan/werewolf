@@ -1,0 +1,2 @@
+class SeerAct < Night
+end

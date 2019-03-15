@@ -1,0 +1,2 @@
+class LongWolfAct < Night
+end

@@ -21,9 +21,9 @@
 }
 
 @Wolf.Trans.Turns = @Wolf.Trans.Turns ? {
-  init: "准备",
-  check_role: "查看身份",
-  day: "白天",
+  sitting: "就坐",
+  deal: "查看身份",
+  discuss: "白天",
   wolf: "夜晚 狼人行动",
   hidden_wolf: "夜晚 隐狼行动",
   long_wolf: "夜晚 大灰狼行动",
@@ -44,10 +44,9 @@
     failed_empty_seat: "人数不足",
     failed_no_role: "尚未分配角色",
     failed_not_seat: "没有就座，无法操作",
-    failed_not_alive: "你已经死亡, 无法发动技能",
+    failed_could_not_skill: "当前状态，无法发动技能",
     failed_locked: "只能落刀被锁定的玩家",
     failed_cannot_kill_self: "该角色不能自刀",
-    failed_not_dead: "你尚未死亡, 无法发动技能",
     failed_have_acted: "已完成行动",
     failed_target_dead: "目标已死亡",
     failed_no_antidot: "已使用过解药",

@@ -75,21 +75,22 @@ class GameChannel < ApplicationCable::Channel
     return if catch_exceptions res
 
     if res == :success
-      play_voice "#{old_status.turn}_end"
+      play_voice "#{old_status.turn_name}_end"
     else
       send_to current_user, res
     end
   end
 
   def next_turn
-    Status.find_current.next!
     status = Status.find_current
-    play_voice "#{status.turn}_start"
+    status.next!
+    status.save
+    play_voice "#{status.turn_name}_start"
     update :status
 
-    if @gm.skip_turn?
+    if status.turn.shoud_pretend?
       sleep Random.new(Time.now.to_i).rand(12..15)
-      play_voice "#{status.turn}_end"
+      play_voice "#{status.turn_name}_end"
     end
   end
 
@@ -97,7 +98,7 @@ class GameChannel < ApplicationCable::Channel
     return send_to current_user, action: 'alert', msg: '不合法操作' unless current_user.lord?
 
     status = Status.find_current
-    return send_to current_user, action: 'alert', msg: '白天以外无法获取信息' unless status.turn == :day
+    return send_to current_user, action: 'alert', msg: '白天以外无法获取信息' unless status.turn_name == 'discuss'
 
     dead_info = History.find_by_key(status.round).dead_in_night
     dead_info.each do |d|
