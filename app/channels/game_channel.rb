@@ -7,6 +7,7 @@ class GameChannel < ApplicationCable::Channel
     @gm = GameEngin.new
 
     update :status_and_players, current_user
+    update :current_user, current_user
 
     # show vote panel
     player = Player.find_by_user current_user
@@ -51,6 +52,56 @@ class GameChannel < ApplicationCable::Channel
     return if catch_exceptions res
 
     send_to current_user, action: 'show_role', role: res
+  end
+
+  def bid_roles(data)
+    res = @gm.bid_roles current_user, data['pos']['prices']
+    return if catch_exceptions res
+
+    update :current_user, current_user
+    send_to current_user, action: 'alert', msg: '完成下注'
+  end
+
+  def cancel_bid_roles
+    res = @gm.cancel_bid_roles current_user
+    return if catch_exceptions res
+
+    update :current_user, current_user
+    send_to current_user, action: 'alert', msg: '已取消之前的下注'
+  end
+
+  def add_coin_all_users(data)
+    return send_to current_user, action: 'alert', msg: '不合法操作' unless current_user.lord?
+
+    res = @gm.add_coin_all_users data['pos']['coin'].to_i
+    return if catch_exceptions res
+
+    Player.find_all.each do |p|
+      update :current_user, p.user
+    end
+    broadcast action: 'alert', msg: '余额已更新'
+  end
+
+  def reset_coin_all_users
+    return send_to current_user, action: 'alert', msg: '不合法操作' unless current_user.lord?
+
+    res = @gm.reset_coin_all_users
+    return if catch_exceptions res
+
+    Player.find_all.each do |p|
+      update :current_user, p.user
+    end
+    broadcast action: 'alert', msg: '余额已归零'
+  end
+
+  def deal_by_bid
+    return send_to current_user, action: 'alert', msg: '不合法操作' unless current_user.lord?
+
+    res = @gm.deal_by_bid
+    return if catch_exceptions res
+
+    update :status_and_players
+    broadcast action: 'alert', msg: '已重新竞价发牌，请查看身份'
   end
 
   def start
@@ -192,6 +243,7 @@ class GameChannel < ApplicationCable::Channel
     msg[:players] = Player.to_msg if %i[players status_and_players].include? data
 
     if user
+      msg[:current_user] = User.find(user.id).slice(:id, :coin, :name) if data == :current_user
       send_to user, msg
     else
       broadcast msg

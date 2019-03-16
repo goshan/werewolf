@@ -6,6 +6,7 @@ class GameEngin
     Player.reset
     Vote.clear
     UserVote.clear
+    Bid.clear
   end
 
   def sit(user, pos)
@@ -25,7 +26,7 @@ class GameEngin
     :success
   end
 
-  def deal
+  def deal(method = :random)
     players = Player.find_all
     players.each do |p|
       return :failed_empty_seat unless p.user
@@ -41,11 +42,21 @@ class GameEngin
     Vote.clear
     UserVote.clear
 
-    # random deal
-    roles = Role.deal_roles players
+    if method == :bid
+      roles = Role.deal_roles_by_bid players
+      Bid.clear
+    else
+      # default
+      # random deal
+      roles = Role.deal_roles players
+    end
     Player.set_roles roles
 
     :success
+  end
+
+  def deal_by_bid
+    deal(:bid)
   end
 
   def check_role(user)
@@ -181,6 +192,64 @@ class GameEngin
       history.dead_in_day.push player.pos
     end
     history.save
+    :success
+  end
+
+  def bid_roles(user, prices)
+    return :failed_negative_price if prices.values.any? { |p| p < 0 }
+
+    total_price = prices.values.reduce(:+)
+    user = User.find(user.id)
+    user.with_lock do
+      return :failed_insufficient_balance if total_price > user.coin
+
+      bid = Bid.find_by_key user.id
+      return :failed_already_bid if bid
+
+      bid = Bid.new user.id, prices
+      user.coin -= total_price
+      user.save!
+      bid.save
+    end
+    :success
+  end
+
+  def cancel_bid_roles(user)
+    user = User.find(user.id)
+    user.with_lock do
+      bid = Bid.find_by_key user.id
+      return :failed_not_yet_bid unless bid
+
+      user.coin += bid.prices.values.reduce(:+)
+      bid.destroy
+      user.save!
+    end
+    :success
+  end
+
+  def add_coin_all_users(coin)
+    Player.find_all.each do |p|
+      user = User.find(p.user.id)
+      user.with_lock do
+        user.coin += coin
+        user.save!
+      end
+    end
+    :success
+  end
+
+  def reset_coin_all_users
+    # clear bid cache also
+    Player.find_all.each do |p|
+      user = User.find(p.user.id)
+      user.with_lock do
+        bid = Bid.find_by_key user.id
+        user.coin = 0
+        bid&.destroy
+        user.save!
+      end
+    end
+    Bid.clear
     :success
   end
 
