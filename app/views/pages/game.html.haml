@@ -41,6 +41,30 @@
 
     .ope-player
       = link_to "查看身份", "#", :class => "btn btn-warning", '@click' => "onClickCheckRole"
+      = link_to "下注身份", "#", :class => "btn btn-warning", 'data-toggle' => "modal", 'data-target' => "#bid-roles"
+      .modal.fade{:id => "bid-roles", :tabindex => "-1", :role => "dialog", 'aria-labelledby' => "playerRolesBidding"}
+        .modal-dialog
+          .modal-content
+            .modal-header
+              %button.close{:type => "button", 'data-dismiss' => "modal", 'aria-label' => "Close"}
+                %span{'aria-hidden' => "true"} &times;
+              %h4.modal-title 出价
+            .modal-body
+              %span= "当前余额: "
+              %span.read-coin-balance="加载中..."
+              %input.read-coin-balance{'type' => 'hidden', 'id' => 'coin-balance'}
+              <hr />
+              .row
+                %form.form-inline
+                - roles_list(@setting).each do |role|
+                  .form-group{'class' => 'col-xs-6'}
+                    .input-group
+                      .input-group-addon #{role[:name]}
+                      %input.form-control{'type' => 'text', 'class' => 'role-price', 'name' => "#{role[:id]}", 'placeholder' => 0, 'id' => "input-price-#{role[:id]}"}
+            .modal-footer
+              = link_to "取消之前下注", "#", :class => "btn btn-danger", 'data-dismiss' => "modal", :id => 'js-cancel-bid-roles'
+              = link_to "下注", "#", :class => "btn btn-primary", 'data-dismiss' => "modal", :id => 'js-bid-roles'
+              = link_to "关闭", "#", :class => "btn btn-default", 'data-dismiss' => "modal"
       = link_to "使用技能", "#", :class => "btn btn-warning pull-right", '@click' => "onClickSkill"
       .modal.fade{:id => "check-role-dialog"}
         .modal-dialog
@@ -102,6 +126,13 @@
         .area
           = link_to "好人胜利", "#", :class => "btn btn-danger", :id => "js-wolf-lose"
           = link_to "狼人胜利", "#", :class => "btn btn-danger pull-right", :id => "js-wolf-win"
+        <hr />
+        .area
+          = link_to "全体金币+5", "#", :class => "btn btn-primary", :id => "js-add-5-coin-all-users"
+          .pull-right
+            = link_to "竞价发牌", "#", :class => "btn btn-default", :id => "js-deal-by-bid"
+        .area
+          = link_to "全体金币归零", "#", :class => "btn btn-danger", :id => "js-reset-coin-all-users"
         .modal.fade{:id => "start-vote-modal", :tabindex => "-1", :role => "dialog", 'aria-labelledby' => "playerOutSelectLabel"}
           .modal-dialog
             .modal-content

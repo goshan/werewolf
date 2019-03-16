@@ -37,6 +37,10 @@ $(document).on 'turbolinks:load', (e) ->
               Wolf.panel.updateWithTurn data.status.turn
             if !Wolf.Utils.varIsNull(data.players)
               Wolf.panel.players = data.players
+            if !Wolf.Utils.varIsNull(data.current_user)
+              for dom in $('.read-coin-balance')
+                $(dom).text(data.current_user.coin || 0)
+                $(dom).val(data.current_user.coin || 0)
 
       do: (action, pos=null)->
         if pos != null

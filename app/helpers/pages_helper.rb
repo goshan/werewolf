@@ -1,5 +1,6 @@
 module PagesHelper
   ROLE_NAME = {
+    :villager => "普通村民",
     :mixed => "混血儿",
     :seer => "预言家",
     :witch => "女巫",
@@ -9,6 +10,7 @@ module PagesHelper
     :magician => "魔术师",
     :augur => "占卜师",
     :knight => "骑士",
+    :normal_wolf => "普通狼人",
     :chief_wolf => "白狼王",
     :lord_wolf => "狼王",
     :long_wolf => "大灰狼",
@@ -72,6 +74,15 @@ module PagesHelper
       "#{ROLE_NAME[r]}+"
     end.join('')
     w += "普通狼人#{setting.normal_wolf_cnt}人"
+  end
+
+  def roles_list(setting)
+    roles = []
+    roles += setting.god_roles_list.map { |r| { id: r, name: ROLE_NAME[r] } }
+    roles << { id: :villager, name: ROLE_NAME[:villager] } if setting.normal_villager_cnt.to_i > 0
+    roles += setting.special_villager_roles_list.map { |r| { id: r, name: ROLE_NAME[r] } }
+    roles << { id: :normal_wolf, name: ROLE_NAME[:normal_wolf] } if setting.normal_villager_cnt.to_i > 0
+    roles + setting.wolf_roles_list.map { |r| { id: r, name: ROLE_NAME[r] } }
   end
 
   def must_kill_setting(setting)
