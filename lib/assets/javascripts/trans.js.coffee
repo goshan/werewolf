@@ -23,6 +23,7 @@
 @Wolf.Trans.Turns = @Wolf.Trans.Turns ? {
   init: "准备",
   check_role: "查看身份",
+  bid_roles: "下注身份",
   day: "白天",
   wolf: "夜晚 狼人行动",
   hidden_wolf: "夜晚 隐狼行动",
@@ -37,6 +38,10 @@
 
 @Wolf.Trans.Panel = @Wolf.Trans.Panel ? {
   alert_message_trans: {
+    failed_negative_price: "出价不能为负数",
+    failed_insufficient_balance: "余额不足",
+    failed_already_bid: "不能重复下注，若要重新下注，请先取消之前的下注",
+    failed_not_yet_bid: "还未进行过下注",
     failed_not_select: "请选择对象",
     failed_mix_self: "不能混血自己",
     failed_not_turn: "当前回合无法操作",
