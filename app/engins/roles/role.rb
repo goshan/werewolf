@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Role < CacheRecord
   extend Abstract
 
@@ -57,6 +59,41 @@ class Role < CacheRecord
     end
 
     Rails.logger.debug "[DEAL ANALYSE] roles: #{roles.join ','}"
+    roles
+  end
+
+  def self.deal_roles_by_bid(players)
+    roles = [nil] * players.length
+    bids = players.map { |player| Bid.find_by_key(player.user.id) }
+    role_cnt = Hash.new(0)
+    self.init_roles_with_setting.each { |r| role_cnt[r] += 1 }
+    (1..players.length).each do |_|
+      # find the highest price and candiates who's offering the price
+      max_price = nil
+      max_price_role = nil
+      candidates = []
+      bids.each_with_index do |bid, i|
+        j = players[i].pos - 1
+        # skip user already got a role
+        next unless roles[j].nil?
+
+        role_cnt.each do |role, cnt|
+          # skip role already assigned
+          next unless cnt > 0
+
+          price = bid.nil? ? 0 : bid.prices[role.to_s].to_i
+          if max_price.nil? || price > max_price
+            max_price = price
+            max_price_role = role
+            candidates = [j]
+          elsif price == max_price && role == max_price_role
+            candidates << j
+          end
+        end
+      end
+      role_cnt[max_price_role] -= 1
+      roles[candidates.sample] = max_price_role
+    end
     roles
   end
 
