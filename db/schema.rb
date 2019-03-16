@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190310071442) do
+ActiveRecord::Schema.define(version: 20190315021442) do
 
-  create_table "results", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "results", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.integer  "user_id",                    null: false
     t.string   "role",                       null: false
     t.boolean  "win",        default: false, null: false
@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(version: 20190310071442) do
     t.index ["user_id"], name: "index_results_on_user_id", using: :btree
   end
 
-  create_table "settings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "settings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.integer  "player_cnt",                       default: 0
     t.string   "god_roles"
     t.string   "special_villager_roles"
@@ -35,12 +35,13 @@ ActiveRecord::Schema.define(version: 20190310071442) do
     t.datetime "updated_at",                                   null: false
   end
 
-  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "name",                             null: false
     t.string   "image"
     t.integer  "role",       limit: 1, default: 0, null: false
     t.string   "alias"
     t.integer  "login_type", limit: 1, default: 0, null: false
+    t.integer  "coin",                 default: 0
     t.string   "wx_openid"
     t.datetime "created_at",                       null: false
     t.datetime "updated_at",                       null: false
