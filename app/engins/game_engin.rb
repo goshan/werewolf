@@ -78,7 +78,8 @@ class GameEngin
   def skill_active(user)
     res = skill_check user
     return res if res.to_s.start_with? 'failed'
-    p.role.prepare_skill
+    player = Player.find_by_user user
+    player.role.prepare_skill
   end
 
   def skill(user, target)

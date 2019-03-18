@@ -1,12 +1,12 @@
 class Discuss < Day
 
-  STEPS = %i[discuss].freeze
+  STEPS = %w[discuss].freeze
 
-  def should_skip?
-    false
+  def audio_before_turn
+    'day_start'
   end
 
-  def should_pretend?
-    false
+  def audio_after_turn
+    'night_start'
   end
 end

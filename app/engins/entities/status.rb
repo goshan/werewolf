@@ -18,14 +18,16 @@ class Status < CacheRecord
     self.turn_name = 'deal'
   end
 
-  def next!
+  def next_turn_and_save!
     next_turn = self.turn.next_available
     if next_turn.nil?
       self.round += 1
-      self.turn_name = Turn.first.name
+      self.save  # need round info when getting next turn, so save before finding next turn
+      self.turn_name = Turn.first_available.name
     else
       self.turn_name = next_turn.name
     end
+    self.save
   end
 
   def self.to_msg

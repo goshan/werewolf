@@ -59,7 +59,8 @@ class GameChannel < ApplicationCable::Channel
     res = @gm.start
     return if catch_exceptions res
 
-    play_voice 'night_start'
+    audio = Status.find_current.turn.audio_after_turn
+    play_voice audio if audio
   end
 
   def skill_active
@@ -75,7 +76,8 @@ class GameChannel < ApplicationCable::Channel
     return if catch_exceptions res
 
     if res == :success
-      play_voice "#{old_status.turn_name}_end"
+      audio = Status.find_current.turn.audio_after_turn
+      play_voice audio if audio
     else
       send_to current_user, res
     end
@@ -83,14 +85,15 @@ class GameChannel < ApplicationCable::Channel
 
   def next_turn
     status = Status.find_current
-    status.next!
-    status.save
-    play_voice "#{status.turn_name}_start"
+    status.next_turn_and_save!
+    turn = status.turn
+    audio = turn.audio_before_turn
+    play_voice audio if audio
     update :status
 
-    if status.turn.shoud_pretend?
+    if turn.audio_after_turn && turn.should_pretend?
       sleep Random.new(Time.now.to_i).rand(12..15)
-      play_voice "#{status.turn_name}_end"
+      play_voice turn.audio_after_turn
     end
   end
 

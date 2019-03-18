@@ -24,15 +24,15 @@
   sitting: "就坐",
   deal: "查看身份",
   discuss: "白天",
-  wolf: "夜晚 狼人行动",
-  hidden_wolf: "夜晚 隐狼行动",
-  long_wolf: "夜晚 大灰狼行动",
-  witch: "夜晚 女巫行动",
-  seer: "夜晚 预言家行动",
-  savior: "夜晚 守卫行动",
-  magician: "夜晚 魔术师行动",
-  augur: "夜晚 占卜师行动"
-  mixed: "夜晚 混血儿行动"
+  wolf_act: "夜晚 狼人行动",
+  hidden_wolf_act: "夜晚 隐狼行动",
+  long_wolf_act: "夜晚 大灰狼行动",
+  witch_act: "夜晚 女巫行动",
+  seer_act: "夜晚 预言家行动",
+  savior_act: "夜晚 守卫行动",
+  magician_act: "夜晚 魔术师行动",
+  augur_act: "夜晚 占卜师行动"
+  mixed_act: "夜晚 混血儿行动"
 }
 
 @Wolf.Trans.Panel = @Wolf.Trans.Panel ? {

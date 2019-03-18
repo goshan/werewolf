@@ -19,12 +19,12 @@ class Turn
     player.role.skill_timing == player.status
   end
 
-  def self.from_name(turn_name)
-    turn_name.camelize.constantize.new
+  def audio_before_turn
+    nil
   end
 
-  def self.first
-    Turn.new.first_child
+  def audio_after_turn
+    nil
   end
 
   def next_available
@@ -33,6 +33,20 @@ class Turn
     return next_turn unless next_turn.should_skip?
 
     next_turn.next_available
+  end
+
+  def self.first
+    self.new.first_child
+  end
+
+  def self.first_available
+    turn = self.first
+    turn = turn.next_available if turn.should_skip?
+    turn
+  end
+
+  def self.from_name(turn_name)
+    turn_name.camelize.constantize.new
   end
 
   #============================
