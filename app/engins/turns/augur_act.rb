@@ -1,0 +1,2 @@
+class AugurAct < Night
+end

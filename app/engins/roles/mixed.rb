@@ -16,7 +16,7 @@ class Mixed < Villager
 
   def win?(res)
     player = Player.find_by_key self.mixed_with
-    player.role.win?(res)
+    player ? player.role.win?(res) : false
   end
 
   def prepare_skill

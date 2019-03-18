@@ -1,0 +1,2 @@
+class MagicianAct < Night
+end

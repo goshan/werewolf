@@ -1,0 +1,2 @@
+class SaviorAct < Night
+end

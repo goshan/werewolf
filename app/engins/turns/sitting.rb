@@ -1,0 +1,2 @@
+class Sitting < Init
+end

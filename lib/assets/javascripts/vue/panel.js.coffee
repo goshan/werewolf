@@ -86,7 +86,7 @@ Vue.component 'player', {
     updateWithTurn: (turn = null) ->
       @skillName = null
       @skillParams = {
-        action: if turn == "init" then "sit" else "none"
+        action: if turn == "sitting" then "sit" else "none"
       }
 
     updateWithData: (data) ->

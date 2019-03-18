@@ -1,0 +1,2 @@
+class WitchAct < Night
+end
