@@ -85,8 +85,8 @@ class Role < CacheRecord
     Setting::WOLF_ROLES.each do |r|
       roles.push r.to_s if setting.has? r
     end
-    (1..setting.normal_villager_cnt).each { |_i| roles.push 'villager' }
-    (1..setting.normal_wolf_cnt).each { |_i| roles.push 'normal_wolf' }
+    setting.normal_villager_cnt.times.each { |_i| roles.push 'villager' }
+    setting.normal_wolf_cnt.times.each { |_i| roles.push 'normal_wolf' }
 
     roles
   end
