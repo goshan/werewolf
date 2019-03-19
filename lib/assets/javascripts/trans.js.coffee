@@ -24,15 +24,15 @@
   sitting: "就坐",
   deal: "查看身份",
   discuss: "白天",
-  wolf_act: "夜晚 狼人行动",
-  hidden_wolf_act: "夜晚 隐狼行动",
-  long_wolf_act: "夜晚 大灰狼行动",
-  witch_act: "夜晚 女巫行动",
-  seer_act: "夜晚 预言家行动",
-  savior_act: "夜晚 守卫行动",
-  magician_act: "夜晚 魔术师行动",
-  augur_act: "夜晚 占卜师行动"
-  mixed_act: "夜晚 混血儿行动"
+  wolf: "夜晚 狼人行动",
+  hidden_wolf: "夜晚 隐狼行动",
+  long_wolf: "夜晚 大灰狼行动",
+  witch: "夜晚 女巫行动",
+  seer: "夜晚 预言家行动",
+  savior: "夜晚 守卫行动",
+  magician: "夜晚 魔术师行动",
+  augur: "夜晚 占卜师行动"
+  mixed: "夜晚 混血儿行动"
 }
 
 @Wolf.Trans.Panel = @Wolf.Trans.Panel ? {
@@ -46,6 +46,7 @@
     failed_not_seat: "没有就座，无法操作",
     failed_could_not_skill: "当前状态，无法发动技能",
     failed_locked: "只能落刀被锁定的玩家",
+    failed_no_target: "请先选择对象",
     failed_cannot_kill_self: "该角色不能自刀",
     failed_have_acted: "已完成行动",
     failed_target_dead: "目标已死亡",
@@ -100,6 +101,10 @@
     confirm_finish: ["明白", 'btn-default'],
     lock: ["锁定", 'btn-warning']
     kill_more: ["追刀", 'btn-danger']
+  }
+  confirm_message_trans: {
+    kill: "你们今晚猎杀的是{killed}号玩家",
+    kill_none: "你们今晚没有猎杀目标"
   }
 }
 

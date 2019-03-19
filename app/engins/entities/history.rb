@@ -1,5 +1,12 @@
 class History < CacheRecord
-  attr_accessor :round, :augur_target, :wolf_kill, :long_wolf_kill, :witch_target, :magician_target, :seer_target, :savior_target, :dead_in_day
+  attr_accessor :round, :dead_in_day
+  attr_accessor :augur_target, :augur_acted
+  attr_accessor :wolf_kill, :wolf_acted
+  attr_accessor :long_wolf_kill, :long_wolf_acted
+  attr_accessor :witch_target, :witch_acted
+  attr_accessor :migician_target, :magician_acted
+  attr_accessor :seer_target, :seer_acted
+  attr_accessor :savior_target, :savior_acted
 
   def self.key_attr
     'round'

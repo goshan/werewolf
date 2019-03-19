@@ -75,21 +75,28 @@ class GameEngin
     :success
   end
 
-  def skill_active(user)
+  def prepare_skill(user)
     res = skill_check user
     return res if res.to_s.start_with? 'failed'
+
     player = Player.find_by_user user
     player.role.prepare_skill
   end
 
-  def skill(user, target)
+  def use_skill(user, target)
     res = skill_check user
     return res if res.to_s.start_with? 'failed'
 
     player = Player.find_by_user user
-    res = player.role.use_skill target
+    player.role.use_skill target
+  end
 
-    res
+  def confirm_skill(user)
+    res = skill_check user
+    return res if res.to_s.start_with? 'failed'
+
+    player = Player.find_by_user user
+    player.role.confirm_skill target
   end
 
   def start_vote(desc, target_pos, voter_pos)
@@ -211,10 +218,8 @@ class GameEngin
     p = Player.find_by_user user
     return :failed_not_seat unless p
     return :failed_no_role unless p.role
-
-    status = Status.find_current
-    return :failed_not_turn unless status.turn.player_should_act?(p)
-    return :failed_could_not_skill unless status.turn.player_could_act?(p)
+    return :failed_not_turn unless p.should_act?
+    return :failed_could_not_skill unless p.could_act?
 
     :success
   end

@@ -1,22 +1,12 @@
 class Turn
   extend Abstract
 
-  need_override :active_roles, :should_skip?, :should_pretend?
+  attr_accessor :step
 
-  WORKING_LEVEL = 2
   STEPS = %w[init night day].freeze
 
-  def name
-    self.class.to_s.underscore
-  end
-
-  def player_should_act?(player)
-    self.active_roles.include? player.role.name
-  end
-
-  def player_could_act?(player)
-    return false unless self.player_should_act?(player)
-    player.role.skill_timing == player.status
+  def initialize(step)
+    @step = step
   end
 
   def audio_before_turn
@@ -27,64 +17,28 @@ class Turn
     nil
   end
 
-  def next_available
-    next_turn = self.next
-    return nil if next_turn.nil?
-    return next_turn unless next_turn.should_skip?
-
-    next_turn.next_available
+  def self.create_with(turn, step)
+    return nil unless STEPS.include? turn
+    turn.camelize.constantize.new step
   end
 
-  def self.first
-    self.new.first_child
-  end
-
-  def self.first_available
-    turn = self.first
-    turn = turn.next_available if turn.should_skip?
-    turn
-  end
-
-  def self.from_name(turn_name)
-    turn_name.camelize.constantize.new
-  end
-
-  #============================
-
-  def level
-    l = 0
-    self.class.ancestors.each do |c|
-      break if c == Turn
-      l += 1
-    end
-    l
-  end
-
-  def next
-    return nil if self.level == 0
-
-    step = self.steps
-    current_index = steps.index self.name
-
-    if current_index == steps.count - 1
-      next_base = self.base_class.new.next
-      return nil if next_base.nil?
-      next_base.first_child
+  def self.first_turn_step
+    if self == Turn
+      self::STEPS.first.camelize.constantize.first_turn_step
     else
-      Turn.from_name steps[current_index + 1]
+      self.new self::STEPS.first
     end
   end
 
-  def base_class
-    self.class.superclass
-  end
-
-  def steps
-    self.base_class.const_get(:STEPS)
-  end
-
-  def first_child
-    return self if self.level == WORKING_LEVEL
-    Turn.from_name(self.class.const_get(:STEPS).first).first_child
+  def self.to_turn_steps
+    if self == Turn
+      self::STEPS.map do |step|
+        step.camelize.constantize.to_turn_steps
+      end.reduce(:+)
+    else
+      self::STEPS.map do |step|
+        self.new step
+      end
+    end
   end
 end

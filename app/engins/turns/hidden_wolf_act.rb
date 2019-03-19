@@ -1,2 +1,0 @@
-class HiddenWolfAct < Night
-end

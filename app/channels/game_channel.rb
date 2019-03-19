@@ -63,24 +63,26 @@ class GameChannel < ApplicationCable::Channel
     play_voice audio if audio
   end
 
-  def skill_active
-    res = @gm.skill_active current_user
+  def prepare_skill
+    res = @gm.prepare_skill current_user
     return if catch_exceptions res
 
-    send_to current_user, res
+    send_to current_user, {action: 'panel'}.merge(res)
   end
 
-  def skill(data)
-    old_status = Status.find_current
-    res = @gm.skill(current_user, data['pos'])
+  def use_skill(data)
+    res = @gm.use_skill current_user, data['target']
     return if catch_exceptions res
 
-    if res == :success
-      audio = Status.find_current.turn.audio_after_turn
-      play_voice audio if audio
-    else
-      send_to current_user, res
-    end
+    send_to current_user, {action: 'confirm'}.merge(res)
+  end
+
+  def confirm_skill
+    res = @gm.confirm_skill current_user
+    return if catch_exceptions res
+
+    audio = Status.find_current.turn.audio_after_turn
+    play_voice audio if audio
   end
 
   def next_turn
