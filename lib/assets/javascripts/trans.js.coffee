@@ -84,27 +84,26 @@
     throw: "请选择玩家放逐"
   }
   dialog_message_trans: {
-    prescribe: "今晚被猎杀的是{killed}号玩家，请操作",
-    prescribe_unknow: "无法获知今晚被猎杀玩家信息，请操作",
-    prescribe_none: "今晚没有玩家被猎杀，请操作",
-    confirm: "{pos}号玩家的身份是<span style='font-size: 21px; font-weight: bold; color: {role?evil:red,virtuous:green};'>{role?evil:狼人,virtuous:好人}</span>",
-    mixed: "你混了{pos}号玩家的血。你与其同胜负。",
-    lock: "今晚是否锁定玩家",
-    kill_more: "今晚是否追刀",
-    normal_wolf_still_alive: "你的狼同伴 {pos} 尚未全部死亡，不能刀人"
+    killed: "你们今晚猎杀的是{target}号玩家",
+    none_killed: "你们今晚没有猎杀目标"
+    #prescribe: "今晚被猎杀的是{killed}号玩家，请操作",
+    #prescribe_unknow: "无法获知今晚被猎杀玩家信息，请操作",
+    #prescribe_none: "今晚没有玩家被猎杀，请操作",
+    #confirm: "{pos}号玩家的身份是<span style='font-size: 21px; font-weight: bold; color: {role?evil:red,virtuous:green};'>{role?evil:狼人,virtuous:好人}</span>",
+    #mixed: "你混了{pos}号玩家的血。你与其同胜负。",
+    #lock: "今晚是否锁定玩家",
+    #kill_more: "今晚是否追刀",
+    #normal_wolf_still_alive: "你的狼同伴 {pos} 尚未全部死亡，不能刀人"
   }
   dialog_button_trans: {
-    antidot: ["救人", 'btn-success'],
-    poison: ["毒人", 'btn-purple'],
-    rest: ["不行动", 'btn-default'],
-    mixed_finish: ["好滴", 'btn-default'],
-    confirm_finish: ["明白", 'btn-default'],
-    lock: ["锁定", 'btn-warning']
-    kill_more: ["追刀", 'btn-danger']
-  }
-  confirm_message_trans: {
-    kill: "你们今晚猎杀的是{killed}号玩家",
-    kill_none: "你们今晚没有猎杀目标"
+    kill_none: ["空刀", 'btn-danger']
+    #antidot: ["救人", 'btn-success'],
+    #poison: ["毒人", 'btn-purple'],
+    #rest: ["不行动", 'btn-default'],
+    #mixed_finish: ["好滴", 'btn-default'],
+    #confirm_finish: ["明白", 'btn-default'],
+    #lock: ["锁定", 'btn-warning']
+    #kill_more: ["追刀", 'btn-danger']
   }
 }
 

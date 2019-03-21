@@ -1,7 +1,9 @@
 class Villager < Role
-  need_override :skill
-
   def side
     :villager
+  end
+
+  def skill(turn)
+    nil
   end
 end

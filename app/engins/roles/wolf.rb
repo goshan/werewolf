@@ -3,11 +3,7 @@ class Wolf < Role
     :wolf
   end
 
-  def skill
-    Status.find_current.turn.step == 'wolf' ? Kill.new(self) : nil
-  end
-
-  def use_skill(pos)
-
+  def skill(turn)
+    turn.round > 0 && turn.step == 'wolf' ? Kill.new(self) : nil
   end
 end

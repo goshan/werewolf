@@ -9,7 +9,7 @@ class GameEngin
   end
 
   def sit(user, pos)
-    return :failed_not_turn unless Status.find_current.turn_name == 'sitting'
+    return :failed_not_turn unless Status.find_current.turn.step == 'sitting'
 
     player = Player.find_by_key pos
     return :failed_seat_not_available if player.user_id
@@ -58,7 +58,7 @@ class GameEngin
 
   def start
     status = Status.find_current
-    return :failed_not_turn unless %w[deal discuss].include? status.turn_name
+    return :failed_not_turn unless %w[deal discuss].include? status.turn.step
 
     Player.find_all.each do |p|
       return :failed_empty_seat unless p.name
@@ -69,40 +69,43 @@ class GameEngin
     status.save
 
     # init new round data
-    new_history = History.new status.round + 1
+    new_history = History.new status.turn.round + 1
     new_history.save
 
     :success
   end
 
   def prepare_skill(user)
-    res = skill_check user
+    turn = Status.find_current.turn
+    res = skill_check user, turn
     return res if res.to_s.start_with? 'failed'
 
     player = Player.find_by_user user
-    player.role.prepare_skill
+    player.role.skill(turn).prepare
   end
 
   def use_skill(user, target)
-    res = skill_check user
+    turn = Status.find_current.turn
+    res = skill_check user, turn
     return res if res.to_s.start_with? 'failed'
 
     player = Player.find_by_user user
-    player.role.use_skill target
+    player.role.skill(turn).use target
   end
 
   def confirm_skill(user)
-    res = skill_check user
+    turn = Status.find_current.turn
+    res = skill_check user, turn
     return res if res.to_s.start_with? 'failed'
 
     player = Player.find_by_user user
-    player.role.confirm_skill target
+    player.role.skill(turn).confirm
   end
 
   def start_vote(desc, target_pos, voter_pos)
     # vote can only be started in day
     status = Status.find_current
-    return :failed_not_turn unless status.turn_name == "discuss"
+    return :failed_not_turn unless status.turn.step == "discuss"
     return :failed_vote_has_started unless status.voting == 0
 
     # set status to vote
@@ -123,7 +126,7 @@ class GameEngin
   def vote(user, target)
     # only can vote in day
     status = Status.find_current
-    return :failed_not_turn unless status.turn_name == 'discuss'
+    return :failed_not_turn unless status.turn.step == 'discuss'
     return :failed_vote_not_started if status.voting == 0
 
     vote = Vote.find_by_key status.voting
@@ -139,7 +142,7 @@ class GameEngin
 
   def stop_vote
     status = Status.find_current
-    return :failed_not_turn unless status.turn_name == 'discuss'
+    return :failed_not_turn unless status.turn.step == 'discuss'
     return :failed_vote_not_started if status.voting == 0
 
     vote = Vote.find_by_key status.voting
@@ -155,9 +158,9 @@ class GameEngin
   def throw(pos)
     # check current turn is day
     status = Status.find_current
-    return :failed_not_turn unless status.turn_name == 'discuss'
+    return :failed_not_turn unless status.turn.step == 'discuss'
 
-    history = History.find_by_key status.round
+    history = History.find_by_key status.turn.round
     pos.each do |p|
       # check players already dead
       player = Player.find_by_key p
@@ -214,12 +217,12 @@ class GameEngin
   end
 
   private
-  def skill_check(user)
+  def skill_check(user, turn)
     p = Player.find_by_user user
     return :failed_not_seat unless p
     return :failed_no_role unless p.role
-    return :failed_not_turn unless p.should_act?
-    return :failed_could_not_skill unless p.could_act?
+    return :failed_not_turn unless p.should_act? turn
+    return :failed_could_not_skill unless p.could_act? turn
 
     :success
   end

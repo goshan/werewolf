@@ -1,52 +1,38 @@
 class Status < CacheRecord
-  attr_accessor :round, :turn, :voting, :over
+  attr_accessor :turn, :voting, :over
 
   def initialize
-    @round = 0
+    @turn = Turn.init
     @voting = 0
     @over = true
-    @turn = Turn.first_turn_step
   end
 
   def deal!
-    @round = 0
     @voting = 0
-    @turn = Init.new('deal')
+    @turn = Init.new(0, 'deal')
   end
 
-  def next_turn_and_save!
-    Turn.to_turn_steps.each do |turn|
-      @turn = turn
-      self.save
-      break unless Status.should_skip?
-    end
+  def next_turn!
+    @turn = @turn.next
+    self.next_turn! if @turn.skip?
   end
 
   def to_cache
     hash = super
-    hash['turn'] = "#{@turn.class.to_s.underscore}##{@turn.step}"
+    hash['round'] = @turn.round
+    hash['turn'] = @turn.class.to_s.underscore
+    hash['step'] = @turn.step
     hash
   end
 
   def self.from_cache(obj)
     ins = super obj
-    turn, step = obj['turn'].split '#'
-    ins.turn = Turn.create_with turn, step
+    ins.turn = Turn.create_with obj['round'].to_i, obj['turn'], obj['step']
     ins
-  end
-
-  def self.should_skip?
-    Player.find_all_should_act.count == 0
-  end
-
-  def self.should_pretend?
-    Plyaer.find_all_could_act.count == 0
   end
 
   def self.to_msg
     status = self.find_current
-    { round: status.round, turn: status.turn_name }
+    { round: status.turn.round, turn: status.turn.step }
   end
-
-
 end

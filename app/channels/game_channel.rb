@@ -67,14 +67,14 @@ class GameChannel < ApplicationCable::Channel
     res = @gm.prepare_skill current_user
     return if catch_exceptions res
 
-    send_to current_user, {action: 'panel'}.merge(res)
+    send_to current_user, res
   end
 
   def use_skill(data)
-    res = @gm.use_skill current_user, data['target']
+    res = @gm.use_skill current_user, data['pos']
     return if catch_exceptions res
 
-    send_to current_user, {action: 'confirm'}.merge(res)
+    send_to current_user, res
   end
 
   def confirm_skill
@@ -87,13 +87,14 @@ class GameChannel < ApplicationCable::Channel
 
   def next_turn
     status = Status.find_current
-    status.next_turn_and_save!
+    status.next_turn!
+    status.save
     turn = status.turn
     audio = turn.audio_before_turn
     play_voice audio if audio
     update :status
 
-    if turn.audio_after_turn && turn.should_pretend?
+    if turn.audio_after_turn && status.turn.predent?
       sleep Random.new(Time.now.to_i).rand(12..15)
       play_voice turn.audio_after_turn
     end
@@ -103,9 +104,9 @@ class GameChannel < ApplicationCable::Channel
     return send_to current_user, action: 'alert', msg: '不合法操作' unless current_user.lord?
 
     status = Status.find_current
-    return send_to current_user, action: 'alert', msg: '白天以外无法获取信息' unless status.turn_name == 'discuss'
+    return send_to current_user, action: 'alert', msg: '白天以外无法获取信息' unless status.turn.step == 'discuss'
 
-    dead_info = History.find_by_key(status.round).dead_in_night
+    dead_info = History.find_by_key(status.turn.round).dead_in_night
     dead_info.each do |d|
       p = Player.find_by_key d
       p.die!

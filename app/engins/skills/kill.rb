@@ -1,12 +1,16 @@
-class Kill
+class Kill < Skill
 
   def player_status_when_use
     :alive
   end
 
   def prepare
-    history = History.find_by_key Status.find_current.round
-    { msg: 'kill', select: 'single', only: history.augur_lock }
+    history = History.find_by_key Status.find_current.turn.round
+    res = SkillResponsePanel.new 'kill'
+    res.select = SkillResponsePanel::SELECT_SINGLE
+    res.only = history.augur_lock
+    res.button_push 'kill_none', 0
+    res.to_msg
   end
 
   # target:
@@ -16,22 +20,29 @@ class Kill
     return :failed_no_target if target.nil?
 
     status = Status.find_current
-    history = History.find_by_key status.round
+    history = History.find_by_key status.turn.round
     return :failed_have_acted if history.wolf_acted
     return :failed_locked if history.augur_lock && !history.augur_lock.include?(pos.to_i)
 
-    player = Player.find_by_key pos
-    return :failed_target_dead unless player.status == :alive
-    return :failed_cannot_kill_self if %w[chief_wolf lord_wolf ghost_rider].include? player.role.name
+    if target.to_i == 0
+      history.wolf_kill = 0
+      res = SkillResponseDialog.new 'none_killed'
+    else
+      player = Player.find_by_key target
+      return :failed_target_dead unless player.status == :alive
+      return :failed_cannot_kill_self if %w[chief_wolf lord_wolf ghost_rider].include? player.role.name
 
-    history.wolf_kill = player.pos
+      history.wolf_kill = player.pos
+      res = SkillResponseDialog.new 'killed'
+      res.add_param 'target', player.pos
+    end
     history.save
 
-    { msg: 'killed', target: player.pos }
+    res.to_msg
   end
 
   def confirm
-    history = History.find_by_key Status.find_current.round
+    history = History.find_by_key Status.find_current.turn.round
     history.wolf_acted = true
     :success
   end

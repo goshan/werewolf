@@ -1,11 +1,14 @@
 class Turn
   extend Abstract
 
-  attr_accessor :step
+  need_override :skip?, :predent?
+
+  attr_accessor :round, :step
 
   STEPS = %w[init night day].freeze
 
-  def initialize(step)
+  def initialize(round, step)
+    @round = round
     @step = step
   end
 
@@ -17,28 +20,37 @@ class Turn
     nil
   end
 
-  def self.create_with(turn, step)
-    return nil unless STEPS.include? turn
-    turn.camelize.constantize.new step
-  end
+  def next
+    round = @round
+    turn = self.class.to_s.underscore
+    step = @step
 
-  def self.first_turn_step
-    if self == Turn
-      self::STEPS.first.camelize.constantize.first_turn_step
-    else
-      self.new self::STEPS.first
-    end
-  end
-
-  def self.to_turn_steps
-    if self == Turn
-      self::STEPS.map do |step|
-        step.camelize.constantize.to_turn_steps
-      end.reduce(:+)
-    else
-      self::STEPS.map do |step|
-        self.new step
+    turn_index = Turn::STEPS.index self.class.to_s.underscore
+    step_index = self.class::STEPS.index @step
+    if step_index == self.class::STEPS.count - 1
+      if turn_index == Turn::STEPS.count - 1
+        round += 1
+        turn = Turn::STEPS.first
+      else
+        turn = Turn::STEPS[turn_index + 1]
       end
+      step = turn.camelize.constantize::STEPS.first
+    else
+      step = self.class::STEPS[step_index + 1]
     end
+
+    Turn.create_with round, turn, step
+  end
+
+  def self.create_with(round, turn, step)
+    return nil unless STEPS.include? turn
+    turn.camelize.constantize.new round, step
+  end
+
+  def self.init
+    return nil unless self == Turn
+
+    cla = Turn::STEPS.first.camelize.constantize
+    cla.new 0, cla::STEPS.first
   end
 end

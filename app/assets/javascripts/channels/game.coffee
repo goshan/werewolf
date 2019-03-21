@@ -30,9 +30,6 @@ $(document).on 'turbolinks:load', (e) ->
           else if data.action == 'dialog'
             Wolf.modal.dialog data
 
-          else if data.action == 'confirm'
-            Wolf.modal.confirm data
-
           else if data.action == 'update'
             if !Wolf.Utils.varIsNull(data.status)
               Wolf.status.round = data.status.round

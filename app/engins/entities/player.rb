@@ -22,14 +22,6 @@ class Player < CacheRecord
     self.find_all.select { |p| p.status == :alive }
   end
 
-  def self.find_all_should_act
-    self.find_all.select(&:should_act?)
-  end
-
-  def self.find_all_could_act
-    self.find_all.select(&:could_act?)
-  end
-
   def self.init
     (1..Setting.current.player_cnt).each do |i|
       p = Player.new i, :alive
@@ -81,13 +73,13 @@ class Player < CacheRecord
     User.find_by_id self.user_id
   end
 
-  def should_act?
-    !self.role.skill.nil?
+  def should_act?(turn)
+    !self.role.skill(turn).nil?
   end
 
-  def could_act?
-    return false unless self.should_act?
-    self.role.skill.player_status_when_use == self.status
+  def could_act?(turn)
+    return false unless self.should_act?(turn)
+    self.role.skill(turn).player_status_when_use == self.status
   end
 
   def assign!(user)
@@ -98,7 +90,7 @@ class Player < CacheRecord
 
   def die!
     if self.role.name == 'hunter'
-      self.role.dead_round = Status.find_current.round
+      self.role.dead_round = Status.find_current.turn.round
       self.role.save
     end
     self.status = :dead

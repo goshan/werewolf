@@ -38,18 +38,6 @@ class Role < CacheRecord
     win
   end
 
-  def prepare_skill
-    skill.prepare
-  end
-
-  def use_skill(target)
-    skill.use target
-  end
-
-  def confirm_skill
-    skill.confirm
-  end
-
   def self.init_by_role(role)
     return nil unless role
 

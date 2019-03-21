@@ -7,7 +7,7 @@ class Vote < CacheRecord
 
   def initialize(desc)
     self.ts = Time.now.to_i
-    self.desc = desc.gsub '{round}', Status.find_current.round.to_s
+    self.desc = desc.gsub '{round}', Status.find_current.turn.round.to_s
     self.targets = []
     self.voters = []
     self.user_votes = {}

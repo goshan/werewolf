@@ -1,8 +1,12 @@
 class Init < Turn
   STEPS = %w[sitting deal].freeze
 
-  def audio_before_turn
-    nil
+  def skip?
+    @round > 0
+  end
+
+  def predent?
+    false
   end
 
   def audio_after_turn
