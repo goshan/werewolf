@@ -56,8 +56,6 @@
     failed_save_self: "当前阶段不能自救",
     failed_no_poison: "已使用过毒药",
     failed_same_guard: "不能连续两晚守护同一玩家",
-    failed_not_shoot_turn: "现在不是开枪的回合",
-    failed_finish_shoot: "你已开过枪",
     failed_cannot_shoot: "你无法开枪",
     failed_exchange_number: "若要交换，则必须选择两名玩家",
     failed_exchange_same: "不能只交换一名玩家",
@@ -66,10 +64,13 @@
     failed_is_killing: "已选择追刀，则必须落刀",
     failed_have_killed: "一局游戏只能追刀一次",
     failed_round_1: "第一晚不能追刀",
+    failed_battle_self: "不能同自己决斗",
     failed_game_not_over: "请先结束游戏",
     failed_vote_has_started: "已经正在投票中",
     failed_vote_not_started: "现在不能进行投票",
-    failed_has_voted: "已经投票"
+    failed_has_voted: "已经投票",
+    shoot: "{player}号玩家发动技能带走{target}号玩家，{dead}号玩家死亡",
+    battle: "{player}号玩家同{target}号玩家进行决斗，{dead}号玩家死亡",
   }
   panel_tip_trans: {
     kill: "请从下方存活玩家中选择一名猎杀",
@@ -83,6 +84,7 @@
     exchange: "请从下方存活玩家中选择两名交换",
     link: "请从下方玩家中选择一名进行混血",
     shoot: "请从开枪射杀下方玩家中的一名",
+    battle: "请从下方玩家中选择的一名进行决斗",
     throw: "请选择要放逐玩家",
     vote: "请选择要投票的对象"
   }
@@ -101,6 +103,7 @@
     exchange_none: ["空换", 'btn-default'],
     link: ["混血", 'btn-purple'],
     shoot: ["开枪", 'btn-danger'],
+    battle: ["决斗", 'btn-primary'],
     throw: ["放逐", 'btn-primary'],
     vote: ["投票", 'btn-warning'],
     abandon: ["弃票", 'btn-default']
@@ -123,6 +126,7 @@
     linked: "你对{target}号玩家进行了混血，你将与其同胜负。",
     check_wolves: "你的狼同伴 {wolves} 尚未全部死亡，不能刀人"
     shoot_done: "你要开枪射杀{target}号玩家"
+    battle_done: "你要跟{target}号玩家决斗"
   }
 }
 

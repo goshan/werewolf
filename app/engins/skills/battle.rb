@@ -1,51 +1,50 @@
-class Shoot < Skill
-  def player_status_when_use
-    :dead
-  end
-
+class Battle < Skill
   def prepare
     status = Status.find_current
     history = History.find_by_key status.turn.round
-    return :failed_have_acted if @role.shoot_done
-    return :failed_cannot_shoot unless history.hunter_skill?
+    return :failed_have_acted if @role.battle_done
 
-    res = SkillResponsePanel.new 'shoot'
+    res = SkillResponsePanel.new 'battle'
     res.select = SkillResponsePanel::SELECT_SINGLE
-    res.button_push 'shoot'
+    res.button_push 'battle'
     res.to_msg
   end
 
   # target:
-  # 1~ --> 开枪
+  # 1~ --> 决斗
   def use(target)
     return :failed_no_target if target.nil?
 
     status = Status.find_current
     history = History.find_by_key status.turn.round
-    return :failed_have_acted if @role.shoot_done
-    return :failed_cannot_shoot unless history.hunter_skill?
+    return :failed_have_acted if @role.battle_done
 
     player = Player.find_by_key target
     return :failed_target_dead unless player.status == :alive
+    knight = Player.find_by_role @role.name
+    return :failed_battle_self if player.pos == knight.pos
 
-    history.hunter_target = player.pos
+    history.knight_target = player.pos
     history.save
 
-    res = SkillResponseDialog.new 'shoot_done'
+    res = SkillResponseDialog.new 'battle_done'
     res.add_param 'target', player.pos
     res.to_msg
   end
 
   def confirm
-    @role.shoot_done = true
+    @role.battle_done = true
     @role.save
 
     history = History.find_by_key Status.find_current.turn.round
-    player = Player.find_by_key history.hunter_target
+    player = Player.find_by_key history.knight_target
     return :failed_target_dead unless player.status == :alive
 
+    unless player.role.side == :wolf
+      player = Player.find_by_role @role.name
+    end
     player.die!
     player.save
-    "skill_in_day_shoot->#{history.hunter_target}->#{player.pos}"
+    "skill_in_day_battle->#{history.knight_target}->#{player.pos}"
   end
 end

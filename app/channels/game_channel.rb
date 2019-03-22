@@ -84,11 +84,12 @@ class GameChannel < ApplicationCable::Channel
     if res == :success
       audio = Status.find_current.turn.audio_after_turn
       play_voice audio if audio
-    elsif res.start_with? 'kill_in_day'
-      target = res.gsub('kill_in_day_', '').to_i
+    elsif res.start_with? 'skill_in_day'
+      target = res.gsub('skill_in_day_', '')
       user = Player.find_lord_user
       player = Player.find_by_user current_user
-      send_to user, {action: 'alert', msg: "#{player.pos}号玩家发动技能，带走#{target}号玩家"}
+      res_info = target.split '->'
+      send_to user, {action: 'alert', msg: res_info[0], player: player.pos, target: res_info[1], dead: res_info[2]}
 
       update :players
       res = @gm.check_over

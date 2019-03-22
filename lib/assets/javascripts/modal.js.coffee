@@ -3,7 +3,10 @@
 @Wolf.modal = {
   alert: (data) ->
     msg = Wolf.Trans.Panel.alert_message_trans[data.msg]
-    msg = data.msg unless msg
+    if msg
+      msg = Wolf.Trans.insert_params(msg, data)
+    else
+      msg = data.msg
     BootstrapDialog.alert msg
 
   dialog: (data) ->

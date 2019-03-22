@@ -7,7 +7,7 @@ class History < CacheRecord
   attr_accessor :magician_target, :magician_acted
   attr_accessor :seer_target, :seer_acted
   attr_accessor :savior_target, :savior_acted
-  attr_accessor :hunter_target
+  attr_accessor :hunter_target, :knight_target
   attr_accessor :half_acted
 
   def self.key_attr
