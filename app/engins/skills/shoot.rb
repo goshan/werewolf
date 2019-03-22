@@ -7,7 +7,7 @@ class Shoot < Skill
     status = Status.find_current
     history = History.find_by_key status.turn.round
     return :failed_have_acted if @role.shoot_done
-    return :failed_cannot_shoot unless history.hunter_skill?
+    return :failed_cannot_shoot if @role.name == 'hunter' && ! history.hunter_skill?
 
     res = SkillResponsePanel.new 'shoot'
     res.select = SkillResponsePanel::SELECT_SINGLE
@@ -23,7 +23,7 @@ class Shoot < Skill
     status = Status.find_current
     history = History.find_by_key status.turn.round
     return :failed_have_acted if @role.shoot_done
-    return :failed_cannot_shoot unless history.hunter_skill?
+    return :failed_cannot_shoot if @role.name == 'hunter' && !history.hunter_skill?
 
     player = Player.find_by_key target
     return :failed_target_dead unless player.status == :alive
