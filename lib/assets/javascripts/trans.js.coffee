@@ -65,12 +65,13 @@
     failed_have_killed: "一局游戏只能追刀一次",
     failed_round_1: "第一晚不能追刀",
     failed_battle_self: "不能同自己决斗",
+    failed_destruct_self: "不能自爆带走自己",
     failed_game_not_over: "请先结束游戏",
     failed_vote_has_started: "已经正在投票中",
     failed_vote_not_started: "现在不能进行投票",
     failed_has_voted: "已经投票",
     shoot: "{player}号玩家发动技能带走{target}号玩家，{dead}号玩家死亡",
-    battle: "{player}号玩家同{target}号玩家进行决斗，{dead}号玩家死亡",
+    battle: "{player}号玩家同{target}号玩家进行决斗，{dead}号玩家死亡"
   }
   panel_tip_trans: {
     kill: "请从下方存活玩家中选择一名猎杀",
@@ -85,6 +86,7 @@
     link: "请从下方玩家中选择一名进行混血",
     shoot: "请开枪射杀下方玩家中的一名",
     battle: "请从下方玩家中选择的一名进行决斗",
+    destruct: "请自爆从下方玩家中选择的一名一同死亡",
     throw: "请选择要放逐玩家",
     vote: "请选择要投票的对象"
   }
@@ -104,6 +106,7 @@
     link: ["混血", 'btn-purple'],
     shoot: ["开枪", 'btn-danger'],
     battle: ["决斗", 'btn-primary'],
+    destruct: ["自爆", 'btn-danger'],
     throw: ["放逐", 'btn-primary'],
     vote: ["投票", 'btn-warning'],
     abandon: ["弃票", 'btn-default']
@@ -124,9 +127,10 @@
     exchanged: "你今晚交换了{target}号两位玩家",
     none_exchanged: "你今晚没有交换玩家",
     linked: "你对{target}号玩家进行了混血，你将与其同胜负。",
-    check_wolves: "你的狼同伴 {wolves} 尚未全部死亡，不能刀人"
-    shoot_done: "你要开枪射杀{target}号玩家"
-    battle_done: "你要跟{target}号玩家决斗"
+    check_wolves: "你的狼同伴 {wolves} 尚未全部死亡，不能刀人",
+    shoot_done: "你要开枪射杀{target}号玩家",
+    battle_done: "你要跟{target}号玩家决斗",
+    destruct_done: "你要自爆带走{target}号玩家"
   }
 }
 

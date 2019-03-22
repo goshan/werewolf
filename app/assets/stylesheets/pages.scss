@@ -260,6 +260,10 @@ fieldset[disabled] .btn-purple.active {
       background-color: #337ab7;
       border: 1px solid #2e6da4;
     }
+    &[status=destruct] {
+      background-color: #d9534f;
+      border: 1px solid #d43f3a;
+    }
     &[status=vote] {
       background-color: #f0ad4e;
       border: 1px solid #eea236;
