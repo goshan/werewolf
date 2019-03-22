@@ -49,6 +49,7 @@ class Guard < Skill
     @role.save
 
     history.savior_acted = true
+    history.save
 
     :success
   end

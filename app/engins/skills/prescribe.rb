@@ -75,6 +75,7 @@ class Prescribe < Skill
     @role.save
 
     history.witch_acted = true
+    history.save
 
     :success
   end

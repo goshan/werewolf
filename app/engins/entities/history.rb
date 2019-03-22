@@ -23,9 +23,9 @@ class History < CacheRecord
     # wolf kill
     kill = self.wolf_kill || Kill::EMPTY
     # long wolf kill
-    kill_more = (self.long_wolf_kill || -1)
+    kill_more = (self.long_wolf_kill || KillMore::EMPTY)
     # witch antidot
-    antidot = (self.witch_target || Prescribe::EMPTY) == 0
+    antidot = (self.witch_target || Prescribe::EMPTY) == Prescribe::ANTIDOTE
     # witch poison
     poison = (self.witch_target || Prescribe::EMPTY) > 0
     # savior
@@ -42,7 +42,7 @@ class History < CacheRecord
     end
 
     # long wolf kill
-    dead.push kill_more unless [-1, 0].include? kill_more
+    dead.push kill_more unless [KillMore::KILL, KillMore::EMPTY].include? kill_more
     dead.pop if guard != Guard::EMPTY && guard == kill_more
 
     # magician exchange

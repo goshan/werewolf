@@ -42,6 +42,7 @@ class Kill < Skill
   def confirm
     history = History.find_by_key Status.find_current.turn.round
     history.wolf_acted = true
+    history.save
     :success
   end
 end
