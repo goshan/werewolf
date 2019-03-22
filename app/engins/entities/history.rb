@@ -21,19 +21,19 @@ class History < CacheRecord
   def dead_in_night
     dead = []
     # wolf kill
-    kill = self.wolf_kill
+    kill = self.wolf_kill || Kill::EMPTY
     # long wolf kill
-    kill_more = self.long_wolf_kill
+    kill_more = (self.long_wolf_kill || -1)
     # witch antidot
-    antidot = self.witch_target == 0
+    antidot = (self.witch_target || Prescribe::EMPTY) == 0
     # witch poison
-    poison = self.witch_target > 0
+    poison = (self.witch_target || Prescribe::EMPTY) > 0
     # savior
-    guard = self.savior_target
+    guard = (self.savior_target || Guard::EMPTY)
 
-    dead.push kill unless kill == 0
+    dead.push kill unless kill == Kill::EMPTY
     dead.pop if antidot
-    if guard != 0 && guard == kill
+    if guard != Guard::EMPTY && guard == kill
       if antidot
         dead.push kill
       else
@@ -43,7 +43,7 @@ class History < CacheRecord
 
     # long wolf kill
     dead.push kill_more unless [-1, 0].include? kill_more
-    dead.pop if guard != 0 && guard == kill_more
+    dead.pop if guard != Guard::EMPTY && guard == kill_more
 
     # magician exchange
     dead = dead.map do |d|

@@ -1,4 +1,6 @@
 class Prescribe < Skill
+  EMPTY = -1
+  ANTIDOTE = 0
 
   def prepare
     history = History.find_by_key Status.find_current.turn.round
@@ -7,9 +9,9 @@ class Prescribe < Skill
     res.select = SkillResponsePanel::SELECT_SINGLE
     res.only = [] unless @role.has_poison
     res.add_param 'killed', @role.has_antidote ? history.wolf_kill : nil
-    res.button_push 'antidote', 0 if @role.has_antidote && history.wolf_kill != 0
+    res.button_push 'antidote', ANTIDOTE if @role.has_antidote && history.wolf_kill != 0
     res.button_push 'poison' if @role.has_poison
-    res.button_push 'rest', -1
+    res.button_push 'rest', EMPTY
     res.to_msg
   end
 
@@ -24,9 +26,9 @@ class Prescribe < Skill
     history = History.find_by_key status.turn.round
     return :failed_have_acted if history.witch_acted
 
-    if target.to_i == -1
+    if target.to_i == EMPTY
       res = SkillResponseDialog.new 'none_prescribe'
-    elsif target.to_i == 0
+    elsif target.to_i == ANTIDOTE
       # check antidot limitation
       return :failed_no_antidot unless @role.has_antidote
       # antidot: check killed user exists
@@ -65,7 +67,7 @@ class Prescribe < Skill
     history = History.find_by_key Status.find_current.turn.round
 
     # update witch limitation
-    if history.witch_target == 0
+    if history.witch_target == ANTIDOTE
       @role.has_antidote = false
     elsif history.witch_target >= 1
       @role.has_poison = false

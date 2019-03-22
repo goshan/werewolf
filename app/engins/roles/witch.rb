@@ -11,15 +11,7 @@ class Witch < God
   end
 
 
-  def skill(turn)
-    turn.round > 0 && turn.step == 'witch' ? Prescribe.new(self) : nil
-  end
-
-  # pos:
-  # [nil -> -1] --> 不行动
-  # 0 --> 救人
-  # 1~ --> 毒人
-  def use_skill(pos)
-
+  def skill_class
+    Prescribe
   end
 end

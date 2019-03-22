@@ -11,7 +11,7 @@
 
     buttons = [{
       label: "确认",
-      cssClass: 'btn-warning',
+      cssClass: 'btn-success',
       action: (dialog, e) =>
         App.game.do 'confirm_skill'
         dialog.close()

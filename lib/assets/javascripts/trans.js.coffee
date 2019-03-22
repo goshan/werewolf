@@ -72,14 +72,13 @@
     failed_cannot_kill: "目前还不能刀人"
   }
   panel_tip_trans: {
-    kill: "请从下方存活玩家中选择一名猎杀，不选择视为空刀",
+    kill: "请从下方存活玩家中选择一名猎杀",
     check: "请从下方存活玩家中选择一名查验",
     prescribe: "今晚被猎杀的是{killed}号玩家，请操作",
     prescribe_unknow: "无法获知今晚被猎杀玩家信息，请操作",
     prescribe_none: "今晚没有玩家被猎杀，请操作",
-    #poison: "请从下方存活玩家中选择一名毒杀，不选择视为不采取行动",
+    guard: "请从下方存活玩家中选择一名守护",
     #mixed: "请从下方玩家中选择一名混血",
-    #guard: "请从下方存活玩家中选择一名守护，不选择视为空守",
     #exchange: "请从下方存活玩家中选择两名交换，不选择视为不交换",
     #lock: "请从下方存活玩家中选择一名锁定，不选择视为不锁定",
     #kill_more: "请从下方存活玩家中选择一名追刀，不可以空刀",
@@ -93,6 +92,8 @@
     antidote: ["救人", 'btn-success'],
     poison: ["毒人", 'btn-purple'],
     rest: ["不行动", 'btn-default'],
+    guard: ["守护", 'btn-success'],
+    guard_none: ["空守", 'btn-default'],
     #mixed_finish: ["好滴", 'btn-default'],
     #confirm_finish: ["明白", 'btn-default'],
     #lock: ["锁定", 'btn-warning']
@@ -105,6 +106,8 @@
     antidote: "你今晚要开药解救{target}号玩家",
     poison: "你今晚要开药毒杀{target}号玩家",
     none_prescribe: "你今晚不使用任何药水",
+    guarded: "你今晚守护的是{target}号玩家",
+    none_guarded: "你今晚空守",
     #mixed: "你混了{pos}号玩家的血。你与其同胜负。",
     #lock: "今晚是否锁定玩家",
     #kill_more: "今晚是否追刀",

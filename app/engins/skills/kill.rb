@@ -1,4 +1,5 @@
 class Kill < Skill
+  EMPTY = 0
 
   def prepare
     history = History.find_by_key Status.find_current.turn.round
@@ -6,7 +7,7 @@ class Kill < Skill
     res.select = SkillResponsePanel::SELECT_SINGLE
     res.only = history.augur_lock
     res.button_push 'kill'
-    res.button_push 'kill_none', 0
+    res.button_push 'kill_none', EMPTY
     res.to_msg
   end
 
@@ -21,8 +22,8 @@ class Kill < Skill
     return :failed_have_acted if history.wolf_acted
     return :failed_locked if history.augur_lock && !history.augur_lock.include?(pos.to_i)
 
-    if target.to_i == 0
-      history.wolf_kill = 0
+    if target.to_i == EMPTY
+      history.wolf_kill = EMPTY
       res = SkillResponseDialog.new 'none_killed'
     else
       player = Player.find_by_key target
