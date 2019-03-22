@@ -78,9 +78,9 @@
     prescribe_none: "今晚没有玩家被猎杀，请操作",
     guard: "请从下方存活玩家中选择一名守护",
     kill_more: "今晚是否追刀",
+    stargaze: "请从下方存活玩家中选择一名锁定",
+    exchange: "请从下方存活玩家中选择两名交换",
     #mixed: "请从下方玩家中选择一名混血",
-    #exchange: "请从下方存活玩家中选择两名交换，不选择视为不交换",
-    #lock: "请从下方存活玩家中选择一名锁定，不选择视为不锁定",
     #vote: "请选择要投票的对象，不选择视为弃票",
     #throw: "请选择玩家放逐"
   }
@@ -88,15 +88,16 @@
     kill: ["落刀", 'btn-danger'],
     kill_none: ["空刀", 'btn-default'],
     check: ["查验", 'btn-warning'],
+    rest: ["不行动", 'btn-default'],
     antidote: ["救人", 'btn-success'],
     poison: ["毒人", 'btn-purple'],
-    rest: ["不行动", 'btn-default'],
     guard: ["守护", 'btn-success'],
     guard_none: ["空守", 'btn-default'],
     kill_more: ["追刀", 'btn-danger'],
+    stargaze: ["锁定", 'btn-darkblue'],
+    exchange: ["交换", 'btn-pink'],
+    exchange_none: ["空换", 'btn-default'],
     #mixed_finish: ["好滴", 'btn-default'],
-    #confirm_finish: ["明白", 'btn-default'],
-    #lock: ["锁定", 'btn-warning']
   }
   dialog_message_trans: {
     killed: "你们今晚猎杀的是{target}号玩家",
@@ -109,8 +110,11 @@
     none_guarded: "你今晚空守",
     killed_more: "你今晚追刀{target}号玩家",
     none_killed_more: "你今晚不进行追刀",
+    locked: "今晚锁定{target}号玩家",
+    none_locked: "今晚不锁定玩家",
+    exchanged: "你今晚交换了{target}号两位玩家",
+    none_exchanged: "你今晚没有交换玩家",
     #mixed: "你混了{pos}号玩家的血。你与其同胜负。",
-    #lock: "今晚是否锁定玩家",
     #normal_wolf_still_alive: "你的狼同伴 {pos} 尚未全部死亡，不能刀人"
   }
 }

@@ -20,7 +20,7 @@ class Kill < Skill
     status = Status.find_current
     history = History.find_by_key status.turn.round
     return :failed_have_acted if history.wolf_acted
-    return :failed_locked if history.augur_lock && !history.augur_lock.include?(pos.to_i)
+    return :failed_locked if history.augur_lock && !history.augur_lock.include?(target.to_i)
 
     if target.to_i == EMPTY
       history.wolf_kill = EMPTY

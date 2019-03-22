@@ -44,7 +44,7 @@ class KillMore < Skill
       res.button_push 'kill'
     else
       player = Player.find_by_key target
-      return :failed_locked if history.augur_lock && !history.augur_lock.include?(pos.to_i)
+      return :failed_locked if history.augur_lock && !history.augur_lock.include?(target.to_i)
       return :failed_target_dead unless player.status == :alive
 
       history.long_wolf_kill = player.pos
