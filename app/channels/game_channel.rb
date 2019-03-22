@@ -81,8 +81,19 @@ class GameChannel < ApplicationCable::Channel
     res = @gm.confirm_skill current_user
     return if catch_exceptions res
 
-    audio = Status.find_current.turn.audio_after_turn
-    play_voice audio if audio
+    if res == :success
+      audio = Status.find_current.turn.audio_after_turn
+      play_voice audio if audio
+    elsif res.start_with? 'kill_in_day'
+      target = res.gsub('kill_in_day_', '').to_i
+      user = Player.find_lord_user
+      player = Player.find_by_user current_user
+      send_to user, {action: 'alert', msg: "#{player.pos}号玩家发动技能，带走#{target}号玩家"}
+
+      update :players
+      res = @gm.check_over
+      game_over res
+    end
   end
 
   def next_turn
@@ -166,13 +177,13 @@ class GameChannel < ApplicationCable::Channel
     res = @gm.throw data['pos']
     return if catch_exceptions res
 
-    update :players
+    status = Status.find_current
+    status.next_turn!
+    status.save
+
+    update :status_and_players
     res = @gm.check_over
-    unless res == :not_over
-      game_over res
-      return
-    end
-    self.start
+    game_over res
   end
 
   def stop_game(data)

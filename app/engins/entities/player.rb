@@ -89,10 +89,6 @@ class Player < CacheRecord
   end
 
   def die!
-    if self.role.name == 'hunter'
-      self.role.dead_round = Status.find_current.turn.round
-      self.role.save
-    end
     self.status = :dead
   end
 

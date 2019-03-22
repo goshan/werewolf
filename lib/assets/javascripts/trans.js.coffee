@@ -23,7 +23,8 @@
 @Wolf.Trans.Turns = @Wolf.Trans.Turns ? {
   sitting: "就坐",
   deal: "查看身份",
-  discuss: "白天",
+  discuss: "白天讨论",
+  testament: "遗言阶段",
   wolf: "夜晚 狼人行动",
   hidden_wolf: "夜晚 隐狼行动",
   long_wolf: "夜晚 大灰狼行动",
@@ -55,6 +56,7 @@
     failed_save_self: "当前阶段不能自救",
     failed_no_poison: "已使用过毒药",
     failed_same_guard: "不能连续两晚守护同一玩家",
+    failed_not_shoot_turn: "现在不是开枪的回合",
     failed_finish_shoot: "你已开过枪",
     failed_cannot_shoot: "你无法开枪",
     failed_exchange_number: "若要交换，则必须选择两名玩家",
@@ -67,8 +69,7 @@
     failed_game_not_over: "请先结束游戏",
     failed_vote_has_started: "已经正在投票中",
     failed_vote_not_started: "现在不能进行投票",
-    failed_has_voted: "已经投票",
-    failed_cannot_kill: "目前还不能刀人"
+    failed_has_voted: "已经投票"
   }
   panel_tip_trans: {
     kill: "请从下方存活玩家中选择一名猎杀",
@@ -81,6 +82,7 @@
     stargaze: "请从下方存活玩家中选择一名锁定",
     exchange: "请从下方存活玩家中选择两名交换",
     link: "请从下方玩家中选择一名进行混血",
+    shoot: "请从开枪射杀下方玩家中的一名",
     throw: "请选择要放逐玩家",
     vote: "请选择要投票的对象"
   }
@@ -98,6 +100,7 @@
     exchange: ["交换", 'btn-pink'],
     exchange_none: ["空换", 'btn-default'],
     link: ["混血", 'btn-purple'],
+    shoot: ["开枪", 'btn-danger'],
     throw: ["放逐", 'btn-primary'],
     vote: ["投票", 'btn-warning'],
     abandon: ["弃票", 'btn-default']
@@ -119,6 +122,7 @@
     none_exchanged: "你今晚没有交换玩家",
     linked: "你对{target}号玩家进行了混血，你将与其同胜负。",
     check_wolves: "你的狼同伴 {wolves} 尚未全部死亡，不能刀人"
+    shoot_done: "你要开枪射杀{target}号玩家"
   }
 }
 

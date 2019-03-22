@@ -58,7 +58,7 @@ class GameEngin
 
   def start
     status = Status.find_current
-    return :failed_not_turn unless %w[deal discuss].include? status.turn.step
+    return :failed_not_turn unless %w[deal testament].include? status.turn.step
 
     Player.find_all.each do |p|
       return :failed_empty_seat unless p.name

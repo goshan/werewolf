@@ -15,27 +15,11 @@ $(document).on 'turbolinks:load', (e) ->
 
   $('#js-start').click (e) ->
     e.preventDefault()
-    if Wolf.status.turn == 'deal' || Wolf.status.turn == 'discuss'
-      BootstrapDialog.show {
-        title: '直接进入黑夜',
-        message: '不放逐玩家而直接进入黑夜，可以吗？',
-        buttons: [{
-          label: '进入黑夜',
-          cssClass: 'btn-danger',
-          action: (dialog) ->
-            App.game.do 'start'
-            ion.sound.play 'mute'  # make audio can be played in cable after revieved socket notice
-            dialog.close()
-        },
-        {
-          label: '放逐玩家',
-          cssClass: 'btn-primary',
-          action: (dialog) ->
-            dialog.close()
-        }]
-      }
+    if Wolf.status.turn == 'deal' || Wolf.status.turn == 'testament'
+      App.game.do 'start'
+      ion.sound.play 'mute'  # make audio can be played in cable after revieved socket notice
     else
-      BootstrapDialog.alert "当前回合无法进行该操作"
+      BootstrapDialog.alert "只有查看身份阶段或者遗言阶段才能够进入夜晚"
 
   $('#js-night-info').click (e) ->
     e.preventDefault()
@@ -57,14 +41,14 @@ $(document).on 'turbolinks:load', (e) ->
       App.game.do 'start_vote', {desc: vote_desc, target_pos: target_pos, voter_pos: voter_pos}
       $('#start-vote-modal .btn-group .btn.active').removeClass('active')
     else
-      BootstrapDialog.alert "只有白天才能发起投票"
+      BootstrapDialog.alert "只有白天讨论阶段才能发起投票"
 
   $('#js-stop-vote').click (e) ->
     e.preventDefault()
     if Wolf.status.turn == 'discuss'
       App.game.do 'stop_vote'
     else
-      BootstrapDialog.alert "只有白天才能终止投票"
+      BootstrapDialog.alert "只有白天讨论阶段才能终止投票"
 
   $('#js-throw').click (e) ->
     e.preventDefault()
@@ -75,7 +59,7 @@ $(document).on 'turbolinks:load', (e) ->
         buttons: {throw: null}
       }
     else
-      BootstrapDialog.alert "只有白天才能放逐玩家"
+      BootstrapDialog.alert "只有白天讨论阶段才能放逐玩家"
 
   $('#js-wolf-win, #js-wolf-lose').click (e) ->
     e.preventDefault()

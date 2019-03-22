@@ -7,6 +7,7 @@ class History < CacheRecord
   attr_accessor :magician_target, :magician_acted
   attr_accessor :seer_target, :seer_acted
   attr_accessor :savior_target, :savior_acted
+  attr_accessor :hunter_target
   attr_accessor :half_acted
 
   def self.key_attr
@@ -87,15 +88,17 @@ class History < CacheRecord
     hunter = Player.find_by_role 'hunter'
     return false unless hunter
 
-    kill_pos = self.magician_exchange(self.wolf_kill || 0)
-    kill_more_pos = self.magician_exchange(self.long_wolf_kill || -1)
-    poison_pos = self.magician_exchange(self.witch_target || -1)
+    kill_pos = self.magician_exchange(self.wolf_kill || Kill::EMPTY)
+    kill_more_pos = self.magician_exchange(self.long_wolf_kill || KillMore::EMPTY)
+    poison_pos = self.magician_exchange(self.witch_target || Prescribe::EMPTY)
     # killed
     kill = kill_pos == hunter.pos || kill_more_pos == hunter.pos
     # poison
     poison = poison_pos == hunter.pos
+    # voted
+    voted = self.dead_in_day.include?(hunter.pos)
 
-    !poison && kill
+    (!poison && kill) || voted
   end
 
   def magician_exchange(pos)

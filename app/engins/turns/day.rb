@@ -1,5 +1,5 @@
 class Day < Turn
-  STEPS = %w[discuss].freeze
+  STEPS = %w[discuss testament].freeze
 
   def skip?
     round < 1
@@ -14,6 +14,6 @@ class Day < Turn
   end
 
   def audio_after_turn
-    @step == 'discuss' ? 'night_start' : nil
+    @step == 'testament' ? 'night_start' : nil
   end
 end
