@@ -2,7 +2,7 @@
 @Wolf.Trans = @Wolf.Trans ? {}
 
 @Wolf.Trans.Roles = @Wolf.Trans.Roles ? {
-  mixed: "混血儿",
+  half: "混血儿",
   seer: "预言家",
   witch: "女巫",
   hunter: "猎人",
@@ -32,7 +32,7 @@
   savior: "夜晚 守卫行动",
   magician: "夜晚 魔术师行动",
   augur: "夜晚 占卜师行动"
-  mixed: "夜晚 混血儿行动"
+  half: "夜晚 混血儿行动"
 }
 
 @Wolf.Trans.Panel = @Wolf.Trans.Panel ? {
@@ -80,7 +80,7 @@
     kill_more: "今晚是否追刀",
     stargaze: "请从下方存活玩家中选择一名锁定",
     exchange: "请从下方存活玩家中选择两名交换",
-    #mixed: "请从下方玩家中选择一名混血",
+    link: "请从下方玩家中选择一名进行混血",
     #vote: "请选择要投票的对象，不选择视为弃票",
     #throw: "请选择玩家放逐"
   }
@@ -97,7 +97,7 @@
     stargaze: ["锁定", 'btn-darkblue'],
     exchange: ["交换", 'btn-pink'],
     exchange_none: ["空换", 'btn-default'],
-    #mixed_finish: ["好滴", 'btn-default'],
+    link: ["混血", 'btn-purple']
   }
   dialog_message_trans: {
     killed: "你们今晚猎杀的是{target}号玩家",
@@ -114,7 +114,7 @@
     none_locked: "今晚不锁定玩家",
     exchanged: "你今晚交换了{target}号两位玩家",
     none_exchanged: "你今晚没有交换玩家",
-    #mixed: "你混了{pos}号玩家的血。你与其同胜负。",
+    linked: "你对{target}号玩家进行了混血，你将与其同胜负。",
     #normal_wolf_still_alive: "你的狼同伴 {pos} 尚未全部死亡，不能刀人"
   }
 }
