@@ -53,9 +53,6 @@ Vue.component 'player', {
     tip: ->
       Wolf.Trans.insert_params Wolf.Trans.Panel.panel_tip_trans[@skillName], @skillParams
 
-    showFinishButton: ->
-      @skillParams.action not in ["none", "sit"]
-
     playersShow: ->
       players = []
       keys = Object.keys(@players)
@@ -66,7 +63,7 @@ Vue.component 'player', {
         val = @players[pos]
         status = val.status
         if val.status == "alive"
-          if !Wolf.Utils.arrayIsEmpty(@skillParams.only) && pos not in @skillParams.only
+          if !Wolf.Utils.varIsNull(@skillParams.only) && pos not in @skillParams.only
             status = "disable"
           else if @selected.length != 0 && pos in @selected
             status = "selected"
@@ -87,9 +84,9 @@ Vue.component 'player', {
       buttons = []
       for msg, target of @buttons
         buttons.push {
-          msg: Wolf.Trans.Panel.dialog_button_trans[msg][0],
-          class: Wolf.Trans.Panel.dialog_button_trans[msg][1],
-          target: target
+          msg: Wolf.Trans.Panel.panel_button_trans[msg][0],
+          class: Wolf.Trans.Panel.panel_button_trans[msg][1],
+          target: if target == null then 'selected' else target
         }
       buttons
   }
@@ -103,14 +100,10 @@ Vue.component 'player', {
     updateWithData: (data) ->
       @skillName = data.msg
       if data.msg in ["vote", "throw"]
-        action = data.msg
+        data.action = data.msg
       else
-        action = "use_skill"
-      @skillParams = {
-        action: action,
-        select: data.select,
-        only: data.only
-      }
+        data.action = "use_skill"
+      @skillParams = data
       @buttons = data.buttons
 
     _reset: () ->

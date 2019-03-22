@@ -149,6 +149,9 @@ fieldset[disabled] .btn-purple.active {
 
     .panel-buttons {
       height: 34px;
+      & a {
+        margin: 0 5px;
+      }
     }
   }
 
@@ -208,11 +211,11 @@ fieldset[disabled] .btn-purple.active {
       background-color: #d9534f;
       border: 1px solid #d43f3a;
     }
-    &[status=poison] {
+    &[status^=prescribe] {
       background-color: #805EAD;
       border: 1px solid #684D8C;
     }
-    &[status=confirm] {
+    &[status=check] {
       background-color: #f0ad4e;
       border: 1px solid #eea236;
     }

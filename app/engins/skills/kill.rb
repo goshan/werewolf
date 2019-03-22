@@ -1,14 +1,11 @@
 class Kill < Skill
 
-  def player_status_when_use
-    :alive
-  end
-
   def prepare
     history = History.find_by_key Status.find_current.turn.round
     res = SkillResponsePanel.new 'kill'
     res.select = SkillResponsePanel::SELECT_SINGLE
     res.only = history.augur_lock
+    res.button_push 'kill'
     res.button_push 'kill_none', 0
     res.to_msg
   end

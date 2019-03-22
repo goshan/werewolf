@@ -73,37 +73,42 @@
   }
   panel_tip_trans: {
     kill: "请从下方存活玩家中选择一名猎杀，不选择视为空刀",
-    poison: "请从下方存活玩家中选择一名毒杀，不选择视为不采取行动",
-    confirm: "请从下方存活玩家中选择一名查验",
-    mixed: "请从下方玩家中选择一名混血",
-    guard: "请从下方存活玩家中选择一名守护，不选择视为空守",
-    exchange: "请从下方存活玩家中选择两名交换，不选择视为不交换",
-    lock: "请从下方存活玩家中选择一名锁定，不选择视为不锁定",
-    kill_more: "请从下方存活玩家中选择一名追刀，不可以空刀",
-    vote: "请选择要投票的对象，不选择视为弃票",
-    throw: "请选择玩家放逐"
+    check: "请从下方存活玩家中选择一名查验",
+    prescribe: "今晚被猎杀的是{killed}号玩家，请操作",
+    prescribe_unknow: "无法获知今晚被猎杀玩家信息，请操作",
+    prescribe_none: "今晚没有玩家被猎杀，请操作",
+    #poison: "请从下方存活玩家中选择一名毒杀，不选择视为不采取行动",
+    #mixed: "请从下方玩家中选择一名混血",
+    #guard: "请从下方存活玩家中选择一名守护，不选择视为空守",
+    #exchange: "请从下方存活玩家中选择两名交换，不选择视为不交换",
+    #lock: "请从下方存活玩家中选择一名锁定，不选择视为不锁定",
+    #kill_more: "请从下方存活玩家中选择一名追刀，不可以空刀",
+    #vote: "请选择要投票的对象，不选择视为弃票",
+    #throw: "请选择玩家放逐"
   }
-  dialog_message_trans: {
-    killed: "你们今晚猎杀的是{target}号玩家",
-    none_killed: "你们今晚没有猎杀目标"
-    #prescribe: "今晚被猎杀的是{killed}号玩家，请操作",
-    #prescribe_unknow: "无法获知今晚被猎杀玩家信息，请操作",
-    #prescribe_none: "今晚没有玩家被猎杀，请操作",
-    #confirm: "{pos}号玩家的身份是<span style='font-size: 21px; font-weight: bold; color: {role?evil:red,virtuous:green};'>{role?evil:狼人,virtuous:好人}</span>",
-    #mixed: "你混了{pos}号玩家的血。你与其同胜负。",
-    #lock: "今晚是否锁定玩家",
-    #kill_more: "今晚是否追刀",
-    #normal_wolf_still_alive: "你的狼同伴 {pos} 尚未全部死亡，不能刀人"
-  }
-  dialog_button_trans: {
-    kill_none: ["空刀", 'btn-danger']
-    #antidot: ["救人", 'btn-success'],
-    #poison: ["毒人", 'btn-purple'],
-    #rest: ["不行动", 'btn-default'],
+  panel_button_trans: {
+    kill: ["落刀", 'btn-danger'],
+    kill_none: ["空刀", 'btn-default'],
+    check: ["查验", 'btn-warning'],
+    antidote: ["救人", 'btn-success'],
+    poison: ["毒人", 'btn-purple'],
+    rest: ["不行动", 'btn-default'],
     #mixed_finish: ["好滴", 'btn-default'],
     #confirm_finish: ["明白", 'btn-default'],
     #lock: ["锁定", 'btn-warning']
     #kill_more: ["追刀", 'btn-danger']
+  }
+  dialog_message_trans: {
+    killed: "你们今晚猎杀的是{target}号玩家",
+    none_killed: "你们今晚没有猎杀目标",
+    checked: "{target}号玩家的身份是<span style='font-size: 21px; font-weight: bold; color: {role?evil:red,virtuous:green};'>{role?evil:狼人,virtuous:好人}</span>",
+    antidote: "你今晚要开药解救{target}号玩家",
+    poison: "你今晚要开药毒杀{target}号玩家",
+    none_prescribe: "你今晚不使用任何药水",
+    #mixed: "你混了{pos}号玩家的血。你与其同胜负。",
+    #lock: "今晚是否锁定玩家",
+    #kill_more: "今晚是否追刀",
+    #normal_wolf_still_alive: "你的狼同伴 {pos} 尚未全部死亡，不能刀人"
   }
 }
 

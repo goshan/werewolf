@@ -17,7 +17,7 @@ class SkillResponsePanel < SkillResponse
     @only = only
   end
 
-  def button_push(button_msg, button_val)
+  def button_push(button_msg, button_val=nil)
     @other_buttons[button_msg] = button_val
   end
 
@@ -27,6 +27,7 @@ class SkillResponsePanel < SkillResponse
       msg: @msg,
       select: @select
     }
+    res.merge! @params
     res.merge!({only: @only}) if @only
     res.merge!({buttons: @other_buttons}) unless @other_buttons.empty?
     res

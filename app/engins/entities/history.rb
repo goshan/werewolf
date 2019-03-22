@@ -21,15 +21,15 @@ class History < CacheRecord
   def dead_in_night
     dead = []
     # wolf kill
-    kill = self.wolf_kill || 0
+    kill = self.wolf_kill
     # long wolf kill
-    kill_more = self.long_wolf_kill || -1
+    kill_more = self.long_wolf_kill
     # witch antidot
-    antidot = (self.witch_target || -1) == 0
+    antidot = self.witch_target == 0
     # witch poison
-    poison = (self.witch_target || -1) > 0
+    poison = self.witch_target > 0
     # savior
-    guard = self.savior_target || 0
+    guard = self.savior_target
 
     dead.push kill unless kill == 0
     dead.pop if antidot

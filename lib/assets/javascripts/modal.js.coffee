@@ -9,23 +9,26 @@
   dialog: (data) ->
     return unless Wolf.panel.skillParams.action == 'none'
 
-    BootstrapDialog.show {
-      closable: false,
-      message: Wolf.Trans.insert_params(Wolf.Trans.Panel.dialog_message_trans[data.msg], data),
-      buttons: [{
+    buttons = [{
+      label: "确认",
+      cssClass: 'btn-warning',
+      action: (dialog, e) =>
+        App.game.do 'confirm_skill'
+        dialog.close()
+    }]
+    if data.retry
+      buttons.push {
         label: "重新操作",
-        cssClass: 'btn-warning',
+        cssClass: 'btn-default',
         action: (dialog, e) =>
           App.game.do 'prepare_skill'
           dialog.close()
-      },
-      {
-        label: "确认",
-        cssClass: 'btn-default',
-        action: (dialog, e) =>
-          App.game.do 'confirm_skill'
-          dialog.close()
-      }]
+      }
+
+    BootstrapDialog.show {
+      closable: false,
+      message: Wolf.Trans.insert_params(Wolf.Trans.Panel.dialog_message_trans[data.msg], data),
+      buttons: buttons
     }
 
   display_role: (data)->

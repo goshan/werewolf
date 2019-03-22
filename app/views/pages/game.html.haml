@@ -77,7 +77,6 @@
     .area.tip-panel
       .tips {{tip}}
       .panel-buttons
-        = link_to "执行", '#', :class => "btn btn-default", 'v-show' => "showFinishButton", '@click' => "onFinish", :target => "selected"
         = link_to "{{button.msg}}", '#', :class => "btn", ':class' => "button.class", ':key' => "button.target", 'v-for' => "button in buttonsShow", '@click' => "onFinish", ':target' => "button.target"
 
     .area.player-panel
