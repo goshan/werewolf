@@ -115,7 +115,7 @@
     exchanged: "你今晚交换了{target}号两位玩家",
     none_exchanged: "你今晚没有交换玩家",
     linked: "你对{target}号玩家进行了混血，你将与其同胜负。",
-    #normal_wolf_still_alive: "你的狼同伴 {pos} 尚未全部死亡，不能刀人"
+    check_wolves: "你的狼同伴 {wolves} 尚未全部死亡，不能刀人"
   }
 }
 
