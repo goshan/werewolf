@@ -1,19 +1,15 @@
 class Init < Turn
   STEPS = %w[sitting deal].freeze
 
-  def should_skip?
-    Status.find_current.round != 0
+  def skip?
+    @round > 0
   end
 
-  def should_pretend?
+  def predent?
     false
   end
 
-  def active_roles
-    [].freeze
-  end
-
-  def player_could_act?(player)
-    true
+  def audio_after_turn
+    @step == 'deal' ? 'night_start' : nil
   end
 end

@@ -1,5 +1,13 @@
 class History < CacheRecord
-  attr_accessor :round, :augur_target, :wolf_kill, :long_wolf_kill, :witch_target, :magician_target, :seer_target, :savior_target, :dead_in_day
+  attr_accessor :round, :dead_in_day
+  attr_accessor :augur_target, :augur_acted
+  attr_accessor :wolf_kill, :wolf_acted
+  attr_accessor :long_wolf_kill, :long_wolf_acted
+  attr_accessor :witch_target, :witch_acted
+  attr_accessor :magician_target, :magician_acted
+  attr_accessor :seer_target, :seer_acted
+  attr_accessor :savior_target, :savior_acted
+  attr_accessor :half_acted
 
   def self.key_attr
     'round'
@@ -14,19 +22,19 @@ class History < CacheRecord
   def dead_in_night
     dead = []
     # wolf kill
-    kill = self.wolf_kill || 0
+    kill = self.wolf_kill || Kill::EMPTY
     # long wolf kill
-    kill_more = self.long_wolf_kill || -1
+    kill_more = (self.long_wolf_kill || KillMore::EMPTY)
     # witch antidot
-    antidot = (self.witch_target || -1) == 0
+    antidot = (self.witch_target || Prescribe::EMPTY) == Prescribe::ANTIDOTE
     # witch poison
-    poison = (self.witch_target || -1) > 0
+    poison = (self.witch_target || Prescribe::EMPTY) > 0
     # savior
-    guard = self.savior_target || 0
+    guard = (self.savior_target || Guard::EMPTY)
 
-    dead.push kill unless kill == 0
+    dead.push kill unless kill == Kill::EMPTY
     dead.pop if antidot
-    if guard != 0 && guard == kill
+    if guard != Guard::EMPTY && guard == kill
       if antidot
         dead.push kill
       else
@@ -35,8 +43,8 @@ class History < CacheRecord
     end
 
     # long wolf kill
-    dead.push kill_more unless [-1, 0].include? kill_more
-    dead.pop if guard != 0 && guard == kill_more
+    dead.push kill_more unless [KillMore::KILL, KillMore::EMPTY].include? kill_more
+    dead.pop if guard != Guard::EMPTY && guard == kill_more
 
     # magician exchange
     dead = dead.map do |d|

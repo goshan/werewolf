@@ -46,14 +46,12 @@ Vue.component 'player', {
     skillParams: {
       action: "none"
     },
+    buttons: [],
     selected: []
   }
   computed: {
     tip: ->
       Wolf.Trans.insert_params Wolf.Trans.Panel.panel_tip_trans[@skillName], @skillParams
-
-    showFinishButton: ->
-      @skillParams.action not in ["none", "sit"]
 
     playersShow: ->
       players = []
@@ -65,7 +63,7 @@ Vue.component 'player', {
         val = @players[pos]
         status = val.status
         if val.status == "alive"
-          if !Wolf.Utils.arrayIsEmpty(@skillParams.only) && pos not in @skillParams.only
+          if !Wolf.Utils.varIsNull(@skillParams.only) && pos not in @skillParams.only
             status = "disable"
           else if @selected.length != 0 && pos in @selected
             status = "selected"
@@ -81,6 +79,16 @@ Vue.component 'player', {
         }
 
       players
+    
+    buttonsShow: ->
+      buttons = []
+      for msg, target of @buttons
+        buttons.push {
+          msg: Wolf.Trans.Panel.panel_button_trans[msg][0],
+          class: Wolf.Trans.Panel.panel_button_trans[msg][1],
+          target: if target == null then 'selected' else target
+        }
+      buttons
   }
   methods: {
     updateWithTurn: (turn = null) ->
@@ -90,30 +98,32 @@ Vue.component 'player', {
       }
 
     updateWithData: (data) ->
-      @skillName = data.skill
-      if data.skill in ["vote", "throw"]
-        action = data.skill
+      @skillName = data.msg
+      if data.msg in ["vote", "throw"]
+        data.action = data.msg
       else
-        action = "skill"
-      @skillParams = {
-        action: action,
-        select: data.select,
-        only: data.only
-      }
+        data.action = "use_skill"
+      @skillParams = data
+      @buttons = data.buttons
 
     _reset: () ->
       @updateWithTurn()
       @selected = []
+      @buttons = []
 
     onFinish: (e) ->
       e.preventDefault()
 
       return if @skillParams.action == 'none'
 
-      if @skillParams.select == "single"
-        App.game.do @skillParams.action, @selected[0]
-      else if @skillParams.select == "multiple"
-        App.game.do @skillParams.action, @selected
+      target = $(e.currentTarget).attr('target')
+      if target == "selected"
+        if @skillParams.select == "single"
+          App.game.do @skillParams.action, @selected[0]
+        else if @skillParams.select == "multiple"
+          App.game.do @skillParams.action, @selected
+      else
+        App.game.do @skillParams.action, target
       @_reset()
   }
 }

@@ -1,6 +1,6 @@
 class Setting < ApplicationRecord
   GOD_ROLES = %i[seer witch hunter savior idiot magician augur knight].freeze
-  SPECIAL_VILLAGER_ROLES = %i[mixed].freeze
+  SPECIAL_VILLAGER_ROLES = %i[half].freeze
   WOLF_ROLES = %i[chief_wolf lord_wolf long_wolf ghost_rider hidden_wolf].freeze
 
   enum witch_self_save: {

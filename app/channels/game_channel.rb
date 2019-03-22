@@ -14,7 +14,7 @@ class GameChannel < ApplicationCable::Channel
     if voting != 0  && player.status == :alive
       vote = Vote.find_by_key voting
       user_vote = UserVote.find_by_key player.pos
-      send_to current_user, action: 'panel', skill: 'vote', select: 'single', only: vote.targets if vote.voters.include?(player.pos) && !user_vote
+      send_to current_user, vote.to_skill_response.to_msg if vote.voters.include?(player.pos) && !user_vote
     end
   end
 
@@ -63,35 +63,38 @@ class GameChannel < ApplicationCable::Channel
     play_voice audio if audio
   end
 
-  def skill_active
-    res = @gm.skill_active current_user
+  def prepare_skill
+    res = @gm.prepare_skill current_user
     return if catch_exceptions res
 
     send_to current_user, res
   end
 
-  def skill(data)
-    old_status = Status.find_current
-    res = @gm.skill(current_user, data['pos'])
+  def use_skill(data)
+    res = @gm.use_skill current_user, data['pos']
     return if catch_exceptions res
 
-    if res == :success
-      audio = Status.find_current.turn.audio_after_turn
-      play_voice audio if audio
-    else
-      send_to current_user, res
-    end
+    send_to current_user, res
+  end
+
+  def confirm_skill
+    res = @gm.confirm_skill current_user
+    return if catch_exceptions res
+
+    audio = Status.find_current.turn.audio_after_turn
+    play_voice audio if audio
   end
 
   def next_turn
     status = Status.find_current
-    status.next_turn_and_save!
+    status.next_turn!
+    status.save
     turn = status.turn
     audio = turn.audio_before_turn
     play_voice audio if audio
     update :status
 
-    if turn.audio_after_turn && turn.should_pretend?
+    if turn.audio_after_turn && status.turn.predent?
       sleep Random.new(Time.now.to_i).rand(12..15)
       play_voice turn.audio_after_turn
     end
@@ -101,9 +104,9 @@ class GameChannel < ApplicationCable::Channel
     return send_to current_user, action: 'alert', msg: '不合法操作' unless current_user.lord?
 
     status = Status.find_current
-    return send_to current_user, action: 'alert', msg: '白天以外无法获取信息' unless status.turn_name == 'discuss'
+    return send_to current_user, action: 'alert', msg: '白天以外无法获取信息' unless status.turn.step == 'discuss'
 
-    dead_info = History.find_by_key(status.round).dead_in_night
+    dead_info = History.find_by_key(status.turn.round).dead_in_night
     dead_info.each do |d|
       p = Player.find_by_key d
       p.die!
@@ -131,8 +134,9 @@ class GameChannel < ApplicationCable::Channel
     return if catch_exceptions res
 
     # broadcast to all alive players
+    msg = res.to_skill_response.to_msg
     Player.find_all_alive.each do |p|
-      send_to p.user, action: 'panel', skill: 'vote', select: 'single', only: res[:target_pos] if res[:voter_pos].include?(p.pos)
+      send_to p.user, msg if res.voters.include?(p.pos)
     end
   end
 

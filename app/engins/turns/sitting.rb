@@ -1,2 +1,0 @@
-class Sitting < Init
-end

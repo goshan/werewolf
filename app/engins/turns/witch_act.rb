@@ -1,2 +1,0 @@
-class WitchAct < Night
-end

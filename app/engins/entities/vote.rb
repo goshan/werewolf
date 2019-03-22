@@ -7,7 +7,7 @@ class Vote < CacheRecord
 
   def initialize(desc)
     self.ts = Time.now.to_i
-    self.desc = desc.gsub '{round}', Status.find_current.round.to_s
+    self.desc = desc.gsub '{round}', Status.find_current.turn.round.to_s
     self.targets = []
     self.voters = []
     self.user_votes = {}
@@ -43,6 +43,15 @@ class Vote < CacheRecord
       msg += "#{item.first == 0 ? '弃权' : "#{item.first}号"} (#{item.last.count}票) <= #{item.last.join(',')}\n"
     end
     msg
+  end
+
+  def to_skill_response
+    res = SkillResponsePanel.new 'vote'
+    res.select = SkillResponsePanel::SELECT_SINGLE
+    res.only = @targets
+    res.button_push 'vote'
+    res.button_push 'abandon', 0
+    res
   end
 
   def self.history_msg

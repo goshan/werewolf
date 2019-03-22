@@ -9,10 +9,6 @@ class Hunter < God
     :day
   end
 
-  def skill_timing
-    :dead
-  end
-
   def prepare_skill
     status = Status.find_current
     history = History.find_by_key status.round

@@ -1,2 +1,0 @@
-class MagicianAct < Night
-end

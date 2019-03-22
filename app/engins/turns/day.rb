@@ -1,15 +1,19 @@
 class Day < Turn
   STEPS = %w[discuss].freeze
 
-  def should_skip?
-    Status.find_current.round < 1
+  def skip?
+    round < 1
   end
 
-  def should_pretend?
+  def predent?
     false
   end
 
-  def active_roles
-    %w[hunter].freeze
+  def audio_before_turn
+    @step == 'discuss' ? 'day_start' : nil
+  end
+
+  def audio_after_turn
+    @step == 'discuss' ? 'night_start' : nil
   end
 end

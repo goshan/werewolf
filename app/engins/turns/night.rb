@@ -1,32 +1,21 @@
 class Night < Turn
-  STEPS = %w[mixed_act augur_act wolf_act hidden_wolf_act witch_act long_wolf_act magician_act seer_act savior_act].freeze
+  STEPS = %w[half augur wolf hidden_wolf witch long_wolf magician seer savior].freeze
 
-  def should_skip?
-    return true if Status.find_current.round < 1
+  def skip?
+    return true if @round < 1
 
-    Player.find_all.each { |p| return false if self.player_should_act?(p) }
-    true
+    Player.find_all.select { |p| p.should_act? self }.count == 0
   end
 
-  def should_pretend?
-    Player.find_all.each { |p| return false if self.player_could_act?(p) }
-    true
+  def predent?
+    Player.find_all.select { |p| p.could_act? self }.count == 0
   end
 
   def audio_before_turn
-    "#{related_role}_start"
+    "#{@step}_start"
   end
 
   def audio_after_turn
-    "#{related_role}_end"
-  end
-
-  def active_roles
-    [related_role].freeze
-  end
-
-  private
-  def related_role
-    self.name.gsub('_act', '')
+    "#{@step}_end"
   end
 end

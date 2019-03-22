@@ -1,37 +1,38 @@
 class Status < CacheRecord
-  attr_accessor :round, :turn_name, :voting, :over
+  attr_accessor :turn, :voting, :over
 
   def initialize
-    self.round = 0
-    self.turn_name = Turn.first.name
-    self.voting = 0
-    self.over = true
-  end
-
-  def turn
-    Turn.from_name self.turn_name
+    @turn = Turn.init
+    @voting = 0
+    @over = true
   end
 
   def deal!
-    self.round = 0
-    self.voting = 0
-    self.turn_name = 'deal'
+    @voting = 0
+    @turn = Init.new(0, 'deal')
   end
 
-  def next_turn_and_save!
-    next_turn = self.turn.next_available
-    if next_turn.nil?
-      self.round += 1
-      self.save  # need round info when getting next turn, so save before finding next turn
-      self.turn_name = Turn.first_available.name
-    else
-      self.turn_name = next_turn.name
-    end
-    self.save
+  def next_turn!
+    @turn = @turn.next
+    self.next_turn! if @turn.skip?
+  end
+
+  def to_cache
+    hash = super
+    hash['round'] = @turn.round
+    hash['turn'] = @turn.class.to_s.underscore
+    hash['step'] = @turn.step
+    hash
+  end
+
+  def self.from_cache(obj)
+    ins = super obj
+    ins.turn = Turn.create_with obj['round'].to_i, obj['turn'], obj['step']
+    ins
   end
 
   def self.to_msg
     status = self.find_current
-    { round: status.round, turn: status.turn_name }
+    { round: status.turn.round, turn: status.turn.step }
   end
 end

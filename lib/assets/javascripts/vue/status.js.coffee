@@ -22,6 +22,6 @@
     onClickSkill: (e) ->
       e.preventDefault()
       if Wolf.panel.skillParams.action == 'none'
-        App.game.do 'skill_active'
+        App.game.do 'prepare_skill'
   }
 }

@@ -58,7 +58,7 @@
                 = image_tag "/card/witch.jpg", :class => 'role-card role-witch hidden'
                 = image_tag "/card/hunter.jpg", :class => 'role-card role-hunter hidden'
                 = image_tag "/card/savior.jpg", :class => 'role-card role-savior hidden'
-                = image_tag "/card/mixed.jpg", :class => 'role-card role-mixed hidden'
+                = image_tag "/card/half.jpg", :class => 'role-card role-half hidden'
                 = image_tag "/card/idiot.jpg", :class => 'role-card role-idiot hidden'
                 = image_tag "/card/magician.jpg", :class => 'role-card role-magician hidden'
                 = image_tag "/card/augur.jpg", :class => 'role-card role-augur hidden'
@@ -76,7 +76,8 @@
   #ope-panel{'v-loack' => true}
     .area.tip-panel
       .tips {{tip}}
-      .panel-finish= link_to "执行", '#', :class => "btn btn-default", 'v-show' => "showFinishButton", '@click' => "onFinish"
+      .panel-buttons
+        = link_to "{{button.msg}}", '#', :class => "btn", ':class' => "button.class", ':key' => "button.target", 'v-for' => "button in buttonsShow", '@click' => "onFinish", ':target' => "button.target"
 
     .area.player-panel
       #all_players{:player_cnt => @setting.player_cnt}

@@ -1,2 +1,0 @@
-class SaviorAct < Night
-end

@@ -52,6 +52,23 @@ fieldset[disabled] .btn-purple.active {
 	background-color: #ffffff; 
 }
 
+.btn-darkblue {
+  color: #fff;
+  background-color: #313ba9;
+  border: 1px solid #202bad;
+  &:hover {
+    color: #fff;
+  }
+}
+
+.btn-pink {
+  color: #fff;
+  background-color: #dc78d9;
+  border: 1px solid #ab6caf;
+  &:hover {
+    color: #fff;
+  }
+}
 
 .login-page {
 	background: url('/img/game_bg.jpg') center top repeat-y;
@@ -147,8 +164,11 @@ fieldset[disabled] .btn-purple.active {
       color: #a94442;
     }
 
-    .panel-finish {
+    .panel-buttons {
       height: 34px;
+      & a {
+        margin: 0 5px;
+      }
     }
   }
 
@@ -208,11 +228,11 @@ fieldset[disabled] .btn-purple.active {
       background-color: #d9534f;
       border: 1px solid #d43f3a;
     }
-    &[status=poison] {
+    &[status^=prescribe] {
       background-color: #805EAD;
       border: 1px solid #684D8C;
     }
-    &[status=confirm] {
+    &[status=check] {
       background-color: #f0ad4e;
       border: 1px solid #eea236;
     }
@@ -224,11 +244,11 @@ fieldset[disabled] .btn-purple.active {
       background-color: #dc78d9;
       border: 1px solid #ab6caf;
     }
-    &[status=mixed] {
+    &[status=link] {
       background-color: #805EAD;
       border: 1px solid #684D8C;
     }
-    &[status=lock] {
+    &[status=stargaze] {
       background-color: #313ba9;
       border: 1px solid #202bad;
     }
