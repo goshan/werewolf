@@ -69,7 +69,11 @@ $(document).on 'turbolinks:load', (e) ->
   $('#js-throw').click (e) ->
     e.preventDefault()
     if Wolf.status.turn == 'discuss'
-      Wolf.panel.updateWithData {skill: 'throw', select: 'multiple'}
+      Wolf.panel.updateWithData {
+        msg: 'throw',
+        select: 'multiple',
+        buttons: {throw: null}
+      }
     else
       BootstrapDialog.alert "只有白天才能放逐玩家"
 

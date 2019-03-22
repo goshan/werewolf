@@ -81,8 +81,8 @@
     stargaze: "请从下方存活玩家中选择一名锁定",
     exchange: "请从下方存活玩家中选择两名交换",
     link: "请从下方玩家中选择一名进行混血",
-    #vote: "请选择要投票的对象，不选择视为弃票",
-    #throw: "请选择玩家放逐"
+    throw: "请选择要放逐玩家",
+    vote: "请选择要投票的对象"
   }
   panel_button_trans: {
     kill: ["落刀", 'btn-danger'],
@@ -97,7 +97,10 @@
     stargaze: ["锁定", 'btn-darkblue'],
     exchange: ["交换", 'btn-pink'],
     exchange_none: ["空换", 'btn-default'],
-    link: ["混血", 'btn-purple']
+    link: ["混血", 'btn-purple'],
+    throw: ["放逐", 'btn-primary'],
+    vote: ["投票", 'btn-warning'],
+    abandon: ["弃票", 'btn-default']
   }
   dialog_message_trans: {
     killed: "你们今晚猎杀的是{target}号玩家",

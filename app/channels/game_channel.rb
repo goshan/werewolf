@@ -14,7 +14,7 @@ class GameChannel < ApplicationCable::Channel
     if voting != 0  && player.status == :alive
       vote = Vote.find_by_key voting
       user_vote = UserVote.find_by_key player.pos
-      send_to current_user, action: 'panel', skill: 'vote', select: 'single', only: vote.targets if vote.voters.include?(player.pos) && !user_vote
+      send_to current_user, vote.to_skill_response.to_msg if vote.voters.include?(player.pos) && !user_vote
     end
   end
 
@@ -134,8 +134,9 @@ class GameChannel < ApplicationCable::Channel
     return if catch_exceptions res
 
     # broadcast to all alive players
+    msg = res.to_skill_response.to_msg
     Player.find_all_alive.each do |p|
-      send_to p.user, action: 'panel', skill: 'vote', select: 'single', only: res[:target_pos] if res[:voter_pos].include?(p.pos)
+      send_to p.user, msg if res.voters.include?(p.pos)
     end
   end
 

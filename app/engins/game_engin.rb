@@ -120,7 +120,7 @@ class GameEngin
     status.voting = vote.ts
     status.save
 
-    { target_pos: vote.targets, voter_pos: vote.voters }
+    vote
   end
 
   def vote(user, target)
