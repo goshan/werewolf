@@ -53,7 +53,7 @@
               %span= "当前余额: "
               %span.read-coin-balance="加载中..."
               %input.read-coin-balance{'type' => 'hidden', 'id' => 'coin-balance'}
-              <hr />
+              %hr
               .row
                 %form.form-inline
                 - roles_list(@setting).each do |role|
