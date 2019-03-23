@@ -245,7 +245,7 @@ class GameEngin
       user.with_lock do
         bid = Bid.find_by_key user.id
         user.coin = 0
-        bid&.destroy
+        bid.destroy if bid
         user.save!
       end
     end
