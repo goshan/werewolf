@@ -18,7 +18,7 @@ class Guard < Skill
 
     status = Status.find_current
     history = History.find_by_key status.turn.round
-    return :failed_have_acted if history.savior_acted
+    return :failed_have_acted if history.acted[self.history_key]
 
     # check savior limitation
     return :failed_same_guard if @role.last_guard != 0 && @role.last_guard == target.to_i
@@ -35,7 +35,7 @@ class Guard < Skill
     end
 
     # defend
-    history.savior_target = target.to_i
+    history.target[self.history_key] = target.to_i
     history.save
 
     res.to_msg
@@ -45,10 +45,10 @@ class Guard < Skill
     history = History.find_by_key Status.find_current.turn.round
 
     # update savior limitation
-    @role.last_guard = history.savior_target
+    @role.last_guard = history.target[self.history_key]
     @role.save
 
-    history.savior_acted = true
+    history.acted[self.history_key] = true
     history.save
 
     :success

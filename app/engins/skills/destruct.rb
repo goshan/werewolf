@@ -19,7 +19,7 @@ class Destruct < Skill
     chief_wolf = Player.find_by_role @role.name
     return :failed_destruct_self if player.pos == chief_wolf.pos
 
-    history.hunter_target = player.pos
+    history.target[self.history_key] = player.pos
     history.save
 
     res = SkillResponseDialog.new 'destruct_done'
@@ -29,7 +29,7 @@ class Destruct < Skill
 
   def confirm
     history = History.find_by_key Status.find_current.turn.round
-    player = Player.find_by_key history.hunter_target
+    player = Player.find_by_key history.target[self.history_key]
     return :failed_target_dead unless player.status == :alive
     chief_wolf = Player.find_by_role @role.name
     return :failed_destruct_self if player.pos == chief_wolf.pos
@@ -39,6 +39,6 @@ class Destruct < Skill
     player.die!
     player.save
 
-    "skill_in_day_shoot->#{history.hunter_target}->#{player.pos}"
+    "skill_in_day_shoot->#{history.target[self.history_key]}->#{player.pos}"
   end
 end

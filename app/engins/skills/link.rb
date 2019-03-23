@@ -14,7 +14,7 @@ class Link < Skill
     return :failed_no_target if target.nil?
 
     history = History.find_by_key Status.find_current.turn.round
-    return :failed_have_acted if history.half_acted
+    return :failed_have_acted if history.acted[self.history_key]
     half = Player.find_by_role @role.name
     return :failed_mix_self if target.to_i == half.pos
 
@@ -28,7 +28,7 @@ class Link < Skill
 
   def confirm
     history = History.find_by_key Status.find_current.turn.round
-    history.half_acted = true
+    history.acted[self.history_key] = true
     history.save
     :success
   end

@@ -19,7 +19,7 @@ class Exchange < Skill
 
     status = Status.find_current
     history = History.find_by_key status.turn.round
-    return :failed_have_acted if history.magician_acted
+    return :failed_have_acted if history.acted[self.history_key]
 
     if target.class != Array && target.to_i == EMPTY
       res = SkillResponseDialog.new 'none_exchanged'
@@ -34,11 +34,11 @@ class Exchange < Skill
 
       # check user alive
       # exchange
-      history.magician_target = []
+      history.target[self.history_key] = []
       target.each do |t|
         player = Player.find_by_key t
         return :failed_target_dead unless player.status == :alive
-        history.magician_target << player.pos
+        history.target[self.history_key] << player.pos
       end
       history.save
       
@@ -53,12 +53,12 @@ class Exchange < Skill
     history = History.find_by_key Status.find_current.turn.round
 
     # update witch limitation
-    unless history.magician_target == EMPTY
-      @role.exchanged += history.magician_target
+    unless history.target[self.history_key] == EMPTY
+      @role.exchanged += history.target[self.history_key]
       @role.save
     end
 
-    history.magician_acted = true
+    history.acted[self.history_key] = true
     history.save
 
     :success

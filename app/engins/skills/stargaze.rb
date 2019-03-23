@@ -17,11 +17,11 @@ class Stargaze < Skill
 
     status = Status.find_current
     history = History.find_by_key status.turn.round
-    return :failed_have_acted if history.augur_acted
+    return :failed_have_acted if history.acted[self.history_key]
 
     # not lock
     if target.to_i == EMPTY
-      history.augur_target = 0
+      history.target[self.history_key] = 0
       history.save
 
       res = SkillResponseDialog.new 'none_locked'
@@ -30,7 +30,7 @@ class Stargaze < Skill
 
       player = Player.find_by_key target.to_i
       return :failed_target_dead unless player.status == :alive
-      history.augur_target = player.pos
+      history.target[self.history_key] = player.pos
       history.save
 
       res = SkillResponseDialog.new 'locked'
@@ -44,12 +44,12 @@ class Stargaze < Skill
     history = History.find_by_key Status.find_current.turn.round
 
     # update witch limitation
-    unless history.augur_target == EMPTY
+    unless history.target[self.history_key] == EMPTY
       @role.locked = true
       @role.save
     end
 
-    history.augur_acted = true
+    history.acted[self.history_key] = true
     history.save
 
     :success

@@ -22,12 +22,12 @@ class KillMore < Skill
 
     status = Status.find_current
     history = History.find_by_key status.turn.round
-    return :failed_have_acted if history.long_wolf_acted
+    return :failed_have_acted if history.acted[@role.name]
 
     if target.to_i == EMPTY
       return :failed_is_killing if @role.killing
 
-      history.long_wolf_kill = target.to_i
+      history.target[@role.name] = target.to_i
       history.save
 
       res = SkillResponseDialog.new 'none_killed_more'
@@ -47,7 +47,7 @@ class KillMore < Skill
       return :failed_locked if history.augur_lock && !history.augur_lock.include?(target.to_i)
       return :failed_target_dead unless player.status == :alive
 
-      history.long_wolf_kill = player.pos
+      history.target[@role.name] = player.pos
       history.save
 
       res = SkillResponseDialog.new 'killed_more'
@@ -61,12 +61,12 @@ class KillMore < Skill
     history = History.find_by_key Status.find_current.turn.round
 
     @role.killing = false
-    if history.long_wolf_kill >= 1
+    if history.target[@role.name] >= 1
       @role.killed = true
     end
     @role.save
 
-    history.long_wolf_acted = true
+    history.acted[@role.name] = true
     history.save
 
     :success

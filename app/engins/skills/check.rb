@@ -14,13 +14,13 @@ class Check < Skill
 
     status = Status.find_current
     history = History.find_by_key status.turn.round
-    return :failed_have_acted if history.seer_acted
+    return :failed_have_acted if history.acted[self.history_key]
 
     player = Player.find_by_key target
     return :failed_target_dead unless player.status == :alive
 
-    history.seer_target = player.pos
-    history.seer_acted = true
+    history.target[self.history_key] = player.pos
+    history.acted[self.history_key] = true
     history.save
 
     # exchange role if magician exchanged

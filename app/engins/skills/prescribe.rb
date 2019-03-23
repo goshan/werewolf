@@ -24,7 +24,7 @@ class Prescribe < Skill
 
     status = Status.find_current
     history = History.find_by_key status.turn.round
-    return :failed_have_acted if history.witch_acted
+    return :failed_have_acted if history.acted[self.history_key]
 
     if target.to_i == EMPTY
       res = SkillResponseDialog.new 'none_prescribe'
@@ -57,7 +57,7 @@ class Prescribe < Skill
     end
 
     # update history
-    history.witch_target = target.to_i
+    history.target[self.history_key] = target.to_i
     history.save
 
     res.to_msg
@@ -67,14 +67,14 @@ class Prescribe < Skill
     history = History.find_by_key Status.find_current.turn.round
 
     # update witch limitation
-    if history.witch_target == ANTIDOTE
+    if history.target[self.history_key] == ANTIDOTE
       @role.has_antidote = false
-    elsif history.witch_target >= 1
+    elsif history.target[self.history_key] >= 1
       @role.has_poison = false
     end
     @role.save
 
-    history.witch_acted = true
+    history.acted[self.history_key] = true
     history.save
 
     :success

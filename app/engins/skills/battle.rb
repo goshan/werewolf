@@ -24,7 +24,7 @@ class Battle < Skill
     knight = Player.find_by_role @role.name
     return :failed_battle_self if player.pos == knight.pos
 
-    history.knight_target = player.pos
+    history.target[self.history_key] = player.pos
     history.save
 
     res = SkillResponseDialog.new 'battle_done'
@@ -37,7 +37,7 @@ class Battle < Skill
     @role.save
 
     history = History.find_by_key Status.find_current.turn.round
-    player = Player.find_by_key history.knight_target
+    player = Player.find_by_key history.target[self.history_key]
     return :failed_target_dead unless player.status == :alive
 
     unless player.role.side == :wolf
@@ -45,6 +45,6 @@ class Battle < Skill
     end
     player.die!
     player.save
-    "skill_in_day_battle->#{history.knight_target}->#{player.pos}"
+    "skill_in_day_battle->#{history.target[self.history_key]}->#{player.pos}"
   end
 end

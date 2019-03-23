@@ -10,4 +10,8 @@ class Skill
   def player_status_when_use
     :alive
   end
+
+  def history_key
+    @role.name
+  end
 end

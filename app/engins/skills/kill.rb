@@ -1,6 +1,11 @@
 class Kill < Skill
   EMPTY = 0
 
+
+  def history_key
+    'kill'
+  end
+
   def prepare
     history = History.find_by_key Status.find_current.turn.round
     res = SkillResponsePanel.new 'kill'
@@ -19,18 +24,18 @@ class Kill < Skill
 
     status = Status.find_current
     history = History.find_by_key status.turn.round
-    return :failed_have_acted if history.wolf_acted
+    return :failed_have_acted if history.acted[history_key]
     return :failed_locked if history.augur_lock && !history.augur_lock.include?(target.to_i)
 
     if target.to_i == EMPTY
-      history.wolf_kill = EMPTY
+      history.target[self.history_key] = EMPTY
       res = SkillResponseDialog.new 'none_killed'
     else
       player = Player.find_by_key target
       return :failed_target_dead unless player.status == :alive
       return :failed_cannot_kill_self if %w[chief_wolf lord_wolf ghost_rider].include? player.role.name
 
-      history.wolf_kill = player.pos
+      history.target[self.history_key] = player.pos
       res = SkillResponseDialog.new 'killed'
       res.add_param 'target', player.pos
     end
@@ -41,7 +46,7 @@ class Kill < Skill
 
   def confirm
     history = History.find_by_key Status.find_current.turn.round
-    history.wolf_acted = true
+    history.acted[self.history_key] = true
     history.save
     :success
   end
