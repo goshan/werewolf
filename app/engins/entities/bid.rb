@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Bid < CacheRecord
   attr_accessor :user_id, :prices
 

@@ -30,3 +30,6 @@ Style/NumericPredicate:
 
 Style/SafeNavigation:
   Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
