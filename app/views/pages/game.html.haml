@@ -59,7 +59,7 @@
                 - roles_list(@setting).each do |role|
                   .form-group{'class' => 'col-xs-6'}
                     .input-group
-                      .input-group-addon #{role[:name]}
+                      .input-group-addon= role[:name]
                       %input.form-control{'type' => 'text', 'class' => 'role-price', 'name' => "#{role[:id]}", 'placeholder' => 0, 'id' => "input-price-#{role[:id]}"}
             .modal-footer
               = link_to "取消之前下注", "#", :class => "btn btn-danger", 'data-dismiss' => "modal", :id => 'js-cancel-bid-roles'
