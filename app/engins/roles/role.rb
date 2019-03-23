@@ -65,7 +65,7 @@ class Role < CacheRecord
     bids = players.map { |player| Bid.find_by_key(player.user.id) }
     role_cnt = Hash.new(0)
     self.init_roles_with_setting.each { |r| role_cnt[r] += 1 }
-    (1..players.length).each do |_|
+    players.length.times do
       # find the highest price and candiates who's offering the price
       max_price = nil
       max_price_role = nil
