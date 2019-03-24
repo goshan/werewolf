@@ -34,7 +34,17 @@ $(document).on 'turbolinks:load', (e) ->
             if !Wolf.Utils.varIsNull(data.status)
               Wolf.status.round = data.status.round
               Wolf.status.turn = data.status.turn
+              Wolf.status.bidding_enabled = data.status.bidding_enabled
               Wolf.panel.updateWithTurn data.status.turn
+              # for admin panel
+              if data.status.bidding_enabled
+                $('#js-enable-bidding').hide()
+                $('#js-disable-bidding').show()
+                $('#js-deal').text('竞价发牌')
+              else
+                $('#js-disable-bidding').hide()
+                $('#js-enable-bidding').show()
+                $('#js-deal').text('随机发牌')
             if !Wolf.Utils.varIsNull(data.players)
               Wolf.panel.players = data.players
             if !Wolf.Utils.varIsNull(data.current_user)

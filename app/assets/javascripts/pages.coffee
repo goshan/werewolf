@@ -92,14 +92,19 @@ $(document).on 'turbolinks:load', (e) ->
     e.preventDefault()
     App.game.do 'cancel_bid_roles'
 
-  $('#js-add-5-coin-all-users').click (e) ->
+  $('#js-add-coin-all-users').click (e) ->
     e.preventDefault()
-    App.game.do 'add_coin_all_users', {coin: 5}
+    coin = parseInt($('#coin-to-patch').val(), 10) || 0
+    App.game.do 'add_coin_all_users', {coin: coin}
 
   $('#js-reset-coin-all-users').click (e) ->
     e.preventDefault()
     App.game.do 'reset_coin_all_users'
 
-  $('#js-deal-by-bid').click (e) ->
+  $('#js-enable-bidding').click (e) ->
     e.preventDefault()
-    App.game.do 'deal_by_bid'
+    App.game.do 'enable_bidding'
+
+  $('#js-disable-bidding').click (e) ->
+    e.preventDefault()
+    App.game.do 'disable_bidding'

@@ -41,8 +41,8 @@
 
     .ope-player
       = link_to "查看身份", "#", :class => "btn btn-warning", '@click' => "onClickCheckRole"
-      = link_to "下注身份", "#", :class => "btn btn-warning", 'data-toggle' => "modal", 'data-target' => "#bid-roles"
-      .modal.fade{:id => "bid-roles", :tabindex => "-1", :role => "dialog", 'aria-labelledby' => "playerRolesBidding"}
+      = link_to "下注身份", "#", :class => "btn btn-warning", 'data-toggle' => "modal", 'data-target' => "#bid-roles", 'v-if' => 'bidding_enabled'
+      .modal.fade{:id => "bid-roles", :tabindex => "-1", :role => "dialog", 'aria-labelledby' => "playerRoles"}
         .modal-dialog
           .modal-content
             .modal-header
@@ -114,7 +114,7 @@
           = link_to "配置", "#", :class => "btn btn-default", 'data-toggle' => "modal", 'data-target' => "#setting"
           = link_to "重置", "#", :class => "btn btn-default", :id => "js-reset"
           .pull-right
-            = link_to "发牌", "#", :class => "btn btn-default", :id => "js-deal"
+            = link_to "随机发牌", "#", :class => "btn btn-default", :id => "js-deal"
             = link_to "夜晚", "#", :class => "btn btn-default", :id => "js-start"
         .area
           = link_to "昨夜信息", "#", :class => "btn btn-default", :id => "js-night-info"
@@ -127,13 +127,29 @@
         .area
           = link_to "好人胜利", "#", :class => "btn btn-danger", :id => "js-wolf-lose"
           = link_to "狼人胜利", "#", :class => "btn btn-danger pull-right", :id => "js-wolf-win"
-        %hr
         .area
-          = link_to "全体金币+5", "#", :class => "btn btn-primary", :id => "js-add-5-coin-all-users"
+          = link_to "金币变更", "#", :class => "btn btn-default", :id => "js-add-5-coin-all-users", 'data-toggle' => "modal", 'data-target' => "#update-coin-modal"
           .pull-right
-            = link_to "竞价发牌", "#", :class => "btn btn-default", :id => "js-deal-by-bid"
-        .area
-          = link_to "全体金币归零", "#", :class => "btn btn-danger", :id => "js-reset-coin-all-users"
+            = link_to "开启竞价系统", "#", :class => "btn btn-primary", :id => "js-enable-bidding"
+            = link_to "关闭竞价系统", "#", :class => "btn btn-danger", :id => "js-disable-bidding", :style => "display: none"
+      .modal.fade{:id => "update-coin-modal", :tabindex => "-1", :role => "dialog", 'aria-labelledby' => "updateCoin"}
+        .modal-dialog
+          .modal-content
+            .modal-header
+              %button.close{:type => "button", 'data-dismiss' => "modal", 'aria-label' => "Close"}
+                %span{'aria-hidden' => "true"} &times;
+              %h4.modal-title 金币变更
+            .modal-body
+              .row
+                %form.form-inline
+                  .form-group{'class' => 'col-xs-8'}
+                    .input-group
+                      .input-group-addon= '全体增加金币'
+                      %input.form-control{'type' => 'text', 'placeholder' => 0, 'id' => "coin-to-patch"}
+            .modal-footer
+              = link_to "全体金币归零", "#", :class => "btn btn-danger", :id => "js-reset-coin-all-users"
+              = link_to "变更", "#", :class => "btn btn-primary", 'data-dismiss' => "modal", :id => 'js-add-coin-all-users'
+              = link_to "关闭", "#", :class => "btn btn-default", 'data-dismiss' => "modal"
         .modal.fade{:id => "start-vote-modal", :tabindex => "-1", :role => "dialog", 'aria-labelledby' => "playerOutSelectLabel"}
           .modal-dialog
             .modal-content

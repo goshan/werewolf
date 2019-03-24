@@ -94,14 +94,24 @@ class GameChannel < ApplicationCable::Channel
     broadcast action: 'alert', msg: '余额已归零'
   end
 
-  def deal_by_bid
+  def enable_bidding
     return send_to current_user, action: 'alert', msg: '不合法操作' unless current_user.lord?
 
-    res = @gm.deal_by_bid
+    res = @gm.enable_bidding
     return if catch_exceptions res
 
-    update :status_and_players
-    broadcast action: 'alert', msg: '已重新竞价发牌，请查看身份'
+    update :status
+    send_to current_user, action: 'alert', msg: '开启了竞价出牌'
+  end
+
+  def disable_bidding
+    return send_to current_user, action: 'alert', msg: '不合法操作' unless current_user.lord?
+
+    res = @gm.disable_bidding
+    return if catch_exceptions res
+
+    update :status
+    send_to current_user, action: 'alert', msg: '关闭了竞价出牌'
   end
 
   def start

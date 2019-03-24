@@ -26,7 +26,7 @@ class GameEngin
     :success
   end
 
-  def deal(method = :random)
+  def deal
     players = Player.find_all
     players.each do |p|
       return :failed_empty_seat unless p.user
@@ -42,7 +42,7 @@ class GameEngin
     Vote.clear
     UserVote.clear
 
-    if method == :bid
+    if status.bidding_enabled
       roles = Role.deal_roles_by_bid players
       Bid.clear
     else
@@ -55,16 +55,26 @@ class GameEngin
     :success
   end
 
-  def deal_by_bid
-    deal(:bid)
-  end
-
   def check_role(user)
     p = Player.find_by_user user
     return :failed_not_seat unless p
     return :failed_no_role unless p.role
 
     p.role.name
+  end
+
+  def enable_bidding
+    status = Status.find_current
+    status.bidding_enabled = true
+    status.save
+    :success
+  end
+
+  def disable_bidding
+    status = Status.find_current
+    status.bidding_enabled = false
+    status.save
+    :success
   end
 
   def start
@@ -189,6 +199,8 @@ class GameEngin
   end
 
   def bid_roles(user, prices)
+    status = Status.find_current
+    return :failed_bidding_disabled unless status.bidding_enabled
     return :failed_negative_price if prices.values.any? { |p| p < 0 }
 
     total_price = prices.values.reduce(:+)
@@ -208,6 +220,9 @@ class GameEngin
   end
 
   def cancel_bid_roles(user)
+    status = Status.find_current
+    return :failed_bidding_disabled unless status.bidding_enabled
+
     user = User.find(user.id)
     user.with_lock do
       bid = Bid.find_by_key user.id
