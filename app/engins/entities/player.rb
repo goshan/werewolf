@@ -85,11 +85,13 @@ class Player < CacheRecord
   end
 
   def should_act?(turn = nil)
+    turn ||= Status.find_current.turn
     s = self.vote_skill_now || self.role.skill(turn)
     !s.nil?
   end
 
   def could_act?(turn = nil)
+    turn ||= Status.find_current.turn
     s = self.vote_skill_now || self.role.skill(turn)
     !s.nil? && s.player_status_when_use == self.status
   end
