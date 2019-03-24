@@ -267,7 +267,7 @@ class GameChannel < ApplicationCable::Channel
 
     if data == :self_user_info
       if user
-        msg[:self_user_info] = User.find(user.id).slice(:coin) if data == :self_user_info
+        msg[:self_user_info] = User.find(user.id).slice(:coin)
         send_to user, msg
       else
         Player.find_all.each do |p|
