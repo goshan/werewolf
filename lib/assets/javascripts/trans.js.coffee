@@ -130,7 +130,9 @@
     check_wolves: "你的狼同伴 {wolves} 尚未全部死亡，不能刀人",
     shoot_done: "你要开枪射杀{target}号玩家",
     battle_done: "你要跟{target}号玩家决斗",
-    destruct_done: "你要自爆带走{target}号玩家"
+    destruct_done: "你要自爆带走{target}号玩家",
+    voted: "你投票给{target}号玩家",
+    none_voted: "你选择弃票"
   }
 }
 

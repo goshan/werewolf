@@ -80,11 +80,7 @@ class AdminChannel < ApplicationCable::Channel
     res = @gm.start_vote data['desc'], data['target_pos'], data['voter_pos']
     return if catch_exceptions res
 
-    # broadcast to all alive players
-    msg = res.to_skill_response.to_msg
-    Player.find_all_alive.each do |p|
-      send_to p.user, msg if res.voters.include?(p.pos)
-    end
+    send_to current_user, action: 'alert', msg: '开始投票'
   end
 
   def stop_vote

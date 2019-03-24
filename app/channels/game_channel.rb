@@ -13,15 +13,6 @@ class GameChannel < ApplicationCable::Channel
     @gm = GameEngin.new
 
     update :status_and_players, current_user
-
-    # show vote panel
-    player = Player.find_by_user current_user
-    voting = Status.find_current.voting
-    if voting != 0  && player.status == :alive
-      vote = Vote.find_by_key voting
-      user_vote = UserVote.find_by_key player.pos
-      send_to current_user, vote.to_skill_response.to_msg if vote.voters.include?(player.pos) && !user_vote
-    end
   end
 
   def unsubscribed
@@ -78,10 +69,5 @@ class GameChannel < ApplicationCable::Channel
       res = @gm.check_over
       game_over res
     end
-  end
-
-  def vote(data)
-    res = @gm.vote current_user, data['pos']
-    catch_exceptions res
   end
 end

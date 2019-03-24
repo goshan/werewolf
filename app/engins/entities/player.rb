@@ -73,13 +73,25 @@ class Player < CacheRecord
     User.find_by_id self.user_id
   end
 
-  def should_act?(turn)
-    !self.role.skill(turn).nil?
+  def skill
+    self.vote_skill_now || self.role.skill(Status.find_current.turn)
   end
 
-  def could_act?(turn)
-    return false unless self.should_act?(turn)
-    self.role.skill(turn).player_status_when_use == self.status
+  def vote_skill_now
+    status = Status.find_current
+    return nil if status.turn.step != 'discuss' || status.voting == 0
+
+    VoteSkill.new self.pos
+  end
+
+  def should_act?(turn = nil)
+    s = self.vote_skill_now || self.role.skill(turn)
+    !s.nil?
+  end
+
+  def could_act?(turn = nil)
+    s = self.vote_skill_now || self.role.skill(turn)
+    !s.nil? && s.player_status_when_use == self.status
   end
 
   def assign!(user)
