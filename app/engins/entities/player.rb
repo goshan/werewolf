@@ -73,6 +73,15 @@ class Player < CacheRecord
     User.find_by_id self.user_id
   end
 
+  def should_act?(turn)
+    !self.role.skill(turn).nil?
+  end
+
+  def could_act?(turn)
+    return false unless self.should_act?(turn)
+    self.role.skill(turn).player_status_when_use == self.status
+  end
+
   def assign!(user)
     self.user_id = user ? user.id : nil
     self.name = user ? user.name : nil
@@ -80,10 +89,6 @@ class Player < CacheRecord
   end
 
   def die!
-    if self.role.name == 'hunter'
-      self.role.dead_round = Status.find_current.round
-      self.role.save
-    end
     self.status = :dead
   end
 

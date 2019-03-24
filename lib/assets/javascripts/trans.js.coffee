@@ -2,7 +2,7 @@
 @Wolf.Trans = @Wolf.Trans ? {}
 
 @Wolf.Trans.Roles = @Wolf.Trans.Roles ? {
-  mixed: "混血儿",
+  half: "混血儿",
   seer: "预言家",
   witch: "女巫",
   hunter: "猎人",
@@ -21,10 +21,10 @@
 }
 
 @Wolf.Trans.Turns = @Wolf.Trans.Turns ? {
-  init: "准备",
-  check_role: "查看身份",
-  bid_roles: "下注身份",
-  day: "白天",
+  sitting: "就坐",
+  deal: "查看身份",
+  discuss: "白天讨论",
+  testament: "遗言阶段",
   wolf: "夜晚 狼人行动",
   hidden_wolf: "夜晚 隐狼行动",
   long_wolf: "夜晚 大灰狼行动",
@@ -33,7 +33,7 @@
   savior: "夜晚 守卫行动",
   magician: "夜晚 魔术师行动",
   augur: "夜晚 占卜师行动"
-  mixed: "夜晚 混血儿行动"
+  half: "夜晚 混血儿行动"
 }
 
 @Wolf.Trans.Panel = @Wolf.Trans.Panel ? {
@@ -49,10 +49,10 @@
     failed_empty_seat: "人数不足",
     failed_no_role: "尚未分配角色",
     failed_not_seat: "没有就座，无法操作",
-    failed_not_alive: "你已经死亡, 无法发动技能",
+    failed_could_not_skill: "当前状态，无法发动技能",
     failed_locked: "只能落刀被锁定的玩家",
+    failed_no_target: "请先选择对象",
     failed_cannot_kill_self: "该角色不能自刀",
-    failed_not_dead: "你尚未死亡, 无法发动技能",
     failed_have_acted: "已完成行动",
     failed_target_dead: "目标已死亡",
     failed_no_antidot: "已使用过解药",
@@ -60,52 +60,81 @@
     failed_save_self: "当前阶段不能自救",
     failed_no_poison: "已使用过毒药",
     failed_same_guard: "不能连续两晚守护同一玩家",
-    failed_finish_shoot: "你已开过枪",
     failed_cannot_shoot: "你无法开枪",
     failed_exchange_number: "若要交换，则必须选择两名玩家",
     failed_exchange_same: "不能只交换一名玩家",
     failed_exchange_dup: "已交换过该名玩家",
     failed_have_locked: "一局游戏只能锁定一次",
-    failed_kill_no: "不能空刀",
     failed_is_killing: "已选择追刀，则必须落刀",
     failed_have_killed: "一局游戏只能追刀一次",
     failed_round_1: "第一晚不能追刀",
+    failed_battle_self: "不能同自己决斗",
+    failed_destruct_self: "不能自爆带走自己",
     failed_game_not_over: "请先结束游戏",
     failed_vote_has_started: "已经正在投票中",
     failed_vote_not_started: "现在不能进行投票",
     failed_has_voted: "已经投票",
-    failed_cannot_kill: "目前还不能刀人"
+    shoot: "{player}号玩家发动技能带走{target}号玩家，{dead}号玩家死亡",
+    battle: "{player}号玩家同{target}号玩家进行决斗，{dead}号玩家死亡"
   }
   panel_tip_trans: {
-    kill: "请从下方存活玩家中选择一名猎杀，不选择视为空刀",
-    poison: "请从下方存活玩家中选择一名毒杀，不选择视为不采取行动",
-    confirm: "请从下方存活玩家中选择一名查验",
-    mixed: "请从下方玩家中选择一名混血",
-    guard: "请从下方存活玩家中选择一名守护，不选择视为空守",
-    exchange: "请从下方存活玩家中选择两名交换，不选择视为不交换",
-    lock: "请从下方存活玩家中选择一名锁定，不选择视为不锁定",
-    kill_more: "请从下方存活玩家中选择一名追刀，不可以空刀",
-    vote: "请选择要投票的对象，不选择视为弃票",
-    throw: "请选择玩家放逐"
-  }
-  dialog_message_trans: {
+    kill: "请从下方存活玩家中选择一名猎杀",
+    check: "请从下方存活玩家中选择一名查验",
     prescribe: "今晚被猎杀的是{killed}号玩家，请操作",
     prescribe_unknow: "无法获知今晚被猎杀玩家信息，请操作",
     prescribe_none: "今晚没有玩家被猎杀，请操作",
-    confirm: "{pos}号玩家的身份是<span style='font-size: 21px; font-weight: bold; color: {role?evil:red,virtuous:green};'>{role?evil:狼人,virtuous:好人}</span>",
-    mixed: "你混了{pos}号玩家的血。你与其同胜负。",
-    lock: "今晚是否锁定玩家",
+    guard: "请从下方存活玩家中选择一名守护",
     kill_more: "今晚是否追刀",
-    normal_wolf_still_alive: "你的狼同伴 {pos} 尚未全部死亡，不能刀人"
+    stargaze: "请从下方存活玩家中选择一名锁定",
+    exchange: "请从下方存活玩家中选择两名交换",
+    link: "请从下方玩家中选择一名进行混血",
+    shoot: "请开枪射杀下方玩家中的一名",
+    battle: "请从下方玩家中选择的一名进行决斗",
+    destruct: "请自爆从下方玩家中选择的一名一同死亡",
+    throw: "请选择要放逐玩家",
+    vote: "请选择要投票的对象"
   }
-  dialog_button_trans: {
-    antidot: ["救人", 'btn-success'],
-    poison: ["毒人", 'btn-purple'],
+  panel_button_trans: {
+    kill: ["落刀", 'btn-danger'],
+    kill_none: ["空刀", 'btn-default'],
+    check: ["查验", 'btn-warning'],
     rest: ["不行动", 'btn-default'],
-    mixed_finish: ["好滴", 'btn-default'],
-    confirm_finish: ["明白", 'btn-default'],
-    lock: ["锁定", 'btn-warning']
-    kill_more: ["追刀", 'btn-danger']
+    antidote: ["救人", 'btn-success'],
+    poison: ["毒人", 'btn-purple'],
+    guard: ["守护", 'btn-success'],
+    guard_none: ["空守", 'btn-default'],
+    kill_more: ["追刀", 'btn-danger'],
+    stargaze: ["锁定", 'btn-darkblue'],
+    exchange: ["交换", 'btn-pink'],
+    exchange_none: ["空换", 'btn-default'],
+    link: ["混血", 'btn-purple'],
+    shoot: ["开枪", 'btn-danger'],
+    battle: ["决斗", 'btn-primary'],
+    destruct: ["自爆", 'btn-danger'],
+    throw: ["放逐", 'btn-primary'],
+    vote: ["投票", 'btn-warning'],
+    abandon: ["弃票", 'btn-default']
+  }
+  dialog_message_trans: {
+    killed: "你们今晚猎杀的是{target}号玩家",
+    none_killed: "你们今晚没有猎杀目标",
+    checked: "{target}号玩家的身份是<span style='font-size: 21px; font-weight: bold; color: {role?evil:red,virtuous:green};'>{role?evil:狼人,virtuous:好人}</span>",
+    antidote: "你今晚要开药解救{target}号玩家",
+    poison: "你今晚要开药毒杀{target}号玩家",
+    none_prescribe: "你今晚不使用任何药水",
+    guarded: "你今晚守护的是{target}号玩家",
+    none_guarded: "你今晚空守",
+    killed_more: "你今晚追刀{target}号玩家",
+    none_killed_more: "你今晚不进行追刀",
+    locked: "今晚锁定{target}号玩家",
+    none_locked: "今晚不锁定玩家",
+    exchanged: "你今晚交换了{target}号两位玩家",
+    none_exchanged: "你今晚没有交换玩家",
+    linked: "你对{target}号玩家进行了混血，你将与其同胜负。",
+    check_wolves: "你的狼同伴 {wolves} 尚未全部死亡，不能刀人",
+    shoot_done: "你要开枪射杀{target}号玩家",
+    battle_done: "你要跟{target}号玩家决斗",
+    destruct_done: "你要自爆带走{target}号玩家"
   }
 }
 

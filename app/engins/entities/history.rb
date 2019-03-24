@@ -1,5 +1,6 @@
 class History < CacheRecord
-  attr_accessor :round, :augur_target, :wolf_kill, :long_wolf_kill, :witch_target, :magician_target, :seer_target, :savior_target, :dead_in_day
+  attr_accessor :round, :dead_in_day
+  attr_accessor :target, :acted
 
   def self.key_attr
     'round'
@@ -7,43 +8,33 @@ class History < CacheRecord
 
   def initialize(round = nil)
     self.round = round
-    self.magician_target = []
+    self.target = {}
+    self.acted = {}
     self.dead_in_day = []
   end
 
   def dead_in_night
     dead = []
-    # wolf kill
-    kill = self.wolf_kill || 0
-    # long wolf kill
-    kill_more = self.long_wolf_kill || -1
-    # witch antidot
-    antidot = (self.witch_target || -1) == 0
-    # witch poison
-    poison = (self.witch_target || -1) > 0
-    # savior
-    guard = self.savior_target || 0
-
-    dead.push kill unless kill == 0
-    dead.pop if antidot
-    if guard != 0 && guard == kill
-      if antidot
-        dead.push kill
+    dead.push wolf_kill unless wolf_kill == Kill::EMPTY
+    dead.pop if has_antidote?
+    if guard != Guard::EMPTY && guard == wolf_kill
+      if has_antidote
+        dead.push wolf_kill
       else
         dead.pop
       end
     end
 
     # long wolf kill
-    dead.push kill_more unless [-1, 0].include? kill_more
-    dead.pop if guard != 0 && guard == kill_more
+    dead.push long_wolf_kill unless [KillMore::KILL, KillMore::EMPTY].include? long_wolf_kill
+    dead.pop if guard != Guard::EMPTY && guard == long_wolf_kill
 
     # magician exchange
     dead = dead.map do |d|
       self.magician_exchange d
     end
-    witch_poison = poison ? self.magician_exchange(self.witch_target) : nil
-    seer = self.seer_target ? self.magician_exchange(self.seer_target) : nil
+    witch_poison = has_poison? ? self.magician_exchange(self.witch_target) : nil
+    seer = self.target['seer'] ? self.magician_exchange(self.target['seer']) : nil
 
     # witch used poison
     if witch_poison
@@ -79,19 +70,21 @@ class History < CacheRecord
     hunter = Player.find_by_role 'hunter'
     return false unless hunter
 
-    kill_pos = self.magician_exchange(self.wolf_kill || 0)
-    kill_more_pos = self.magician_exchange(self.long_wolf_kill || -1)
-    poison_pos = self.magician_exchange(self.witch_target || -1)
+    kill_pos = self.magician_exchange wolf_kill
+    kill_more_pos = self.magician_exchange long_wolf_kill
+    poison_pos = self.magician_exchange witch_target
     # killed
     kill = kill_pos == hunter.pos || kill_more_pos == hunter.pos
     # poison
-    poison = poison_pos == hunter.pos
+    hunter_poison = poison_pos == hunter.pos
+    # voted
+    voted = self.dead_in_day.include?(hunter.pos)
 
-    !poison && kill
+    (!hunter_poison && kill) || voted
   end
 
   def magician_exchange(pos)
-    target = self.magician_target.dup
+    target = (self.target['magician'] || []).dup
     if target.include? pos
       target.delete pos
       return target.first
@@ -101,10 +94,34 @@ class History < CacheRecord
   end
 
   def augur_lock
-    return nil if self.augur_target.nil? || self.augur_target == 0
+    return nil if self.target['augur'].nil? || self.target['augur'] == 0
 
-    locked = [self.augur_target - 1, self.augur_target, self.augur_target + 1]
+    locked = [self.target['augur'] - 1, self.target['augur'], self.target['augur'] + 1]
     player_cnt = Setting.current.player_cnt
     locked.map { |p| (p - 1) % player_cnt + 1 } # make start with 0, not 1 before mod
+  end
+
+  def wolf_kill
+    self.target['kill'] || Kill::EMPTY
+  end
+
+  def long_wolf_kill
+    self.target['long_wolf'] || KillMore::EMPTY
+  end
+
+  def witch_target
+    self.target['witch'] || Prescribe::EMPTY
+  end
+
+  def has_antidote?
+    witch_target == Prescribe::ANTIDOTE
+  end
+
+  def has_poison?
+    witch_target > 0
+  end
+
+  def guard
+    self.target['savior'] || Guard::EMPTY
   end
 end

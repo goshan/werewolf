@@ -1,25 +1,15 @@
 class Hunter < God
-  attr_accessor :shoot_done, :dead_round
+  attr_accessor :shoot_done
 
   def need_save?
     true
   end
 
-  def skill_turn
-    :day
+  def skill_class
+    Shoot
   end
 
-  def skill_timing
-    :dead
-  end
-
-  def prepare_skill
-    status = Status.find_current
-    history = History.find_by_key status.round
-    # check skill enabled
-    return :failed_finish_shoot if self.dead_round < status.round
-    return :failed_cannot_shoot unless history.hunter_skill?
-
-    { action: :alert, msg: '你可以开枪' }
+  def skill(turn)
+    turn.round > 0 && turn.class == Day ? self.skill_class.new(self) : nil
   end
 end

@@ -1,7 +1,7 @@
 module PagesHelper
   ROLE_NAME = {
     :villager => "普通村民",
-    :mixed => "混血儿",
+    :half => "混血儿",
     :seer => "预言家",
     :witch => "女巫",
     :hunter => "猎人",
@@ -18,7 +18,7 @@ module PagesHelper
     :hidden_wolf => "隐狼"
   }
   ROLE_KLASS = {
-    :mixed => "danger",
+    :half => "danger",
     :seer => "primary",
     :witch => "purple",
     :hunter => "warning",

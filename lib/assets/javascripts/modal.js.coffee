@@ -3,30 +3,34 @@
 @Wolf.modal = {
   alert: (data) ->
     msg = Wolf.Trans.Panel.alert_message_trans[data.msg]
-    msg = data.msg unless msg
+    if msg
+      msg = Wolf.Trans.insert_params(msg, data)
+    else
+      msg = data.msg
     BootstrapDialog.alert msg
 
   dialog: (data) ->
-    # has been showing sth
     return unless Wolf.panel.skillParams.action == 'none'
 
-    buttons = []
-    for b in data.buttons
+    buttons = [{
+      label: "确认",
+      cssClass: 'btn-success',
+      action: (dialog, e) =>
+        App.game.do 'confirm_skill'
+        dialog.close()
+    }]
+    if data.retry
       buttons.push {
-        label: Wolf.Trans.insert_params(Wolf.Trans.Panel.dialog_button_trans[b.skill][0], b),
-        cssClass: Wolf.Trans.Panel.dialog_button_trans[b.skill][1],
-        data: b
+        label: "重新操作",
+        cssClass: 'btn-default',
         action: (dialog, e) =>
-          d = e.data.button.data
-          if d.action == 'skill'
-            App.game.do 'skill', d.value
-          else if d.action == 'panel'
-            Wolf.panel.updateWithData d
+          App.game.do 'prepare_skill'
           dialog.close()
       }
+
     BootstrapDialog.show {
       closable: false,
-      message: Wolf.Trans.insert_params(Wolf.Trans.Panel.dialog_message_trans[data.skill], data),
+      message: Wolf.Trans.insert_params(Wolf.Trans.Panel.dialog_message_trans[data.msg], data),
       buttons: buttons
     }
 

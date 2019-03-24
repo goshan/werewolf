@@ -1,7 +1,7 @@
 class Role < CacheRecord
   extend Abstract
 
-  need_override :side, :skill_turn, :prepare_skill, :use_skill
+  need_override :side, :skill
 
   DEAL_RETRY_TIMES_MAX = 250
   LAST_ROLES_SCORE_COEF = [0.8, 0.9].freeze
@@ -20,16 +20,22 @@ class Role < CacheRecord
     self.side
   end
 
-  def skill_timing
-    :alive
-  end
-
   def need_save?
     false
   end
 
   def save_if_need
     self.save if self.need_save?
+  end
+
+  def win?(res)
+    win = false
+    if res == :wolf_win
+      win = self.side == :wolf
+    elsif res == :wolf_lose
+      win = (self.side == :god) || (self.side == :villager)
+    end
+    win
   end
 
   def self.init_by_role(role)
@@ -95,16 +101,6 @@ class Role < CacheRecord
     roles
   end
 
-  def win?(res)
-    win = false
-    if res == :wolf_win
-      win = self.side == :wolf
-    elsif res == :wolf_lose
-      win = (self.side == :god) || (self.side == :villager)
-    end
-    win
-  end
-
   private
 
   def self.init_roles_with_setting
@@ -120,8 +116,8 @@ class Role < CacheRecord
     Setting::WOLF_ROLES.each do |r|
       roles.push r.to_s if setting.has? r
     end
-    (1..setting.normal_villager_cnt).each { |_i| roles.push 'villager' }
-    (1..setting.normal_wolf_cnt).each { |_i| roles.push 'normal_wolf' }
+    setting.normal_villager_cnt.times.each { |_i| roles.push 'villager' }
+    setting.normal_wolf_cnt.times.each { |_i| roles.push 'normal_wolf' }
 
     roles
   end
