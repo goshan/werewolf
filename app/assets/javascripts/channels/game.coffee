@@ -47,11 +47,11 @@ $(document).on 'turbolinks:load', (e) ->
                 $('#js-deal').text('随机发牌')
             if !Wolf.Utils.varIsNull(data.players)
               Wolf.panel.players = data.players
-            if !Wolf.Utils.varIsNull(data.current_user)
+            if !Wolf.Utils.varIsNull(data.self_user_info)
               for dom in $('.read-coin-balance-text')
-                $(dom).text(data.current_user.coin || 0)
+                $(dom).text(data.self_user_info.coin || 0)
               for dom in $('.read-coin-balance-value')
-                $(dom).val(data.current_user.coin || 0)
+                $(dom).val(data.self_user_info.coin || 0)
 
       do: (action, pos=null)->
         if pos != null

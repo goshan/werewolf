@@ -7,7 +7,7 @@ class GameChannel < ApplicationCable::Channel
     @gm = GameEngin.new
 
     update :status_and_players, current_user
-    update :current_user, current_user
+    update :self_user_info, current_user
 
     # show vote panel
     player = Player.find_by_user current_user
@@ -58,7 +58,7 @@ class GameChannel < ApplicationCable::Channel
     res = @gm.bid_roles current_user, data['pos']['prices']
     return if catch_exceptions res
 
-    update :current_user, current_user
+    update :self_user_info, current_user
     send_to current_user, action: 'alert', msg: '完成下注'
   end
 
@@ -66,7 +66,7 @@ class GameChannel < ApplicationCable::Channel
     res = @gm.cancel_bid_roles current_user
     return if catch_exceptions res
 
-    update :current_user, current_user
+    update :self_user_info, current_user
     send_to current_user, action: 'alert', msg: '已取消之前的下注'
   end
 
@@ -76,9 +76,7 @@ class GameChannel < ApplicationCable::Channel
     res = @gm.add_coin_all_users data['pos']['coin'].to_i
     return if catch_exceptions res
 
-    Player.find_all.each do |p|
-      update :current_user, p.user
-    end
+    update :self_user_info
     broadcast action: 'alert', msg: '余额已更新'
   end
 
@@ -88,9 +86,7 @@ class GameChannel < ApplicationCable::Channel
     res = @gm.reset_coin_all_users
     return if catch_exceptions res
 
-    Player.find_all.each do |p|
-      update :current_user, p.user
-    end
+    update :self_user_info
     broadcast action: 'alert', msg: '余额已归零'
   end
 
@@ -269,11 +265,22 @@ class GameChannel < ApplicationCable::Channel
   def update(data = :status_and_players, user = nil)
     msg = { action: 'update' }
 
+    if data == :self_user_info
+      if user
+        msg[:self_user_info] = User.find(user.id).slice(:coin) if data == :self_user_info
+        send_to user, msg
+      else
+        Player.find_all.each do |p|
+          update :self_user_info, p.user unless p.user.nil?
+        end
+      end
+      return
+    end
+
     msg[:status] = Status.to_msg if %i[status status_and_players].include? data
     msg[:players] = Player.to_msg if %i[players status_and_players].include? data
 
     if user
-      msg[:current_user] = User.find(user.id).slice(:id, :coin, :name) if data == :current_user
       send_to user, msg
     else
       broadcast msg
