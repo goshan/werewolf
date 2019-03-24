@@ -161,9 +161,10 @@ class GameEngin
     return :failed_not_turn unless status.turn.step == 'discuss'
 
     history = History.find_by_key status.turn.round
-    pos.each do |p|
+
+    if pos.to_i > 0
       # check players already dead
-      player = Player.find_by_key p
+      player = Player.find_by_key pos
       return :failed_target_dead unless player.status == :alive
 
       # throw out
@@ -172,8 +173,8 @@ class GameEngin
 
       # update history
       history.dead_in_day.push player.pos
+      history.save
     end
-    history.save
     :success
   end
 
