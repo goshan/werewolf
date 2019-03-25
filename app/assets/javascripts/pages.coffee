@@ -16,7 +16,7 @@ $(document).on 'turbolinks:load', (e) ->
   $('#js-start').click (e) ->
     e.preventDefault()
     if Wolf.status.turn == 'deal' || Wolf.status.turn == 'testament'
-      App.admin.do 'start'
+      App.admin.do 'night'
       ion.sound.play 'mute'  # make audio can be played in cable after revieved socket notice
     else
       BootstrapDialog.alert "只有查看身份阶段或者遗言阶段才能够进入夜晚"

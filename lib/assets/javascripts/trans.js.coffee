@@ -67,6 +67,7 @@
     failed_battle_self: "不能同自己决斗",
     failed_destruct_self: "不能自爆带走自己",
     failed_game_not_over: "请先结束游戏",
+    failed_not_voter: "你不能投票",
     failed_vote_has_started: "已经正在投票中",
     failed_vote_not_started: "现在不能进行投票",
     failed_has_voted: "已经投票",

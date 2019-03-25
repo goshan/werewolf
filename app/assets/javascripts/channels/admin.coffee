@@ -21,5 +21,5 @@ $(document).on 'turbolinks:load', (e) ->
             audio.play_audio data.audio
 
       do: (action, data=null)->
-        console.log "#{action}"
+        console.log "admin: #{action}"
         @perform action, data

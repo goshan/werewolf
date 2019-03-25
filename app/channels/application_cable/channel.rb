@@ -21,15 +21,20 @@ module ApplicationCable
       end
     end
 
+    def send_to_lord(data)
+      user = Player.find_lord_user
+      AdminChannel.broadcast_to user, data if user
+    end
+
     # let master user play audio
     def play_voice(type)
-      user = Player.find_lord_user
-      AdminChannel.broadcast_to user, action: 'play', audio: type if user
+      send_to_lord action: 'play', audio: type
     end
 
     # send game over audio and update player history with res
     # res => :wolf_win, :wolf_lose
-    def game_over(res)
+    def maybe_game_over(res=nil)
+      res = Engin.process.stop_when_over res
       if res == :wolf_win
         play_voice 'wolf_win'
         broadcast action: 'alert', msg: '游戏结束，狼人胜利'

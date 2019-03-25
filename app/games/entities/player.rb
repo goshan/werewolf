@@ -44,6 +44,20 @@ class Player < CacheRecord
     end
   end
 
+  # get god, villager, wolf cnt
+  def self.alive_roles_dis
+    cnt = { god: 0, villager: 0, wolf: 0, must_kill_dead: true}
+    must_kill_alive = false
+    self.find_all.each do |p|
+      next unless p.status == :alive
+      next if p.role.side_to_check_win.nil?
+
+      cnt[p.role.side_to_check_win] += 1
+      cnt[:must_kill_dead] = false if p.role.name == Setting.current.must_kill
+    end
+    cnt
+  end
+
   def initialize(pos, status)
     self.pos = pos
     self.status = status

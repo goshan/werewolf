@@ -8,8 +8,6 @@ class AdminChannel < ApplicationCable::Channel
 
     logger.info "Auth with admin user #{current_user.name}(#{current_user.id})"
     will_send_to current_user
-
-    @gm = GameEngin.new
   end
 
   def unsubscribed
@@ -17,20 +15,20 @@ class AdminChannel < ApplicationCable::Channel
   end
 
   def reset
-    @gm.reset
+    Engin.process.reset
     update :status_and_players
   end
 
   def deal
-    res = @gm.deal
+    res = Engin.process.deal
     return if catch_exceptions res
 
     update :status_and_players
     broadcast action: 'alert', msg: '已重新发牌，请查看身份'
   end
 
-  def start
-    res = @gm.start
+  def night
+    res = Engin.process.night
     return if catch_exceptions res
 
     audio = Status.find_current.turn.audio_after_turn
@@ -38,18 +36,15 @@ class AdminChannel < ApplicationCable::Channel
   end
 
   def next_turn
-    status = Status.find_current
-    status.next_turn!
-    status.save
-    turn = status.turn
+    turn = Engin.process.next_turn
     audio = turn.audio_before_turn
     play_voice audio if audio
     update :status
 
-    if turn.audio_after_turn && status.turn.predent?
-      sleep Random.new(Time.now.to_i).rand(12..15)
-      play_voice turn.audio_after_turn
-    end
+    return unless turn.audio_after_turn && turn.predent?
+
+    sleep Random.new(Time.now.to_i).rand(12..15)
+    play_voice turn.audio_after_turn
   end
 
   def night_info
@@ -63,21 +58,13 @@ class AdminChannel < ApplicationCable::Channel
       p.save
     end
     update :players
-
-    if dead_info.count == 0
-      send_to current_user, action: 'alert', msg: '昨夜平安夜'
-    elsif dead_info.count == 2
-      send_to current_user, action: 'alert', msg: "昨夜双死，死亡不分先后，#{dead_info.first}和#{dead_info.last}号玩家死亡"
-    else
-      send_to current_user, action: 'alert', msg: "昨夜#{dead_info.join(',')}号玩家死亡"
-    end
-    res = @gm.check_over
-    game_over res
+    send_dead_info dead_info
+    maybe_game_over
   end
 
   def start_vote(data)
     # call engin
-    res = @gm.start_vote data['desc'], data['target_pos'], data['voter_pos']
+    res = Engin.vote.start data['desc'], data['target_pos'], data['voter_pos']
     return if catch_exceptions res
 
     send_to current_user, action: 'alert', msg: '开始投票'
@@ -85,14 +72,14 @@ class AdminChannel < ApplicationCable::Channel
 
   def stop_vote
     # call engin
-    res = @gm.stop_vote
+    res = Engin.vote.stop
     return if catch_exceptions res
 
     broadcast action: 'alert', msg: res
   end
 
   def throw(data)
-    res = @gm.throw data['pos']
+    res = Engin.process.throw data['pos']
     return if catch_exceptions res
 
     status = Status.find_current
@@ -100,25 +87,33 @@ class AdminChannel < ApplicationCable::Channel
     status.save
 
     update :status_and_players
-    res = @gm.check_over
-    game_over res
+    maybe_game_over
   end
 
   def stop_game(data)
-    return send_to current_user, action: 'alert', msg: '结束游戏失败' unless data['pos'] == 'wolf' || data['pos'] = 'villager'
+    return send_to current_user, action: 'alert', msg: '结束游戏失败' unless data['win'] == 'wolf' || data['win'] == 'villager'
 
     res = if data['win'] == 'wolf'
             :wolf_win
           elsif data['win'] == 'villager'
             :wolf_lose
           end
-    @gm.game_over res
-    game_over res
+    maybe_game_over res
   end
 
   private
 
   def broadcast(data)
     ActionCable.server.broadcast 'game', data
+  end
+
+  def send_dead_info(dead_info)
+    if dead_info.count == 0
+      send_to current_user, action: 'alert', msg: '昨夜平安夜'
+    elsif dead_info.count == 2
+      send_to current_user, action: 'alert', msg: "昨夜双死，死亡不分先后，#{dead_info.first}和#{dead_info.last}号玩家死亡"
+    else
+      send_to current_user, action: 'alert', msg: "昨夜#{dead_info.join(',')}号玩家死亡"
+    end
   end
 end
