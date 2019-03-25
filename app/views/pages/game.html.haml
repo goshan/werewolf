@@ -95,7 +95,7 @@
         .area
           = link_to "昨夜信息", "#", :class => "btn btn-default", :id => "js-night-info"
           .pull-right
-            = link_to "放逐玩家", "#", :class => "btn btn-default", :id => "js-throw"
+            = link_to "放逐玩家", "#", :class => "btn btn-default", :id => "throw-btn", 'data-toggle' => "modal", 'data-target' => "#throw-modal"
         .area
           = link_to "发起投票", "#", :class => "btn btn-primary", :id => "start-vote-btn", 'data-toggle' => "modal", 'data-target' => "#start-vote-modal"
           .pull-right
@@ -103,6 +103,23 @@
         .area
           = link_to "好人胜利", "#", :class => "btn btn-danger", :id => "js-wolf-lose"
           = link_to "狼人胜利", "#", :class => "btn btn-danger pull-right", :id => "js-wolf-win"
+        .modal.fade{:id => "throw-modal", :tabindex => "-1", :role => "dialog", 'aria-labelledby' => "playerOutSelectLabel"}
+          .modal-dialog
+            .modal-content
+              .modal-header
+                %button.close{:type => "button", 'data-dismiss' => "modal", 'aria-label' => "Close"}
+                  %span{'aria-hidden' => "true"} &times;
+                %h4.modal-title 放逐玩家
+              .modal-body
+                .form-group#target_pos
+                  = label_tag "放逐对象"
+                  .btn-group{'data-toggle' => "buttons"}
+                    - (1..Setting.current.player_cnt).each do |i|
+                      %label.btn.btn-primary{:id => i}
+                        = radio_button_tag :throw_target, i, false
+                        = "#{i}号"
+              .modal-footer
+                = link_to "好的", "#", :class => "btn btn-default", 'data-dismiss' => "modal", :id => "js-throw"
         .modal.fade{:id => "start-vote-modal", :tabindex => "-1", :role => "dialog", 'aria-labelledby' => "playerOutSelectLabel"}
           .modal-dialog
             .modal-content

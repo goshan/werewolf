@@ -58,7 +58,7 @@ class @Wolf.Audio
         res = obj.name.match /(.+)_end_voice/
         if obj.name == "night_bgm" || (res && res[0] == obj.name)
           setTimeout ->
-            App.game.do 'next_turn'
+            App.admin.do 'next_turn'
             ion.sound.stop "#{res[1]}_bgm" if res && res[1]
           , 1000
     }

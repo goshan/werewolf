@@ -1,6 +1,5 @@
 $(document).on 'turbolinks:load', (e) ->
   if $('#easy_login_session').length != 0 && !App.game
-    audio = new Wolf.Audio()
     App.game = App.cable.subscriptions.create {channel: "GameChannel", f: $('#easy_login_session').attr('f')},
       connected: ->
         # Called when the subscription is ready for use on the server
@@ -17,9 +16,6 @@ $(document).on 'turbolinks:load', (e) ->
           console.log data
           if data.action == 'alert'
             Wolf.modal.alert data
-
-          else if data.action == 'play'
-            audio.play_audio data.audio
 
           else if data.action == 'show_role'
             Wolf.modal.display_role data
