@@ -76,12 +76,12 @@ module PagesHelper
     w += "普通狼人#{setting.normal_wolf_cnt}人"
   end
 
-  def roles_list(setting)
+  def bid_roles_list(setting)
     roles = []
     roles += setting.god_roles_list.map { |r| { id: r, name: ROLE_NAME[r] } }
     roles << { id: :villager, name: ROLE_NAME[:villager] } if setting.normal_villager_cnt.to_i > 0
     roles += setting.special_villager_roles_list.map { |r| { id: r, name: ROLE_NAME[r] } }
-    roles << { id: :normal_wolf, name: ROLE_NAME[:normal_wolf] } if setting.normal_villager_cnt.to_i > 0
+    roles << { id: :normal_wolf, name: ROLE_NAME[:normal_wolf] } if setting.normal_wolf_cnt.to_i > 0
     roles + setting.wolf_roles_list.map { |r| { id: r, name: ROLE_NAME[r] } }
   end
 

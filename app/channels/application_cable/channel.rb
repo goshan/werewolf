@@ -23,7 +23,8 @@ module ApplicationCable
 
     def update_self_info(user = nil)
       if user
-        send_to_channel 'game', user, action: 'self_info', coin: user.coin, bid: Bid.find_by_key(user.id).prices
+        bid = Bid.find_by_key user.id
+        send_to_channel 'game', user, action: 'self_info', coin: user.coin, bid: bid ? bid.prices : {}
       else
         Player.find_all.each do |p|
           update_self_info p.user if p.user
