@@ -45,15 +45,6 @@ class Vote < CacheRecord
     msg
   end
 
-  def to_skill_response
-    res = SkillResponsePanel.new 'vote'
-    res.select = SkillResponsePanel::SELECT_SINGLE
-    res.only = @targets
-    res.button_push 'vote'
-    res.button_push 'abandon', 0
-    res
-  end
-
   def self.history_msg
     msg = ''
     self.find_all.sort_by(&:ts).each do |vote|

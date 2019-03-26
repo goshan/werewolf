@@ -99,10 +99,7 @@ Vue.component 'player', {
 
     updateWithData: (data) ->
       @skillName = data.msg
-      if data.msg in ["vote", "throw"]
-        data.action = data.msg
-      else
-        data.action = "use_skill"
+      data.action = "use_skill"
       @skillParams = data
       @buttons = data.buttons
 

@@ -35,13 +35,30 @@ class Player < CacheRecord
   end
 
   def self.set_roles(roles)
+    puts roles.inspect
     self.find_all.each do |p|
+      puts p.inspect
+      puts roles[p.pos - 1]
       r = Role.init_by_role roles[p.pos - 1]
       r.save_if_need
       p.role = r
       p.status = :alive
       p.save
     end
+  end
+
+  # get god, villager, wolf cnt
+  def self.alive_roles_dis
+    cnt = { god: 0, villager: 0, wolf: 0, must_kill_dead: true}
+    must_kill_alive = false
+    self.find_all.each do |p|
+      next unless p.status == :alive
+      next if p.role.side_to_check_win.nil?
+
+      cnt[p.role.side_to_check_win] += 1
+      cnt[:must_kill_dead] = false if p.role.name == Setting.current.must_kill
+    end
+    cnt
   end
 
   def initialize(pos, status)
@@ -73,13 +90,27 @@ class Player < CacheRecord
     User.find_by_id self.user_id
   end
 
-  def should_act?(turn)
-    !self.role.skill(turn).nil?
+  def skill
+    self.vote_skill_now || self.role.skill(Status.find_current.turn)
   end
 
-  def could_act?(turn)
-    return false unless self.should_act?(turn)
-    self.role.skill(turn).player_status_when_use == self.status
+  def vote_skill_now
+    status = Status.find_current
+    return nil if status.turn.step != 'discuss' || status.voting == 0
+
+    VoteSkill.new self.pos
+  end
+
+  def should_act?(turn = nil)
+    turn ||= Status.find_current.turn
+    s = self.vote_skill_now || self.role.skill(turn)
+    !s.nil?
+  end
+
+  def could_act?(turn = nil)
+    turn ||= Status.find_current.turn
+    s = self.vote_skill_now || self.role.skill(turn)
+    !s.nil? && s.player_status_when_use == self.status
   end
 
   def assign!(user)

@@ -72,6 +72,7 @@
     failed_battle_self: "不能同自己决斗",
     failed_destruct_self: "不能自爆带走自己",
     failed_game_not_over: "请先结束游戏",
+    failed_not_voter: "你不能投票",
     failed_vote_has_started: "已经正在投票中",
     failed_vote_not_started: "现在不能进行投票",
     failed_has_voted: "已经投票",
@@ -135,7 +136,9 @@
     check_wolves: "你的狼同伴 {wolves} 尚未全部死亡，不能刀人",
     shoot_done: "你要开枪射杀{target}号玩家",
     battle_done: "你要跟{target}号玩家决斗",
-    destruct_done: "你要自爆带走{target}号玩家"
+    destruct_done: "你要自爆带走{target}号玩家",
+    voted: "你投票给{target}号玩家",
+    none_voted: "你选择弃票"
   }
 }
 

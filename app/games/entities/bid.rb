@@ -6,7 +6,11 @@ class Bid < CacheRecord
   end
 
   def initialize(user_id, prices)
-    self.user_id = user_id
-    self.prices = prices
+    @user_id = user_id
+    @prices = prices
+  end
+
+  def total_price
+    @prices.values.reduce(:+)
   end
 end
