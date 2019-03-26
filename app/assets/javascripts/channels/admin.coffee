@@ -19,6 +19,10 @@ $(document).on 'turbolinks:load', (e) ->
             Wolf.modal.alert data
           else if data.action == 'play'
             audio.play_audio data.audio
+          else if data.action == 'deal_type'
+            $('#deal-modal .'+data.deal_type+'-deal-nav').addClass('active')
+            content = $('#deal-modal .'+data.deal_type+'-deal-nav a').attr('href')
+            $('#deal-modal .tab-content '+content).addClass('active')
 
       do: (action, data=null)->
         console.log "admin: #{action}"

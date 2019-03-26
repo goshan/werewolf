@@ -147,6 +147,16 @@ fieldset[disabled] .btn-purple.active {
 	}
 }
 
+#bid-info-modal {
+  .coin-balance, .current-bid {
+    font-size: 15px;
+    margin: 10px;
+    span {
+      margin: 10px;
+    }
+  }
+}
+
 #ope-panel {
   font-weight: bold;
   margin-top: -10px;
@@ -277,4 +287,14 @@ fieldset[disabled] .btn-purple.active {
 	&.player-right-side {
 		text-align: right;
 	}
+}
+
+#deal-modal {
+  #js-deal-type-nav {
+    position: relative !important;
+    top: 0;
+    padding-left: 0;
+    margin-bottom: 10px;
+    list-style: none;
+  }
 }

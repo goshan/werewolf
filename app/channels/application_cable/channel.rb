@@ -21,17 +21,6 @@ module ApplicationCable
       end
     end
 
-    def update_self_info(user = nil)
-      if user
-        bid = Bid.find_by_key user.id
-        send_to_channel 'game', user, action: 'self_info', coin: user.coin, bid: bid ? bid.prices : {}
-      else
-        Player.find_all.each do |p|
-          update_self_info p.user if p.user
-        end
-      end
-    end
-
     def send_to_master(data)
       user = Player.find_lord_user
       send_to_channel 'admin', user, data if user

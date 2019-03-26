@@ -43,6 +43,7 @@
     failed_insufficient_balance: "余额不足",
     failed_already_bid: "不能重复下注，若要重新下注，请先取消之前的下注",
     failed_not_yet_bid: "还未进行过下注",
+    failed_unknown_deal_type: "未知发牌模式",
     failed_not_select: "请选择对象",
     failed_mix_self: "不能混血自己",
     failed_not_turn: "当前回合无法操作",
@@ -76,6 +77,8 @@
     failed_vote_has_started: "已经正在投票中",
     failed_vote_not_started: "现在不能进行投票",
     failed_has_voted: "已经投票",
+    deal_type_random: "现在为随机发牌模式",
+    deal_type_bid: "现在为竞价发牌模式",
     shoot: "{player}号玩家发动技能带走{target}号玩家，{dead}号玩家死亡",
     battle: "{player}号玩家同{target}号玩家进行决斗，{dead}号玩家死亡"
   }

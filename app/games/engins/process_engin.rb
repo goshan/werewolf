@@ -8,34 +8,6 @@ class ProcessEngin
     UserVote.clear
   end
 
-  def deal
-    players = Player.find_all
-    players.each do |p|
-      return :failed_empty_seat unless p.user
-    end
-
-    status = Status.find_current
-    return :failed_game_not_over unless status.over
-
-    status.deal!
-    status.save
-    History.clear
-    Role.clear
-    Vote.clear
-    UserVote.clear
-
-    if status.bidding_enabled
-      roles = Role.deal_roles_by_bid players
-      Bid.clear
-    else
-      # default: random deal
-      roles = Role.deal_roles players
-    end
-    Player.set_roles roles
-
-    :success
-  end
-
   def night
     status = Status.find_current
     return :failed_not_turn unless %w[deal testament].include? status.turn.step

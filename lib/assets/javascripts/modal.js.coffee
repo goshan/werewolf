@@ -39,4 +39,11 @@
     $('#check-role-dialog .role-card').addClass('hidden')
     $("#check-role-dialog .role-#{data.role}").removeClass('hidden')
     $('#check-role-dialog').modal 'show'
+
+  display_bid_info: (data)->
+    $('#bid-info-modal .coin-balance-val').text(data.coin)
+    $('#bid-info-modal .current-bid').text("")
+    for role, price of data.bid
+      $('#bid-info-modal .current-bid').append("<span>#{Wolf.Trans.Roles[role]}: #{price}</span>")
+    $('#bid-info-modal').modal 'show'
 }

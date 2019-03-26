@@ -28,28 +28,13 @@ $(document).on 'turbolinks:load', (e) ->
 
           else if data.action == 'update'
             if !Wolf.Utils.varIsNull(data.status)
-              Wolf.status.round = data.status.round
-              Wolf.status.turn = data.status.turn
-              Wolf.status.bidding_enabled = data.status.bidding_enabled
+              Wolf.status.update data.status
               Wolf.panel.updateWithTurn data.status.turn
-              # for admin panel
-              if data.status.bidding_enabled
-                $('#js-enable-bidding').hide()
-                $('#js-disable-bidding').show()
-                $('#js-deal').text('竞价发牌')
-              else
-                $('#js-disable-bidding').hide()
-                $('#js-enable-bidding').show()
-                $('#js-deal').text('随机发牌')
             if !Wolf.Utils.varIsNull(data.players)
               Wolf.panel.players = data.players
 
-          else if data.action == 'self_info'
-            if !Wolf.Utils.varIsNull(data.coin)
-              for dom in $('.read-coin-balance-text')
-                $(dom).text(data.coin || 0)
-              for dom in $('.read-coin-balance-value')
-                $(dom).val(data.coin || 0)
+          else if data.action == 'bid_info'
+            Wolf.modal.display_bid_info data
 
       do: (action, pos=null)->
         if pos != null

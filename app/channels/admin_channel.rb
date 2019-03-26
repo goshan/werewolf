@@ -8,6 +8,10 @@ class AdminChannel < ApplicationCable::Channel
 
     logger.info "Auth with admin user #{current_user.name}(#{current_user.id})"
     will_send_to current_user
+
+    sleep 1
+    # for sending deal type
+    send_to current_user, action: 'deal_type', deal_type: Status.find_current.deal_type
   end
 
   def unsubscribed
@@ -20,7 +24,7 @@ class AdminChannel < ApplicationCable::Channel
   end
 
   def deal
-    res = Engin.process.deal
+    res = Engin.deal.deal
     return if catch_exceptions res
 
     update :status_and_players
@@ -101,19 +105,17 @@ class AdminChannel < ApplicationCable::Channel
     maybe_game_over res
   end
 
-  def bidding_enabled(data)
-    res = Engin.bid.bidding_enabled data['enabled']
+  def deal_type(data)
+    res = Engin.deal.deal_type data['deal_type']
     return if catch_exceptions res
 
     update :status
-    send_to current_user, action: 'alert', msg: data['enabled'] ? '开启竞价系统' : '关闭竞价系统'
   end
 
-  def add_coin_all_users(data)
-    res = Engin.bid.add_coin_all_users data['coin'].to_i
+  def add_coin_all_players(data)
+    res = Engin.coin.add_coin_all_players data['coin'].to_i
     return if catch_exceptions res
 
-    update_self_info
     send_to current_user, action: 'alert', msg: '余额已更新'
   end
 

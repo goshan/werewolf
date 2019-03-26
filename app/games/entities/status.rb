@@ -1,11 +1,14 @@
 class Status < CacheRecord
-  attr_accessor :turn, :voting, :over, :bidding_enabled
+  attr_accessor :turn, :voting, :over, :deal_type
+
+  DEAL_TYPE_RANDOM = 'random'.freeze
+  DEAL_TYPE_BID = 'bid'.freeze
 
   def initialize
     @turn = Turn.init
     @voting = 0
     @over = true
-    @bidding_enabled = false
+    @deal_type = DEAL_TYPE_RANDOM
   end
 
   def deal!
@@ -34,6 +37,6 @@ class Status < CacheRecord
 
   def self.to_msg
     status = self.find_current
-    { round: status.turn.round, turn: status.turn.step, bidding_enabled: status.bidding_enabled }
+    { round: status.turn.round, turn: status.turn.step, deal_type: status.deal_type }
   end
 end
