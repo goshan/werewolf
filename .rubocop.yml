@@ -27,3 +27,9 @@ Style/AsciiComments:
 
 Style/NumericPredicate:
   Enabled: false
+
+Style/SafeNavigation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false

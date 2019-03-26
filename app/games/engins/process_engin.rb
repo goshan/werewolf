@@ -24,8 +24,13 @@ class ProcessEngin
     Vote.clear
     UserVote.clear
 
-    # random deal
-    roles = Role.deal_roles players
+    if status.bidding_enabled
+      roles = Role.deal_roles_by_bid players
+      Bid.clear
+    else
+      # default: random deal
+      roles = Role.deal_roles players
+    end
     Player.set_roles roles
 
     :success

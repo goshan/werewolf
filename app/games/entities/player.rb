@@ -35,7 +35,10 @@ class Player < CacheRecord
   end
 
   def self.set_roles(roles)
+    puts roles.inspect
     self.find_all.each do |p|
+      puts p.inspect
+      puts roles[p.pos - 1]
       r = Role.init_by_role roles[p.pos - 1]
       r.save_if_need
       p.role = r

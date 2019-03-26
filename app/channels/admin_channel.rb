@@ -24,7 +24,7 @@ class AdminChannel < ApplicationCable::Channel
     return if catch_exceptions res
 
     update :status_and_players
-    broadcast action: 'alert', msg: '已重新发牌，请查看身份'
+    broadcast_to_channel 'game', action: 'alert', msg: '已重新发牌，请查看身份'
   end
 
   def night
@@ -75,7 +75,7 @@ class AdminChannel < ApplicationCable::Channel
     res = Engin.vote.stop
     return if catch_exceptions res
 
-    broadcast action: 'alert', msg: res
+    broadcast_to_channel 'game', action: 'alert', msg: res
   end
 
   def throw(data)
@@ -101,11 +101,24 @@ class AdminChannel < ApplicationCable::Channel
     maybe_game_over res
   end
 
-  private
+  def bidding_enabled(data)
+    res = Engin.bid.bidding_enabled data['enabled']
+    return if catch_exceptions res
 
-  def broadcast(data)
-    ActionCable.server.broadcast 'game', data
+    update :status
+    send_to current_user, action: 'alert', msg: data['enabled'] ? '开启竞价系统' : '关闭竞价系统'
   end
+
+  def add_coin_all_users(data)
+    res = Engin.bid.add_coin_all_users data['coin'].to_i
+    return if catch_exceptions res
+
+    update_self_info
+    send_to current_user, action: 'alert', msg: '余额已更新'
+  end
+
+
+  private
 
   def send_dead_info(dead_info)
     if dead_info.count == 0

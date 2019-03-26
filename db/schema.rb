@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190310071442) do
+ActiveRecord::Schema.define(version: 20190315021442) do
 
   create_table "results", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "user_id",                    null: false
@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(version: 20190310071442) do
     t.integer  "role",       limit: 1, default: 0, null: false
     t.string   "alias"
     t.integer  "login_type", limit: 1, default: 0, null: false
+    t.integer  "coin",                 default: 0
     t.string   "wx_openid"
     t.datetime "created_at",                       null: false
     t.datetime "updated_at",                       null: false

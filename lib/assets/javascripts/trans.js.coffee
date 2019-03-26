@@ -38,6 +38,11 @@
 
 @Wolf.Trans.Panel = @Wolf.Trans.Panel ? {
   alert_message_trans: {
+    failed_bidding_disabled: "竞价系统已关闭",
+    failed_negative_price: "出价不能为负数",
+    failed_insufficient_balance: "余额不足",
+    failed_already_bid: "不能重复下注，若要重新下注，请先取消之前的下注",
+    failed_not_yet_bid: "还未进行过下注",
     failed_not_select: "请选择对象",
     failed_mix_self: "不能混血自己",
     failed_not_turn: "当前回合无法操作",

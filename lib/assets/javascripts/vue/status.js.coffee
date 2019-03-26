@@ -3,6 +3,7 @@
 @Wolf.status = new Vue {
   el: "#info",
   data: {
+    bidding_enabled: false,
     round: 0,
     turn: "init"
   },

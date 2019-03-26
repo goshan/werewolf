@@ -66,3 +66,42 @@ $(document).on 'turbolinks:load', (e) ->
     else if name == "js-wolf-lose"
       App.admin.do 'stop_game', win: 'villager'
 
+  $('#js-bid-roles').click (e) ->
+    e.preventDefault()
+    prices = { }
+    need = 0
+    for dom in $('#bid-roles input.role-price')
+      role = $(dom).attr('name')
+      prices[role] = parseInt($(dom).val(), 10) || 0
+      if prices[role] < 0
+        BootstrapDialog.alert "出价不能为负数"
+        return
+      need += prices[role]
+    balance = parseInt($('#coin-balance').val(), 10) || 0
+    if need <= balance
+      App.game.do 'bid_roles', {prices: prices}
+      for dom in $('#bid-roles input.role-price')
+        $(dom).val('')
+    else
+     BootstrapDialog.alert "你的下注总和超过了当前余额"
+
+  $('#js-cancel-bid-roles').click (e) ->
+    e.preventDefault()
+    App.game.do 'cancel_bid_roles'
+
+  $('#js-add-coin-all-users').click (e) ->
+    e.preventDefault()
+    coin = parseInt($('#coin-to-patch').val(), 10) || 0
+    App.admin.do 'add_coin_all_users', coin: coin
+
+  $('#js-reset-coin-all-users').click (e) ->
+    e.preventDefault()
+    App.admin.do 'add_coin_all_users', coin: -1
+
+  $('#js-enable-bidding').click (e) ->
+    e.preventDefault()
+    App.admin.do 'bidding_enabled', enabled: true
+
+  $('#js-disable-bidding').click (e) ->
+    e.preventDefault()
+    App.admin.do 'bidding_enabled', enabled: false

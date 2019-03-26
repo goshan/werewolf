@@ -15,32 +15,42 @@ module ApplicationCable
       msg[:players] = Player.to_msg if %i[players status_and_players].include? data
 
       if user
-        send_to user, msg
+        send_to_channel 'game', user, msg
       else
-        broadcast msg
+        broadcast_to_channel 'game', msg
       end
     end
 
-    def send_to_lord(data)
+    def update_self_info(user = nil)
+      if user
+        send_to_channel 'game', user, action: 'self_info', coin: user.coin, bid: Bid.find_by_key(user.id).prices
+      else
+        Player.find_all.each do |p|
+          update_self_info p.user if p.user
+        end
+      end
+    end
+
+    def send_to_master(data)
       user = Player.find_lord_user
-      AdminChannel.broadcast_to user, data if user
+      send_to_channel 'admin', user, data if user
     end
 
     # let master user play audio
     def play_voice(type)
-      send_to_lord action: 'play', audio: type
+      send_to_master action: 'play', audio: type
     end
 
     # send game over audio and update player history with res
     # res => :wolf_win, :wolf_lose
-    def maybe_game_over(res=nil)
+    def maybe_game_over(res = nil)
       res = Engin.process.stop_when_over res
       if res == :wolf_win
         play_voice 'wolf_win'
-        broadcast action: 'alert', msg: '游戏结束，狼人胜利'
+        broadcast_to_channel 'game', action: 'alert', msg: '游戏结束，狼人胜利'
       elsif res == :wolf_lose
         play_voice 'wolf_lose'
-        broadcast action: 'alert', msg: '游戏结束，好人胜利'
+        broadcast_to_channel 'game', action: 'alert', msg: '游戏结束，好人胜利'
       end
     end
 

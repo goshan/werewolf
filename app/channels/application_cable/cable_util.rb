@@ -22,4 +22,12 @@ module ApplicationCable::CableUtil
     key = self.class.to_s.gsub('Channel', '').downcase
     ActionCable.server.broadcast key, data
   end
+
+  def send_to_channel(channel, obj, data)
+    "#{channel}_channel".camelize.constantize.broadcast_to obj, data
+  end
+
+  def broadcast_to_channel(channel, data)
+    ActionCable.server.broadcast channel, data
+  end
 end

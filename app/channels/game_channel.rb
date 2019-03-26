@@ -11,6 +11,7 @@ class GameChannel < ApplicationCable::Channel
 
     sleep 1
     update :status_and_players, current_user
+    update_self_info current_user
   end
 
   def unsubscribed
@@ -63,6 +64,22 @@ class GameChannel < ApplicationCable::Channel
     end
   end
 
+  def bid_roles(data)
+    res = Engin.bid.bid_roles current_user, data['pos']['prices']
+    return if catch_exceptions res
+
+    update_self_info current_user
+    send_to current_user, action: 'alert', msg: '完成下注'
+  end
+
+  def cancel_bid_roles
+    res = Engin.bid.cancel_bid_roles current_user
+    return if catch_exceptions res
+
+    update_self_info current_user
+    send_to current_user, action: 'alert', msg: '已取消之前的下注'
+  end
+
   private
 
   def alert_skill_res_in_day(res)
@@ -74,6 +91,6 @@ class GameChannel < ApplicationCable::Channel
       target: res_info[1],
       dead: res_info[2]
     }
-    send_to_lord data
+    send_to_master data
   end
 end
