@@ -21,6 +21,7 @@ class AdminChannel < ApplicationCable::Channel
   def reset
     Engin.process.reset
     update :status_and_players
+    send_to current_user, action: 'deal_type', deal_type: Status.find_current.deal_type
   end
 
   def deal
@@ -109,7 +110,7 @@ class AdminChannel < ApplicationCable::Channel
     res = Engin.deal.deal_type data['deal_type']
     return if catch_exceptions res
 
-    update :status
+    send_to current_user, action: 'deal_type', deal_type: Status.find_current.deal_type
   end
 
   def add_coin_all_players(data)

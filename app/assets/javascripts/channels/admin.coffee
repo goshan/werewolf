@@ -20,6 +20,8 @@ $(document).on 'turbolinks:load', (e) ->
           else if data.action == 'play'
             audio.play_audio data.audio
           else if data.action == 'deal_type'
+            $('#deal-modal .nav-tabs li').removeClass('active')
+            $('#deal-modal .tab-content .tab-pane').removeClass('active')
             $('#deal-modal .'+data.deal_type+'-deal-nav').addClass('active')
             content = $('#deal-modal .'+data.deal_type+'-deal-nav a').attr('href')
             $('#deal-modal .tab-content '+content).addClass('active')
