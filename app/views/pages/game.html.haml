@@ -56,7 +56,7 @@
               %hr
               .row
                 %form.form-inline
-                - roles_list(@setting).each do |role|
+                - bid_roles_list(@setting).each do |role|
                   .form-group{'class' => 'col-xs-6'}
                     .input-group
                       .input-group-addon= role[:name]
