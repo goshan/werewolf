@@ -34,6 +34,6 @@ class Check < Skill
   end
 
   def confirm
-    :success
+    SkillFinishedResponse.play_audio
   end
 end

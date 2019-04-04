@@ -13,7 +13,7 @@ class CheckWolves < Skill
   end
 
   def confirm
-    :success
+    SkillFinishedResponse.play_audio
   end
 
   private

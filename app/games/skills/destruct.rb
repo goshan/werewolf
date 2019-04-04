@@ -39,6 +39,9 @@ class Destruct < Skill
     player.die!
     player.save
 
-    "skill_in_day_shoot->#{history.target[self.history_key]}->#{player.pos}"
+    res = SKillFinishedResponse.skill_in_day 'shoot'
+    res.add_param :target, history.target[self.history_key]
+    res.add_param :dead, player.pos
+    res
   end
 end

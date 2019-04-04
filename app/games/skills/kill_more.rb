@@ -69,6 +69,6 @@ class KillMore < Skill
     history.acted[@role.name] = true
     history.save
 
-    :success
+    SkillFinishedResponse.play_audio
   end
 end

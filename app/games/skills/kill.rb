@@ -48,6 +48,6 @@ class Kill < Skill
     history = History.find_by_key Status.find_current.turn.round
     history.acted[self.history_key] = true
     history.save
-    :success
+    SkillFinishedResponse.play_audio
   end
 end
