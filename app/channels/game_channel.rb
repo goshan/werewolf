@@ -53,11 +53,12 @@ class GameChannel < ApplicationCable::Channel
     res = Engin.game.confirm_skill current_user
     return if catch_exceptions res
 
-    if res == :success
+    if res.action == SkillFinishedResponse::ACTION_PLAY_AUDIO
       audio = Status.find_current.turn.audio_after_turn
       play_voice audio if audio
-    elsif res.start_with? 'skill_in_day'
-      alert_skill_res_in_day res
+    elsif res.action == SkillFinishedResponse::ACTION_SKILL_IN_DAY
+      res.add_param :player, Player.find_by_user(current_user).pos
+      send_to_master res.to_msg
       update :players
       maybe_game_over
     end
@@ -81,19 +82,5 @@ class GameChannel < ApplicationCable::Channel
     return if catch_exceptions res
 
     send_to current_user, action: 'alert', msg: '已取消之前的下注'
-  end
-
-  private
-
-  def alert_skill_res_in_day(res)
-    res_info = res.gsub('skill_in_day_', '').split '->'
-    data = {
-      action: 'alert',
-      msg: res_info[0],
-      player: Player.find_by_user(current_user).pos,
-      target: res_info[1],
-      dead: res_info[2]
-    }
-    send_to_master data
   end
 end

@@ -61,6 +61,6 @@ class Exchange < Skill
     history.acted[self.history_key] = true
     history.save
 
-    :success
+    SkillFinishedResponse.play_audio
   end
 end

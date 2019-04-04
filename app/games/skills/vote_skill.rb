@@ -43,6 +43,6 @@ class VoteSkill < Skill
     vote = Vote.find_by_key Status.find_current.voting
     return :failed_not_voter unless vote.voters.include?(@pos)
 
-    :success
+    SkillFinishedResponse.play_audio
   end
 end
