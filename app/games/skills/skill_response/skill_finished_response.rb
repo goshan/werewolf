@@ -14,7 +14,7 @@ class SkillFinishedResponse
 
   def initialize(action, msg)
     @action = action
-    if action == ACTION_PLAY_ADUIO
+    if action == ACTION_PLAY_AUDIO
     elsif action == ACTION_SKILL_IN_DAY
       super 'alert', msg
     end
