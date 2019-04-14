@@ -78,7 +78,7 @@ class PagesController < ApplicationController
     setting.must_kill = params[:must_kill] if params[:must_kill] && params[:must_kill] != 'nil'
     setting.save
 
-    GameEngin.new.reset
+    Engin.process.reset
     msg = { action: 'update', status: Status.to_msg, players: Player.to_msg }
     ActionCable.server.broadcast 'game', msg
     redirect_to root_path
