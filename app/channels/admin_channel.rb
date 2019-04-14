@@ -111,6 +111,7 @@ class AdminChannel < ApplicationCable::Channel
     return if catch_exceptions res
 
     send_to current_user, action: 'deal_type', deal_type: Status.find_current.deal_type
+    update :status
   end
 
   def add_coin_all_players(data)
