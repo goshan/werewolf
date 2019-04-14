@@ -19,4 +19,13 @@ class SkillFinishedResponse < SkillResponse
       super 'alert', msg
     end
   end
+
+  def to_msg
+    res = {
+      action: @type,
+      msg: @msg
+    }
+    res.merge! @params
+    res
+  end
 end
