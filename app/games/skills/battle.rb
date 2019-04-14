@@ -46,7 +46,7 @@ class Battle < Skill
     player.die!
     player.save
 
-    res = SKillFinishedResponse.skill_in_day 'battle'
+    res = SkillFinishedResponse.skill_in_day 'battle'
     res.add_param :target, history.target[self.history_key]
     res.add_param :dead, player.pos
     res
