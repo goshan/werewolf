@@ -1,4 +1,4 @@
-class SkillFinishedResponse
+class SkillFinishedResponse < SkillResponse
   attr_reader :action
 
   ACTION_PLAY_AUDIO = 'play_audio'.freeze
