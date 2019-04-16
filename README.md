@@ -22,7 +22,7 @@ Rails 5.0.7
 
 ```
 $ bundle -v
-Bundler version 1.15.4
+Bundler version 2.0.1
 ```
 
 ### Setup
