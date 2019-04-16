@@ -7,49 +7,49 @@
 }
 
 .btn-purple,
-.btn-purple:hover, 
-.btn-purple:focus { 
-	color: #ffffff; 
-	background-color: #805EAD; 
-	border-color: #130269; 
-} 
+.btn-purple:hover,
+.btn-purple:focus {
+	color: #ffffff;
+	background-color: #805EAD;
+	border-color: #130269;
+}
 
-.btn-purple:active, 
-.btn-purple.active, 
-.open .dropdown-toggle.btn-purple { 
-	color: #ffffff; 
-	background-color: #684D8C; 
-	border-color: #130269; 
-} 
+.btn-purple:active,
+.btn-purple.active,
+.open .dropdown-toggle.btn-purple {
+	color: #ffffff;
+	background-color: #684D8C;
+	border-color: #130269;
+}
 
-.btn-purple:active, 
-.btn-purple.active, 
-.open .dropdown-toggle.btn-purple { 
-	background-image: none; 
-} 
+.btn-purple:active,
+.btn-purple.active,
+.open .dropdown-toggle.btn-purple {
+	background-image: none;
+}
 
-.btn-purple.disabled, 
-.btn-purple[disabled], 
-fieldset[disabled] .btn-purple, 
-.btn-purple.disabled:hover, 
-.btn-purple[disabled]:hover, 
-fieldset[disabled] .btn-purple:hover, 
-.btn-purple.disabled:focus, 
-.btn-purple[disabled]:focus, 
-fieldset[disabled] .btn-purple:focus, 
-.btn-purple.disabled:active, 
-.btn-purple[disabled]:active, 
-fieldset[disabled] .btn-purple:active, 
-.btn-purple.disabled.active, 
-.btn-purple[disabled].active, 
-fieldset[disabled] .btn-purple.active { 
-	background-color: #805EAD; 
-	border-color: #130269; 
-} 
+.btn-purple.disabled,
+.btn-purple[disabled],
+fieldset[disabled] .btn-purple,
+.btn-purple.disabled:hover,
+.btn-purple[disabled]:hover,
+fieldset[disabled] .btn-purple:hover,
+.btn-purple.disabled:focus,
+.btn-purple[disabled]:focus,
+fieldset[disabled] .btn-purple:focus,
+.btn-purple.disabled:active,
+.btn-purple[disabled]:active,
+fieldset[disabled] .btn-purple:active,
+.btn-purple.disabled.active,
+.btn-purple[disabled].active,
+fieldset[disabled] .btn-purple.active {
+	background-color: #805EAD;
+	border-color: #130269;
+}
 
-.btn-purple .badge { 
-	color: #805EAD; 
-	background-color: #ffffff; 
+.btn-purple .badge {
+	color: #805EAD;
+	background-color: #ffffff;
 }
 
 .btn-darkblue {
@@ -243,6 +243,10 @@ fieldset[disabled] .btn-purple.active {
       border: 1px solid #684D8C;
     }
     &[status=check] {
+      background-color: #f0ad4e;
+      border: 1px solid #eea236;
+    }
+    &[status=psychic_check] {
       background-color: #f0ad4e;
       border: 1px solid #eea236;
     }

@@ -31,6 +31,9 @@ class @Wolf.Audio
         { name: "seer_bgm", volume: 0.5, loop: true },
         { name: "seer_start_voice" },
         { name: "seer_end_voice" },
+        { name: "psychic_bgm", volume: 0.5, loop: true },
+        { name: "psychic_start_voice" },
+        { name: "psychic_end_voice" },
         { name: "savior_bgm", volume: 0.5, loop: true },
         { name: "savior_start_voice" },
         { name: "savior_end_voice" },
@@ -77,7 +80,7 @@ class @Wolf.Audio
         else if res[2] == "end"
           stop_all = false
           voice = "#{res[0]}_voice"
- 
+
     ion.sound.stop() if stop_all
 
     if bgm && voice

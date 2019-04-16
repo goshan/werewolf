@@ -35,6 +35,7 @@ class History < CacheRecord
     end
     witch_poison = has_poison? ? self.magician_exchange(self.witch_target) : nil
     seer = self.target['seer'] ? self.magician_exchange(self.target['seer']) : nil
+    #psychic = self.target['psychic'] ? self.magician_exchange(self.target['psychic']) : nil
 
     # witch used poison
     if witch_poison

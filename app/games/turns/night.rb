@@ -1,5 +1,5 @@
 class Night < Turn
-  STEPS = %w[half augur wolf hidden_wolf witch long_wolf magician seer savior].freeze
+  STEPS = %w[half augur wolf hidden_wolf witch long_wolf magician seer psychic savior].freeze
 
   def skip?
     return true if @round < 1

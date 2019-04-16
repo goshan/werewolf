@@ -63,8 +63,12 @@ namespace :ranking do
     print_res read_history(args.from, :savior)
   end
 
+  task :psychic, ['from'] => :environment do |task, args|
+    print_res read_history(args.from, :psychic)
+  end
+
   task :god, ['from'] => :environment do |task, args|
-    print_res read_history(args.from, [:seer, :witch, :hunter, :idiot, :savior, :magician, :augur])
+    print_res read_history(args.from, [:seer, :witch, :hunter, :idiot, :savior, :magician, :augur, :psychic])
   end
 
   task :villager, ['from'] => :environment do |task, args|
@@ -72,7 +76,7 @@ namespace :ranking do
   end
 
   task :good, ['from'] => :environment do |task, args|
-    print_res read_history(args.from, [:seer, :witch, :hunter, :idiot, :savior, :magician, :augur, :villager])
+    print_res read_history(args.from, [:seer, :witch, :hunter, :idiot, :savior, :magician, :augur, :psychic, :villager])
   end
 
   task :wolf, ['from'] => :environment do |task, args|
