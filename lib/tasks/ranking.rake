@@ -63,6 +63,10 @@ namespace :ranking do
     print_res read_history(args.from, :savior)
   end
 
+  task :fox, ['from'] => :environment do |task, args|
+    print_res read_history(args.from, :fox)
+  end
+
   task :psychic, ['from'] => :environment do |task, args|
     print_res read_history(args.from, :psychic)
   end

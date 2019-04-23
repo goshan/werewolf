@@ -18,6 +18,7 @@
   villager: "村民",
   normal_wolf: "狼人",
   hidden_wolf: "隐狼",
+  fox: "狐狸",
   psychic: "通灵师"
 }
 
@@ -31,6 +32,7 @@
   long_wolf: "夜晚 大灰狼行动",
   witch: "夜晚 女巫行动",
   seer: "夜晚 预言家行动",
+  fox: "夜晚 狐狸行动",
   psychic: "夜晚 通灵师行动",
   savior: "夜晚 守卫行动",
   magician: "夜晚 魔术师行动",
@@ -88,6 +90,8 @@
     kill: "请从下方存活玩家中选择一名猎杀",
     check: "请从下方存活玩家中选择一名查验",
     psychic_check: "请从下方存活玩家中选择一名查验",
+    fox_check: "请从下方存活玩家中选择一名，查验其及其左右两侧存活玩家中是否有狼",
+    fox_none: "先前没有查验到狼，已失去查验技能",
     prescribe: "今晚被猎杀的是{killed}号玩家，请操作",
     prescribe_unknow: "无法获知今晚被猎杀玩家信息，请操作",
     prescribe_none: "今晚没有玩家被猎杀，请操作",
@@ -107,6 +111,7 @@
     kill_none: ["空刀", 'btn-default'],
     check: ["查验", 'btn-warning'],
     psychic_check: ["查验", 'btn-warning'],
+    fox_check: ["查验", 'btn-warning'],
     rest: ["不行动", 'btn-default'],
     antidote: ["救人", 'btn-success'],
     poison: ["毒人", 'btn-purple'],
@@ -129,6 +134,8 @@
     none_killed: "你们今晚没有猎杀目标",
     checked: "{target}号玩家的身份是<span style='font-size: 21px; font-weight: bold; color: {role?evil:red,virtuous:green};'>{role?evil:狼人,virtuous:好人}</span>",
     psychic_checked: "{target}号玩家的身份是<span style='font-size: 21px; font-weight: bold; color: {side?evil:red,virtuous:green};'>{role}</span>",
+    none_fox_check: "查验环节已跳过",
+    fox_checked: "{targets}号玩家中，<span style='font-size: 21px; font-weight: bold; color: {role?evil:red,virtuous:green};'>{role?evil:存在狼人,virtuous:不存在狼人}</span>",
     antidote: "你今晚要开药解救{target}号玩家",
     poison: "你今晚要开药毒杀{target}号玩家",
     none_prescribe: "你今晚不使用任何药水",

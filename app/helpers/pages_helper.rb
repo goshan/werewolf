@@ -16,6 +16,7 @@ module PagesHelper
     :long_wolf => "大灰狼",
     :ghost_rider => "恶灵骑士",
     :hidden_wolf => "隐狼",
+    :fox => "狐狸",
     :psychic => "通灵师"
   }
   ROLE_KLASS = {
@@ -28,6 +29,7 @@ module PagesHelper
     :magician => "info",
     :augur => "primary",
     :knight => "info",
+    :fox => "primary",
     :chief_wolf => "danger",
     :lord_wolf => "danger",
     :long_wolf => "danger",

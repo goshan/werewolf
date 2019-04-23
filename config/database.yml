@@ -12,8 +12,9 @@ default: &default
 development:
   <<: *default
   username: root
-  password: ''
-  host: localhost
+  password: 'r00t'
+  host: 127.0.0.1
+  port: 3307
   database: wolf_dev
 
 # Warning: The database defined as "test" will be erased and
