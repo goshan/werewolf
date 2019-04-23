@@ -18,7 +18,9 @@
   villager: "村民",
   normal_wolf: "狼人",
   hidden_wolf: "隐狼",
-  psychic: "通灵师"
+  psychic: "通灵师",
+  evil: "狼人",
+  virtuous: "好人"
 }
 
 @Wolf.Trans.Turns = @Wolf.Trans.Turns ? {
@@ -87,7 +89,6 @@
   panel_tip_trans: {
     kill: "请从下方存活玩家中选择一名猎杀",
     check: "请从下方存活玩家中选择一名查验",
-    psychic_check: "请从下方存活玩家中选择一名查验",
     prescribe: "今晚被猎杀的是{killed}号玩家，请操作",
     prescribe_unknow: "无法获知今晚被猎杀玩家信息，请操作",
     prescribe_none: "今晚没有玩家被猎杀，请操作",
@@ -106,7 +107,6 @@
     kill: ["落刀", 'btn-danger'],
     kill_none: ["空刀", 'btn-default'],
     check: ["查验", 'btn-warning'],
-    psychic_check: ["查验", 'btn-warning'],
     rest: ["不行动", 'btn-default'],
     antidote: ["救人", 'btn-success'],
     poison: ["毒人", 'btn-purple'],
@@ -127,8 +127,7 @@
   dialog_message_trans: {
     killed: "你们今晚猎杀的是{target}号玩家",
     none_killed: "你们今晚没有猎杀目标",
-    checked: "{target}号玩家的身份是<span style='font-size: 21px; font-weight: bold; color: {role?evil:red,virtuous:green};'>{role?evil:狼人,virtuous:好人}</span>",
-    psychic_checked: "{target}号玩家的身份是<span style='font-size: 21px; font-weight: bold; color: {side?evil:red,virtuous:green};'>{role}</span>",
+    checked: "{target}号玩家的身份是<span style='font-size: 21px; font-weight: bold; color: {side?evil:red,virtuous:green};'>{Roles:role}</span>",
     antidote: "你今晚要开药解救{target}号玩家",
     poison: "你今晚要开药毒杀{target}号玩家",
     none_prescribe: "你今晚不使用任何药水",
@@ -153,7 +152,9 @@
 @Wolf.Trans.insert_params = (template, params) ->
   return "" if Wolf.Utils.varIsNull(template)
 
-  res = template.replace /\{([^\{\}\?:,]+)\}/g, (x, y) ->
+  res = template.replace /\{Roles:([^\{\}\?:,]+)\}/g, (x, y) ->
+    return if params[y] then @Wolf.Trans.Roles[params[y]] else '??'
+  res = res.replace /\{([^\{\}\?:,]+)\}/g, (x, y) ->
     return if params[y] then params[y] else '??'
   res = res.replace /\{([^\{\}\?:,]+)\?(([^\{\}\?:,]+:[^\{\}\?:,]+,?)+)\}/g, (x, y, z) ->
     c_m = z.match /([^\{\}\?:,]+):([^\{\}\?:,]+)/g

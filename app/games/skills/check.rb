@@ -28,7 +28,8 @@ class Check < Skill
 
     res = SkillResponseDialog.new 'checked'
     res.add_param 'target', target
-    res.add_param 'role', player.role.side_for_seer
+    res.add_param 'side', player.role.side_for_seer
+    res.add_param 'role', @role.name == 'psychic' ? player.role.name : player.role.side_for_seer
     res.cannot_retry!
     res.to_msg
   end
