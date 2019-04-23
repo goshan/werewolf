@@ -135,7 +135,7 @@
     checked: "{target}号玩家的身份是<span style='font-size: 21px; font-weight: bold; color: {role?evil:red,virtuous:green};'>{role?evil:狼人,virtuous:好人}</span>",
     psychic_checked: "{target}号玩家的身份是<span style='font-size: 21px; font-weight: bold; color: {side?evil:red,virtuous:green};'>{role}</span>",
     none_fox_check: "查验环节已跳过",
-    fox_checked: "{targets}号玩家中，<span style='font-size: 21px; font-weight: bold; color: {role?evil:red,virtuous:green};'>{role?evil:存在狼人,virtuous:不存在狼人}</span>",
+    fox_checked: "{targets}号玩家中，<span style='font-size: 21px; font-weight: bold; color: {side?evil:red,virtuous:green};'>{side?evil:存在狼人,virtuous:不存在狼人}</span>",
     antidote: "你今晚要开药解救{target}号玩家",
     poison: "你今晚要开药毒杀{target}号玩家",
     none_prescribe: "你今晚不使用任何药水",

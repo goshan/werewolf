@@ -25,42 +25,15 @@ class FoxCheck < Skill
       player = Player.find_by_key target
       return :failed_target_dead unless player.status == :alive
 
-      targets = []
-      target_players = []
-      n = Player.find_all.length
-      # left
-      i = (target - 2) % n
-      while i != target
-        player = Player.find_by_key(i + 1)
-        if player.status == :alive
-          targets << (i + 1)
-          target_players << Player.find_by_key(history.magician_exchange(i + 1))
-          break
-        end
-        i = (i - 1) % n
-      end
-      # mid
-      targets << target
-      target_players << Player.find_by_key(history.magician_exchange(target.to_i))
-      # right
-      j = target % n
-      while j != i
-        player = Player.find_by_key(j + 1)
-        if player.status == :alive
-          targets << (j + 1)
-          target_players << Player.find_by_key(history.magician_exchange(j + 1))
-          break
-        end
-        j = (j + 1) % n
-      end
-      has_evil = target_players.any? { |p| p.role.side_for_seer == :evil }
+      targets = FoxCheck.find_alive_neighbors(target)
+      has_evil = targets.any? { |pos| Player.find_by_key(history.magician_exchange(pos)).role.side_for_seer == :evil }
       unless has_evil
         @role.seen_evil = false
         @role.save
       end
       res = SkillResponseDialog.new 'fox_checked'
       res.add_param 'targets', targets
-      res.add_param 'role', has_evil ? :evil : :virtuous
+      res.add_param 'side', has_evil ? :evil : :virtuous
     end
 
     history.acted[self.history_key] = true
@@ -72,5 +45,24 @@ class FoxCheck < Skill
 
   def confirm
     SkillFinishedResponse.play_audio
+  end
+
+  private
+
+  def self.find_alive_neighbors(m)
+    l = r = nil
+    players = Player.find_all
+    n = players.length
+    players.each do |player|
+      next if player.pos == m || player.status != :alive
+
+      r = player.pos if r.nil? || (player.pos - m) % n < (r - m) % n
+      l = player.pos if l.nil? || (m - player.pos) % n < (m - l) % n
+    end
+    results = []
+    results << l unless l.nil?
+    results << m
+    results << r unless r.nil?
+    results
   end
 end
