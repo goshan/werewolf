@@ -62,7 +62,7 @@ class FoxCheck < Skill
     results = []
     results << l unless l.nil?
     results << m
-    results << r unless r.nil?
+    results << r unless r.nil? || r == l
     results
   end
 end
