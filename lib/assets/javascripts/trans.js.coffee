@@ -111,6 +111,7 @@
     kill: ["落刀", 'btn-danger'],
     kill_none: ["空刀", 'btn-default'],
     check: ["查验", 'btn-warning'],
+    fox_check: ["查验", 'btn-warning'],
     rest: ["不行动", 'btn-default'],
     antidote: ["救人", 'btn-success'],
     poison: ["毒人", 'btn-purple'],
