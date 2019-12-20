@@ -1,5 +1,5 @@
 class Setting < ApplicationRecord
-  GOD_ROLES = %i[seer witch hunter savior idiot magician augur knight psychic].freeze
+  GOD_ROLES = %i[seer witch hunter savior idiot magician augur knight psychic fox].freeze
   SPECIAL_VILLAGER_ROLES = %i[half].freeze
   WOLF_ROLES = %i[chief_wolf lord_wolf long_wolf ghost_rider hidden_wolf].freeze
 

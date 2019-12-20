@@ -250,6 +250,10 @@ fieldset[disabled] .btn-purple.active {
       background-color: #f0ad4e;
       border: 1px solid #eea236;
     }
+    &[status=fox_check] {
+      background-color: #f0ad4e;
+      border: 1px solid #eea236;
+    }
     &[status=guard] {
       background-color: #5cb85c;
       border: 1px solid #4cae4c;
