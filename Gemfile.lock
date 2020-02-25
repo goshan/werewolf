@@ -110,7 +110,7 @@ GEM
     mysql2 (0.5.2)
     necromancer (0.4.0)
     nio4r (2.3.1)
-    nokogiri (1.10.1)
+    nokogiri (1.10.8)
       mini_portile2 (~> 2.4.0)
     parallel (1.14.0)
     parser (2.6.2.0)
