@@ -55,3 +55,9 @@ $ bundle exec rails server
 (then access http://localhost:3000 by any browser)
 ```
 
+- Run at production server
+
+```
+$ cp env.example env
+# Edit env file to fill your DB and Redis setting
+```
