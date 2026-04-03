@@ -9,5 +9,6 @@ elif [ $1 = "start" ]; then
     exit 1
   fi
 
+  source $env_path
   bundle exec puma -p 3000 -e production -w 5 -d
 fi
